@@ -68,7 +68,11 @@ def trim_or_pad_time(data: torch.Tensor, target_time: int) -> torch.Tensor:
 
 
 def get_MFCC(
-    waveform: torch.Tensor, sample_rate: int, n_mfcc: int = 256
+    waveform: torch.Tensor,
+    sample_rate: int,
+    n_mfcc: int = 256,
+    n_fft: int = 2048,
+    log: bool = True,
 ) -> torch.Tensor:
     """
     Computes the MFCCs of a waveform.
@@ -79,6 +83,8 @@ def get_MFCC(
             The sample rate of the waveform.
         n_mfcc: int
             The Number of mfc coefficients to retain
+        log: bool
+            Whether to use log-mel spectrograms instead of db-scaled.
     Returns:
         Tensor (B, n_mfcc, T') where T' = ceil(T / hop_length)
             The MFCCs of the waveform.
@@ -88,7 +94,6 @@ def get_MFCC(
     win_length = None
     hop_length = 512
     n_mels = 256
-    n_mfcc = 256  # Number of mfc coefficients to retain
 
     # NOTE: MFCC Source
     # https://pytorch.org/audio/stable/transforms.html#torchaudio.transforms.MFCC
@@ -96,8 +101,10 @@ def get_MFCC(
     mfcc_transform = T.MFCC(
         sample_rate=sample_rate,
         n_mfcc=n_mfcc,
+        log_mels=log,
         melkwargs={
             "n_fft": n_fft,
+            "win_length": win_length,
             "n_mels": n_mels,
             "hop_length": hop_length,
             "mel_scale": "htk",
@@ -107,32 +114,51 @@ def get_MFCC(
     return mfcc
 
 
-def get_audio_paths(
-    json_dir: Union[str, Path],
-    media_dir: Union[str, Path],
-) -> List[Tuple[str, int]]:
+def get_LFCC(
+    waveform: torch.Tensor,
+    sample_rate: int,
+    n_lfcc: int = 256,
+    n_fft: int = 2048,
+    log: bool = True,
+) -> torch.Tensor:
+    """
+    Computes the LFCCs of a waveform.
+    Args:
+        waveform: Tensor (B, T)
+            The waveform to compute the LFCCs of.
+        sample_rate: int
+            The sample rate of the waveform.
+        n_lfcc: int
+            The Number of lfc coefficients to retain
+        log: bool
+            whether to use log-lf spectrograms instead of db-scaled.
+    Returns:
+        Tensor (B, n_lfcc, T') where T' = ceil(T / hop_length)
+            The LFCCs of the waveform.
+    """
+
+    win_length = None
+    hop_length = 512
+
+    # NOTE: LFCC Source
+    # https://pytorch.org/audio/main/transforms.html#lfcc
+    lfcc_transform = T.LFCC(
+        sample_rate=sample_rate,
+        n_lfcc=n_lfcc,
+        log_lf=log,
+        speckwargs={
+            "n_fft": n_fft,
+            "win_length": win_length,
+            "hop_length": hop_length,
+        },
+    )
+    lfcc = lfcc_transform(waveform)  # (B, n_lfcc, time')
+    return lfcc
+
+
+def get_audio_paths() -> List[Tuple[str, int]]:
     audio_paths: List[Tuple[str, int]] = []
-    assert Path(json_dir).is_dir()
-    assert Path(media_dir).is_dir()
-
-    for name in os.listdir(json_dir):
-        if name.endswith(".json"):
-            json_path = Path(json_dir) / name
-            with open(json_path, "r") as f:
-                data = json.load(f)
-                media_filenames = data.get("media_filenames", [])
-                audio_file = None
-                for i in media_filenames:
-                    if i.endswith(".mp3"):
-                        audio_file = i
-                        break
-
-                if audio_file is not None:
-                    audio_path = Path(media_dir).resolve() / audio_file
-                    if audio_path.is_file():
-                        audio_paths.append((str(audio_path), int(data["id"])))
-                    else:
-                        logger.error(f"{audio_file} does not exists")
+    # TODO
 
     return audio_paths
 
