@@ -27,7 +27,7 @@ class Trainer(object):
         self,
         epochs: int = 20,
         batch_size: int = 32,
-        device: str = "cpu",
+        device: str = "cuda" if torch.cuda.is_available else "cpu",
         optimizer_fn: Callable = torch.optim.Adam,
         optimizer_kwargs: dict = {"lr": 1e-3},
     ) -> None:

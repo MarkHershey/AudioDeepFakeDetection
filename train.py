@@ -37,15 +37,10 @@ def init_logger(log_file):
 
 def save_model(
     model: torch.nn.Module,
+    model_class: str,
     model_dir: Union[Path, str],
     name: str,
-    em: bool = False,
-    raw_net: bool = False,
 ) -> None:
-    if raw_net:
-        model_class = "raw_net"
-    else:
-        model_class = "em" if em else "gd"
     full_model_dir = Path(f"{model_dir}/{model_class}/{name}")
     if not full_model_dir.exists():
         full_model_dir.mkdir(parents=True)
@@ -59,7 +54,7 @@ def train(
     amount_to_use: int = None,
     epochs: int = 20,
     device: str = "cuda" if torch.cuda.is_available else "cpu",
-    batch_size: int = 8,
+    batch_size: int = 32,
     model_dir: Optional[str] = None,
     test_size: float = 0.2,
 ) -> None:
@@ -93,7 +88,11 @@ def train(
     dataset_train = ConcatDataset([real_dataset_train, fake_dataset_train])
     LOGGER.info(f"Training model on {len(dataset_train)} audio files.")
 
-    model = SimpleModel(feat_dim=40, time_dim=972, mid_dim=30, out_dim=1)
+    pos_weight = torch.Tensor([len(real_dataset_train) / len(fake_dataset_train)]).to(
+        device
+    )
+
+    model = SimpleModel(feat_dim=40, time_dim=972, mid_dim=30, out_dim=1).to(device)
 
     model = GDTrainer(
         device=device,
@@ -107,15 +106,15 @@ def train(
         dataset=dataset_train,
         model=model,
         test_len=test_size,
+        pos_weight=pos_weight,
     )
 
     if model_dir is not None:
-        ...
         save_model(
-            model,
-            model_dir,
-            str(fake_dir).strip("/").replace("/", "_"),
-            raw_net=True,
+            model=model,
+            model_class="simple_lstm",
+            model_dir=model_dir,
+            name=str(fake_dir).strip("/").replace("/", "_"),
         )
 
 
@@ -127,6 +126,10 @@ def main():
     train(
         real_dir="/home/markhh/Documents/DeepFakeAudioDetection/LJ_Speech",
         fake_dir="/home/markhh/Documents/DeepFakeAudioDetection/WaveFake_generated_audio/ljspeech_waveglow",
+        amount_to_use=None,
+        epochs=10,
+        batch_size=128,
+        model_dir="saved",
     )
 
 
