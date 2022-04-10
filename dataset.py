@@ -49,7 +49,7 @@ def get_dataset(fake_dirs, real_dir,  train_val_test_split, debug=False, down_sa
     
     train_len = int(len(dataset) *train_val_test_split[0]) 
     val_len = int(len(dataset) * train_val_test_split[1]) 
-    test_len = len(dataset) - train_len - test_len
+    test_len = len(dataset) - train_len - val_len
     lengths = [train_len, val_len, test_len]
     train_dataset, val_dataset, test_dataset = torch.utils.data.random_split(dataset, lengths)
     return train_dataset, val_dataset, test_dataset

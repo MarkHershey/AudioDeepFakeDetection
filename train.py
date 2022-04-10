@@ -7,11 +7,11 @@ from dataset import get_dataset
 from RNN import RNNClassification, SimpleRNN
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-from sklearn.metrics import f1_score 
+from sklearn.metrics import f1_score , roc_curve
 import os
 from contextlib import redirect_stdout
 import logging
-
+import numpy as np
 LOGGER = logging.getLogger()
 
 
@@ -40,6 +40,10 @@ def eval(model,data_loader, seq_length):
         predictions += pred
         labels += gold
     f1 = f1_score(labels, predictions)
+    fpr, tpr, threshold = roc_curve(labels, predictions, pos_label=1)
+    fnr = 1 - tpr
+    EER = fpr[np.nanargmin(np.absolute((fnr - fpr)))]
+    print("f1:%f",  round(f1*100, 2))
     print("f1:%f",  round(f1*100, 2))
     LOGGER.info("f1:%f"%round(f1*100, 2))
     return f1
