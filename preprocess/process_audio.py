@@ -303,10 +303,14 @@ def check_mfcc_time_length(
 
 @timeitprint
 def test():
-    a_mp3 = Path("/home/mark/Data/NFT_Dataset/media/08416.mp3")
-    waveform, sample_rate = get_waveform(filepath=a_mp3, resample_rate=8000)
+    audio_file = Path(
+        "/home/markhh/Documents/DeepFakeAudioDetection/LJ_Speech/wavs/LJ001-0001.wav"
+    )
+    waveform, sample_rate = get_waveform(filepath=audio_file, resample_rate=8000)
     mfcc = get_MFCC(waveform, sample_rate)
+    lfcc = get_LFCC(waveform, sample_rate)
     print(mfcc.shape)
+    print(lfcc.shape)
 
 
 def main():
@@ -351,4 +355,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    test()
