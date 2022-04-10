@@ -75,7 +75,7 @@ def train(args, model, train_loader, val_loader, patience, loss_func, optimizer)
                 
             
         current_epoch += 1
-        f1 = eval(model, train_loader, seq_length)
+        f1 = eval(model, val_loader, seq_length)
         if f1 > current_best:
             current_best = f1
             num_epoch_with_no_progress = 0
@@ -94,10 +94,11 @@ def main():
     parser.add_argument("--RNN_layers", type=int, default=1)
     parser.add_argument("--RNN_hidden", type=int, default=6460)
     parser.add_argument("--batch_size", type=int, default=32)
-    parser.add_argument("--patience", type=int, default=3, help="will stop training if val accuracy does not increase for --patience epochs")
+    parser.add_argument("--patience", type=int, default=5, help="will stop training if val accuracy does not increase for --patience epochs")
     parser.add_argument("--save_dir", type=str, default="./experiments/")
     parser.add_argument("--run_name", type=str, default="RNN/")
     parser.add_argument("--debug", action="store_true")
+    parser.add_argument("--down_sample_rate", help="sampel a subset to finetune network parameters", default=1.0, type=float)
     parser.add_argument("--lr", type=float, default=1e-3, )
     args = parser.parse_args()
     set_seed(42)
@@ -114,11 +115,9 @@ def main():
             fake_dirs.append(path.absolute())
             
    
-    train_dataset, val_dataset, test_dataset = get_dataset(fake_dirs, args.real_dir, args.train_val_test_split, debug=args.debug)
+    train_dataset, val_dataset, test_dataset = get_dataset(fake_dirs, args.real_dir, args.train_val_test_split, debug=args.debug, down_sample_rate=args.down_sample_rate)
     
-    print(len(train_dataset))
-    print(len(val_dataset))
-    assert False
+   
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, drop_last=True)
     val_loader = DataLoader(val_dataset, batch_size=args.batch_size)
     test_loader = DataLoader(test_dataset, batch_size=args.batch_size)
