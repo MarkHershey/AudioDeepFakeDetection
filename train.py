@@ -102,6 +102,7 @@ def main(experiment_name: str = "debug"):
 
     root_save_dir = Path("saved")
     save_dir = root_save_dir / experiment_name
+    save_dir.mkdir(parents=True, exist_ok=True)
     log_file = save_dir / f"{timestamp_seconds()}.log"
 
     set_seed_all(42)
