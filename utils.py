@@ -1,5 +1,6 @@
 import os
 import random
+import time
 from pathlib import Path
 from typing import List, Optional, Union
 
@@ -51,3 +52,14 @@ def set_benchmark_mode() -> None:
         torch.backends.cudnn.benchmark = True
         torch.backends.cudnn.deterministic = False
     return None
+
+
+def save_checkpoint(epoch, model, optimizer, model_kwargs, filename):
+    state = {
+        "epoch": epoch,
+        "state_dict": model.state_dict(),
+        "optimizer": optimizer.state_dict(),
+        "model_kwargs": model_kwargs,
+    }
+    time.sleep(3)
+    torch.save(state, filename)

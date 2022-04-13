@@ -1,10 +1,12 @@
 import logging
-from copy import deepcopy
-from typing import Callable, List, Optional
+from pathlib import Path
+from typing import Callable, Optional, Union
 
-import numpy as np
 import torch
-from torch.utils.data import DataLoader
+import torch.nn as nn
+from torch.utils.data import DataLoader, Dataset
+
+from utils import save_checkpoint
 
 LOGGER = logging.getLogger(__name__)
 
@@ -16,104 +18,142 @@ class Trainer(object):
 
     Args:
         epochs (int): The amount of training epochs.
-        batch_size (int): Amount of audio files to use in one batch.
-        device (str): The device to train on (Default 'cpu').
-        batch_size (int): The amount of audio files to consider in one batch (Default: 32).
-        optimizer_fn (Callable): Function for constructing the optimzer.
+        batch_size (int): The batch size for training.
+        device (str): The device to train on.
+        optimizer_fn (Callable): Function for constructing the optimzer (Default: Adam).
         optimizer_kwargs (dict): Kwargs for the optimzer.
     """
 
     def __init__(
         self,
-        epochs: int = 20,
-        batch_size: int = 32,
-        device: str = "cuda" if torch.cuda.is_available else "cpu",
+        epochs: int,
+        batch_size: int,
+        device: str,
         optimizer_fn: Callable = torch.optim.Adam,
-        optimizer_kwargs: dict = {"lr": 1e-3},
+        optimizer_kwargs: Optional[dict] = {"lr": 1e-3},
     ) -> None:
-        self.epochs = epochs
-        self.batch_size = batch_size
+        self.epochs = int(epochs)
+        self.batch_size = int(batch_size)
         self.device = device
         self.optimizer_fn = optimizer_fn
         self.optimizer_kwargs = optimizer_kwargs
-        self.epoch_test_losses: List[float] = []
+
+        assert self.epochs > 0
+        assert self.batch_size > 0
+        assert isinstance(optimizer_fn, Callable)
+        assert isinstance(optimizer_kwargs, dict)
 
 
-class GDTrainer(Trainer):
+class ModelTrainer(Trainer):
+    """A model trainer for binary classification"""
+
     def train(
         self,
-        dataset: torch.utils.data.Dataset,
-        model: torch.nn.Module,
-        test_len: float,
+        model: nn.Module,
+        dataset_train: Dataset,
+        dataset_test: Dataset,  # test or validation
+        save_dir: Union[str, Path] = None,  # directory to save model checkpoints
         pos_weight: Optional[torch.FloatTensor] = None,
-    ):
-
-        test_len = int(len(dataset) * test_len)
-        train_len = len(dataset) - test_len
-        lengths = [train_len, test_len]
-        train, test = torch.utils.data.random_split(dataset, lengths)
+    ) -> None:
+        if save_dir:
+            save_dir: Path = Path(save_dir)
+            if not save_dir.exists():
+                save_dir.mkdir(parents=True)
 
         train_loader = DataLoader(
-            train, batch_size=self.batch_size, shuffle=True, drop_last=True
+            dataset_train,
+            batch_size=self.batch_size,
+            shuffle=True,
+            drop_last=False,
         )
-        test_loader = DataLoader(test, batch_size=self.batch_size, drop_last=True)
+        test_loader = DataLoader(
+            dataset_test,
+            batch_size=self.batch_size,
+            drop_last=False,
+        )
 
-        criterion = torch.nn.BCEWithLogitsLoss(pos_weight=pos_weight)
+        criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
         optim = self.optimizer_fn(model.parameters(), **self.optimizer_kwargs)
 
         best_model = None
         best_acc = 0
         for epoch in range(self.epochs):
-            running_loss = 0
-            num_correct = 0.0
-            num_total = 0.0
+            ###################################################################
+            # train
             model.train()
-
-            for i, (batch_x, _, batch_y) in enumerate(train_loader):
-                batch_size = batch_x.size(0)
-                num_total += batch_size
-
-                batch_x = batch_x.to(self.device)
-                batch_y = batch_y.unsqueeze(1).type(torch.float32).to(self.device)
-
-                batch_out = model(batch_x)
-                batch_loss = criterion(batch_out, batch_y)
-
-                batch_pred = (torch.sigmoid(batch_out) + 0.5).int()
-                num_correct += (batch_pred == batch_y.int()).sum(dim=0).item()
-
-                running_loss += batch_loss.item() * batch_size
-
-                optim.zero_grad()
-                batch_loss.backward()
-                optim.step()
-
-            running_loss /= num_total
-            train_accuracy = (num_correct / num_total) * 100
-
+            total_loss = 0
             num_correct = 0.0
             num_total = 0.0
-            model.eval()
-            for batch_x, _, batch_y in test_loader:
 
-                batch_size = batch_x.size(0)
-                num_total += batch_size
+            for _, (batch_x, _, batch_y) in enumerate(train_loader):
+                # get actual batch size
+                curr_batch_size = batch_x.size(0)
+                num_total += curr_batch_size
+                # get batch input x
                 batch_x = batch_x.to(self.device)
+                # make batch label y a vector
                 batch_y = batch_y.unsqueeze(1).type(torch.float32).to(self.device)
-                batch_out = model(batch_x)
-
+                # forward
+                batch_out = model(batch_x)  # (B, 1)
+                # compute loss
+                batch_loss = criterion(batch_out, batch_y)  # (1, )
+                # get binary prediction {0, 1}
                 batch_pred = (torch.sigmoid(batch_out) + 0.5).int()
+                # count number of correct predictions
+                num_correct += (batch_pred == batch_y.int()).sum(dim=0).item()
+                # accumulate loss
+                total_loss += batch_loss.item() * curr_batch_size
+                # backwards
+                optim.zero_grad()  # reset gradient
+                batch_loss.backward()  # compute gradient
+                optim.step()  # update params
+
+            # get loss for this epoch
+            total_loss /= num_total
+            # get training accuracy for this epoch
+            train_acc = (num_correct / num_total) * 100
+
+            ###################################################################
+            # evaluation
+            model.eval()
+            num_correct = 0.0
+            num_total = 0.0
+
+            for batch_x, _, batch_y in test_loader:
+                # get actual batch size
+                curr_batch_size = batch_x.size(0)
+                num_total += curr_batch_size
+                # get batch input x
+                batch_x = batch_x.to(self.device)
+                # make batch label y a vector
+                batch_y = batch_y.unsqueeze(1).type(torch.float32).to(self.device)
+                # forward / inference
+                batch_out = model(batch_x)
+                # get binary prediction {0, 1}
+                batch_pred = (torch.sigmoid(batch_out) + 0.5).int()
+                # count number of correct predictions
                 num_correct += (batch_pred == batch_y.int()).sum(dim=0).item()
 
-            test_acc = 100 * (num_correct / num_total)
-
-            if best_model is None or test_acc > best_acc:
-                best_acc = test_acc
-                best_model = deepcopy(model.state_dict())
+            # get test accuracy
+            test_acc = (num_correct / num_total) * 100
 
             LOGGER.info(
-                f"[{epoch:04d}]: {running_loss} - train acc: {train_accuracy} - test_acc: {test_acc}"
+                f"[{epoch:03d}]: loss: {round(total_loss, 4)} - train acc: {round(train_acc, 2)} - test acc: {round(test_acc, 2)}"
             )
 
-        model.load_state_dict(best_model)
-        return model
+            if test_acc > best_acc:
+                best_acc = test_acc
+                LOGGER.info(f"[{epoch:03d}]: Best Test Accuracy: {round(best_acc, 3)}")
+
+                if save_dir:
+                    save_path = save_dir / "best.pt"
+                    save_checkpoint(
+                        epoch=epoch,
+                        model=model,
+                        optimizer=optim,
+                        model_kwargs=self.__dict__,
+                        filename=save_path,
+                    )
+                    LOGGER.info(f"[{epoch:03d}]: Best Model Saved: {save_path}")
+
+        return None

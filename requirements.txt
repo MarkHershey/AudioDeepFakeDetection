@@ -1,0 +1,4 @@
+numpy
+matplotlib
+puts==0.0.8
+
