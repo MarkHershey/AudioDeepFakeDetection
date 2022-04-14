@@ -6,6 +6,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
 
+from metrics import compute_roc_auc_eer
 from utils import save_checkpoint
 
 LOGGER = logging.getLogger(__name__)
@@ -118,6 +119,9 @@ class ModelTrainer(Trainer):
             model.eval()
             num_correct = 0.0
             num_total = 0.0
+            # save test label and predictions
+            y_true = []
+            y_pred = []
 
             for batch_x, _, batch_y in test_loader:
                 # get actual batch size
@@ -127,18 +131,24 @@ class ModelTrainer(Trainer):
                 batch_x = batch_x.to(self.device)
                 # make batch label y a vector
                 batch_y = batch_y.unsqueeze(1).type(torch.float32).to(self.device)
+                y_true.append(batch_y.copy().int().cpu())
                 # forward / inference
                 batch_out = model(batch_x)
                 # get binary prediction {0, 1}
                 batch_pred = (torch.sigmoid(batch_out) + 0.5).int()
+                y_pred.append(batch_pred.cpu())
                 # count number of correct predictions
                 num_correct += (batch_pred == batch_y.int()).sum(dim=0).item()
 
             # get test accuracy
             test_acc = (num_correct / num_total) * 100
+            # get auc and eer
+            y_true = torch.cat(y_true, dim=0).numpy()
+            y_pred = torch.cat(y_pred, dim=0).numpy()
+            test_auc, test_eer = compute_roc_auc_eer(y_true, y_pred)
 
             LOGGER.info(
-                f"[{epoch:03d}]: loss: {round(total_loss, 4)} - train acc: {round(train_acc, 2)} - test acc: {round(test_acc, 2)}"
+                f"[{epoch:03d}]: loss: {round(total_loss, 4)} - train acc: {round(train_acc, 2)} - test acc: {round(test_acc, 2)} - test eer : {round(test_eer, 3)}"
             )
 
             if test_acc > best_acc:

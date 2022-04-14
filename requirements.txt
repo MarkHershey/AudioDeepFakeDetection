@@ -1,4 +1,5 @@
 numpy
 matplotlib
+scikit-learn
 puts==0.0.8
 
