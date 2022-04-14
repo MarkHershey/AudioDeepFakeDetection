@@ -113,10 +113,10 @@ def main(experiment_name: str = "debug"):
         amount_to_use=None,
         epochs=50,
         device="cuda:1",
-        batch_size=128,
+        batch_size=256,
         save_dir=save_dir,
     )
 
 
 if __name__ == "__main__":
-    main(experiment_name="in_dist_melgan_exp1")
+    main(experiment_name="in_dist_melgan_exp1.1")

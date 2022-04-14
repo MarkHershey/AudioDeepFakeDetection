@@ -131,12 +131,12 @@ class ModelTrainer(Trainer):
                 batch_x = batch_x.to(self.device)
                 # make batch label y a vector
                 batch_y = batch_y.unsqueeze(1).type(torch.float32).to(self.device)
-                y_true.append(batch_y.copy().int().cpu())
+                y_true.append(batch_y.clone().detach().int().cpu())
                 # forward / inference
                 batch_out = model(batch_x)
                 # get binary prediction {0, 1}
                 batch_pred = (torch.sigmoid(batch_out) + 0.5).int()
-                y_pred.append(batch_pred.cpu())
+                y_pred.append(batch_pred.clone().detach().cpu())
                 # count number of correct predictions
                 num_correct += (batch_pred == batch_y.int()).sum(dim=0).item()
 

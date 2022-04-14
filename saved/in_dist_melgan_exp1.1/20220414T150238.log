@@ -1,0 +1,79 @@
+2022-04-14 15:02:38,511 - INFO - Loading data...
+2022-04-14 15:02:38,647 - INFO - Loading data from /home/markhuang/Data/WaveFake/real...!
+2022-04-14 15:02:38,743 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_melgan...!
+2022-04-14 15:02:38,743 - INFO - Training model on 20960 audio files.
+2022-04-14 15:12:43,684 - INFO - [000]: loss: 0.6937 - train acc: 50.13 - test acc: 50.97 - test eer : 0.087
+2022-04-14 15:12:43,684 - INFO - [000]: Best Test Accuracy: 50.973
+2022-04-14 15:12:46,692 - INFO - [000]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 15:22:48,454 - INFO - [001]: loss: 0.6921 - train acc: 51.97 - test acc: 51.95 - test eer : 0.908
+2022-04-14 15:22:48,454 - INFO - [001]: Best Test Accuracy: 51.947
+2022-04-14 15:22:51,464 - INFO - [001]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 15:32:59,130 - INFO - [002]: loss: 0.6878 - train acc: 55.08 - test acc: 58.66 - test eer : 0.486
+2022-04-14 15:32:59,130 - INFO - [002]: Best Test Accuracy: 58.664
+2022-04-14 15:33:02,138 - INFO - [002]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 15:43:10,235 - INFO - [003]: loss: 0.6714 - train acc: 59.73 - test acc: 62.18 - test eer : 0.36
+2022-04-14 15:43:10,235 - INFO - [003]: Best Test Accuracy: 62.176
+2022-04-14 15:43:13,244 - INFO - [003]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 15:53:21,824 - INFO - [004]: loss: 0.6311 - train acc: 65.16 - test acc: 66.37 - test eer : 0.29
+2022-04-14 15:53:21,824 - INFO - [004]: Best Test Accuracy: 66.374
+2022-04-14 15:53:24,834 - INFO - [004]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 16:03:32,304 - INFO - [005]: loss: 0.563 - train acc: 71.14 - test acc: 73.4 - test eer : 0.219
+2022-04-14 16:03:32,304 - INFO - [005]: Best Test Accuracy: 73.397
+2022-04-14 16:03:35,312 - INFO - [005]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 16:13:37,604 - INFO - [006]: loss: 0.4375 - train acc: 80.28 - test acc: 83.53 - test eer : 0.089
+2022-04-14 16:13:37,605 - INFO - [006]: Best Test Accuracy: 83.531
+2022-04-14 16:13:40,615 - INFO - [006]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 16:23:39,179 - INFO - [007]: loss: 0.2449 - train acc: 90.74 - test acc: 92.63 - test eer : 0.071
+2022-04-14 16:23:39,179 - INFO - [007]: Best Test Accuracy: 92.634
+2022-04-14 16:23:42,189 - INFO - [007]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 16:33:40,834 - INFO - [008]: loss: 0.1197 - train acc: 95.78 - test acc: 95.63 - test eer : 0.022
+2022-04-14 16:33:40,834 - INFO - [008]: Best Test Accuracy: 95.63
+2022-04-14 16:33:43,844 - INFO - [008]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 16:43:49,836 - INFO - [009]: loss: 0.0697 - train acc: 97.65 - test acc: 97.12 - test eer : 0.015
+2022-04-14 16:43:49,836 - INFO - [009]: Best Test Accuracy: 97.118
+2022-04-14 16:43:52,846 - INFO - [009]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 16:54:05,138 - INFO - [010]: loss: 0.046 - train acc: 98.59 - test acc: 98.13 - test eer : 0.027
+2022-04-14 16:54:05,138 - INFO - [010]: Best Test Accuracy: 98.13
+2022-04-14 16:54:08,148 - INFO - [010]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 17:04:20,332 - INFO - [011]: loss: 0.0346 - train acc: 98.9 - test acc: 98.47 - test eer : 0.021
+2022-04-14 17:04:20,333 - INFO - [011]: Best Test Accuracy: 98.473
+2022-04-14 17:04:23,337 - INFO - [011]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 17:14:34,896 - INFO - [012]: loss: 0.0266 - train acc: 99.17 - test acc: 98.84 - test eer : 0.007
+2022-04-14 17:14:34,896 - INFO - [012]: Best Test Accuracy: 98.836
+2022-04-14 17:14:37,906 - INFO - [012]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 17:24:47,146 - INFO - [013]: loss: 0.0197 - train acc: 99.42 - test acc: 98.97 - test eer : 0.006
+2022-04-14 17:24:47,146 - INFO - [013]: Best Test Accuracy: 98.969
+2022-04-14 17:24:50,156 - INFO - [013]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 17:35:02,007 - INFO - [014]: loss: 0.0161 - train acc: 99.54 - test acc: 99.14 - test eer : 0.009
+2022-04-14 17:35:02,008 - INFO - [014]: Best Test Accuracy: 99.141
+2022-04-14 17:35:05,016 - INFO - [014]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 17:45:12,020 - INFO - [015]: loss: 0.0134 - train acc: 99.63 - test acc: 99.26 - test eer : 0.008
+2022-04-14 17:45:12,021 - INFO - [015]: Best Test Accuracy: 99.256
+2022-04-14 17:45:15,030 - INFO - [015]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 17:55:20,549 - INFO - [016]: loss: 0.0106 - train acc: 99.68 - test acc: 99.27 - test eer : 0.005
+2022-04-14 17:55:20,549 - INFO - [016]: Best Test Accuracy: 99.275
+2022-04-14 17:55:23,559 - INFO - [016]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 18:05:26,881 - INFO - [017]: loss: 0.0089 - train acc: 99.72 - test acc: 98.95 - test eer : 0.003
+2022-04-14 18:15:33,228 - INFO - [018]: loss: 0.0068 - train acc: 99.84 - test acc: 99.39 - test eer : 0.005
+2022-04-14 18:15:33,228 - INFO - [018]: Best Test Accuracy: 99.389
+2022-04-14 18:15:36,238 - INFO - [018]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 18:25:41,671 - INFO - [019]: loss: 0.0057 - train acc: 99.82 - test acc: 99.43 - test eer : 0.003
+2022-04-14 18:25:41,672 - INFO - [019]: Best Test Accuracy: 99.427
+2022-04-14 18:25:44,681 - INFO - [019]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 18:35:50,628 - INFO - [020]: loss: 0.0045 - train acc: 99.91 - test acc: 99.35 - test eer : 0.006
+2022-04-14 18:45:55,164 - INFO - [021]: loss: 0.0038 - train acc: 99.92 - test acc: 99.41 - test eer : 0.004
+2022-04-14 18:56:00,117 - INFO - [022]: loss: 0.003 - train acc: 99.94 - test acc: 99.43 - test eer : 0.004
+2022-04-14 19:06:04,018 - INFO - [023]: loss: 0.0025 - train acc: 99.97 - test acc: 99.47 - test eer : 0.002
+2022-04-14 19:06:04,018 - INFO - [023]: Best Test Accuracy: 99.466
+2022-04-14 19:06:07,028 - INFO - [023]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 19:16:10,278 - INFO - [024]: loss: 0.002 - train acc: 99.98 - test acc: 99.5 - test eer : 0.005
+2022-04-14 19:16:10,278 - INFO - [024]: Best Test Accuracy: 99.504
+2022-04-14 19:16:13,287 - INFO - [024]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 19:26:17,581 - INFO - [025]: loss: 0.0016 - train acc: 99.99 - test acc: 99.39 - test eer : 0.002
+2022-04-14 19:36:24,823 - INFO - [026]: loss: 0.0013 - train acc: 99.99 - test acc: 99.48 - test eer : 0.002
+2022-04-14 19:46:29,263 - INFO - [027]: loss: 0.0011 - train acc: 99.99 - test acc: 99.43 - test eer : 0.002
+2022-04-14 19:56:34,588 - INFO - [028]: loss: 0.0009 - train acc: 100.0 - test acc: 99.52 - test eer : 0.002
+2022-04-14 19:56:34,588 - INFO - [028]: Best Test Accuracy: 99.523
+2022-04-14 19:56:37,598 - INFO - [028]: Best Model Saved: saved/in_dist_melgan_exp1.1/best.pt
+2022-04-14 20:06:43,501 - INFO - [029]: loss: 0.0008 - train acc: 99.99 - test acc: 99.43 - test eer : 0.002
+2022-04-14 20:16:55,647 - INFO - [030]: loss: 0.0007 - train acc: 100.0 - test acc: 99.5 - test eer : 0.002
