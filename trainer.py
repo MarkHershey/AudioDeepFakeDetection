@@ -142,9 +142,12 @@ class ModelTrainer(Trainer):
 
             # get test accuracy
             test_acc = (num_correct / num_total) * 100
-            # get auc and eer
+            # get all labels and predictions
             y_true = torch.cat(y_true, dim=0).numpy()
             y_pred = torch.cat(y_pred, dim=0).numpy()
+            # TODO: save predictions
+            ...
+            # get auc and eer
             test_auc, test_eer = compute_roc_auc_eer(y_true, y_pred)
 
             LOGGER.info(

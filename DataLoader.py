@@ -337,7 +337,7 @@ def load_directory_split_train_test(
 if __name__ == "__main__":
     real_dataset_train, real_dataset_test = load_directory_split_train_test(
         path="/home/markhh/Documents/DeepFakeAudioDetection/LJ_Speech",
-        feature_fn=lfcc,
+        feature_fn=None,
         feature_kwargs={},
         test_size=0.2,
         use_double_delta=True,
@@ -349,7 +349,7 @@ if __name__ == "__main__":
 
     fake_dataset_train, fake_dataset_test = load_directory_split_train_test(
         path="/home/markhh/Documents/DeepFakeAudioDetection/WaveFake_generated_audio/ljspeech_waveglow",
-        feature_fn=lfcc,
+        feature_fn=None,
         feature_kwargs={},
         test_size=0.2,
         use_double_delta=True,

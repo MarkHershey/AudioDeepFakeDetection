@@ -2,12 +2,11 @@ import numpy as np
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
-from torch.nn import init
 
 
-class SimpleModel(nn.Module):
+class SimpleLSTM(nn.Module):
     def __init__(self, feat_dim: int, time_dim: int, mid_dim: int, out_dim: int):
-        super(SimpleModel, self).__init__()
+        super(SimpleLSTM, self).__init__()
 
         self.lstm = nn.LSTM(
             input_size=feat_dim,
@@ -44,7 +43,7 @@ class SimpleModel(nn.Module):
 
 
 if __name__ == "__main__":
-    model = SimpleModel(feat_dim=40, time_dim=972, mid_dim=30, out_dim=1)
+    model = SimpleLSTM(feat_dim=40, time_dim=972, mid_dim=30, out_dim=1)
     x = torch.Tensor(np.random.rand(8, 40, 972))
     y = model(x)
     print(y.shape)

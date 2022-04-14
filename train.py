@@ -1,20 +1,22 @@
 """This file is a simple example script training a CNN model on mel spectrograms."""
 import argparse
+import json
 import logging
-from copy import deepcopy
+import warnings
 from pathlib import Path
 from typing import Callable, List, Optional, Union
 
 import torch
 from puts import timestamp_seconds
-from torch.utils.data import ConcatDataset, DataLoader
-from torchaudio.functional import compute_deltas
+from torch.utils.data import ConcatDataset
 
 from DataLoader import lfcc, load_directory_split_train_test, mfcc
-from models.simple import SimpleModel
+from models.cnn import ShallowCNN
+from models.lstm import SimpleLSTM
 from trainer import ModelTrainer
 from utils import set_seed_all
 
+warnings.filterwarnings("ignore")
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.DEBUG)
 
@@ -28,6 +30,8 @@ def init_logger(log_file: Union[Path, str]) -> None:
     formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
     fh.setFormatter(formatter)
     ch.setFormatter(formatter)
+    # clear handlers
+    LOGGER.handlers = []
     # add the handlers to the logger
     LOGGER.addHandler(fh)
     LOGGER.addHandler(ch)
@@ -36,20 +40,93 @@ def init_logger(log_file: Union[Path, str]) -> None:
 
 def train(
     real_dir: Union[Path, str],
-    fake_dir: List[Union[Path, str]],
+    fake_dir: Union[Path, str],
     amount_to_use: int = None,
     epochs: int = 20,
     device: str = "cuda" if torch.cuda.is_available else "cpu",
     batch_size: int = 32,
     save_dir: Union[str, Path] = None,
     test_size: float = 0.2,
+    feature_classname: str = "wave",
+    model_classname: str = "SimpleLSTM",
+    in_distribution: bool = True,
 ) -> None:
+    """
+    Train a model on WaveFake data.
+
+    Args:
+        real_dir:
+            path to LJSpeech dataset directory
+        fake_dir:
+            path to WaveFake dataset directory
+        amount_to_use:
+            amount of data to use (if None, use all) (default: None)
+        epochs:
+            number of epochs to train for (default: 20)
+        device:
+            device to use (default: "cuda" if available)
+        batch_size:
+            batch size (default: 32)
+        save_dir:
+            directory to save model checkpoints to (default: None)
+        test_size:
+            ratio of test set / whole dataset (default: 0.2)
+        feature_classname:
+            classname of feature extractor (possible: "wave", "mfcc", "lfcc")
+        model_classname:
+            classname of model (possible: "SimpleLSTM", "ShallowCNN")
+        in_distribution:
+            whether to use in-distribution data (default: True)
+                - True: use 1:1 real:fake data (split melgan for training and test)
+                - False: use 1:7 real:fake data (use melgan for test only, others for training)
+
+    Returns:
+        None
+    """
+    feature_classname = feature_classname.lower()
+    assert feature_classname in ("wave", "lfcc", "mfcc")
+    assert model_classname in ("SimpleLSTM", "ShallowCNN")
+
+    # get feature transformation function
+    feature_fn = None if feature_classname == "wave" else eval(feature_classname)
+    assert feature_fn in (None, lfcc, mfcc)
+    # get model constructor
+    Model = eval(model_classname)
+    assert Model in (SimpleLSTM, ShallowCNN)
+
+    model_kwargs_map = {
+        "SimpleLSTM": {
+            "wave": {"feat_dim": 40, "time_dim": 972, "mid_dim": 30, "out_dim": 1},
+            "lfcc": {"feat_dim": 40, "time_dim": 972, "mid_dim": 30, "out_dim": 1},
+            "mfcc": {"feat_dim": 40, "time_dim": 972, "mid_dim": 30, "out_dim": 1},
+        },
+        "ShallowCNN": {
+            "wave": {"in_features": 1, "out_dim": 1},
+            "lfcc": {"in_features": 1, "out_dim": 1},
+            "mfcc": {"in_features": 1, "out_dim": 1},
+        },
+    }
+
+    model_kwargs: dict = model_kwargs_map.get(model_classname).get(feature_classname)
+
+    LOGGER.info(f"Training model: {model_classname}")
+    LOGGER.info(f"Input feature : {feature_classname}")
+    LOGGER.info(f"Model kwargs  : {json.dumps(model_kwargs, indent=2)}")
+
+    ###########################################################################
+
+    real_dir = Path(real_dir)
+    fake_dir = Path(fake_dir)
+    assert real_dir.is_dir()
+    assert fake_dir.is_dir()
+    melgan_dir = fake_dir / "ljspeech_melgan"
+    assert melgan_dir.is_dir()
 
     LOGGER.info("Loading data...")
 
     real_dataset_train, real_dataset_test = load_directory_split_train_test(
         path=real_dir,
-        feature_fn=lfcc,
+        feature_fn=feature_fn,
         feature_kwargs={},
         test_size=test_size,
         use_double_delta=True,
@@ -59,9 +136,9 @@ def train(
         amount_to_use=amount_to_use,
     )
 
-    fake_dataset_train, fake_dataset_test = load_directory_split_train_test(
-        path=fake_dir,
-        feature_fn=lfcc,
+    fake_melgan_train, fake_melgan_test = load_directory_split_train_test(
+        path=melgan_dir,
+        feature_fn=feature_fn,
         feature_kwargs={},
         test_size=test_size,
         use_double_delta=True,
@@ -71,15 +148,51 @@ def train(
         amount_to_use=amount_to_use,
     )
 
-    dataset_train = ConcatDataset([real_dataset_train, fake_dataset_train])
-    dataset_test = ConcatDataset([real_dataset_test, fake_dataset_test])
+    dataset_train, dataset_test = None, None
+    if in_distribution:
+        # ljspeech (real) and melgan (fake) are split into train and test
+        dataset_train = ConcatDataset([real_dataset_train, fake_melgan_train])
+        dataset_test = ConcatDataset([real_dataset_test, fake_melgan_test])
+        pos_weight = len(real_dataset_train) / len(fake_melgan_train)
+    else:
+        fake_dirs = list(fake_dir.glob("ljspeech_*"))
+        assert len(fake_dirs) == 7
+        # remove melgan from training data
+        fake_dirs.remove(melgan_dir)
+        # create datasets for each fake directory
+        fake_dataset_train = list(
+            map(
+                lambda _dir: load_directory_split_train_test(
+                    path=_dir,
+                    feature_fn=feature_fn,
+                    feature_kwargs={},
+                    test_size=0.01,
+                    use_double_delta=True,
+                    phone_call=False,
+                    pad=True,
+                    label=0,
+                    amount_to_use=amount_to_use,
+                )[0],
+                fake_dirs,
+            )
+        )
+        # all fake audio (except melgan) are used for training
+        fake_dataset_train = ConcatDataset(fake_dataset_train)
+        pos_weight = len(real_dataset_train) / len(fake_dataset_train)
+        # melgan is used for testing only
+        dataset_train = ConcatDataset([real_dataset_train, fake_dataset_train])
+        dataset_test = ConcatDataset([real_dataset_test, fake_melgan_test])
+
+    ###########################################################################
+
     LOGGER.info(f"Training model on {len(dataset_train)} audio files.")
+    LOGGER.info(f"Testing model on  {len(dataset_test)} audio files.")
+    LOGGER.info(f"Train/Test ratio: {len(dataset_train) / len(dataset_test)}")
+    LOGGER.info(f"Real/Fake ratio in training: {round(pos_weight, 3)} (pos_weight)")
 
-    pos_weight = torch.Tensor([len(real_dataset_train) / len(fake_dataset_train)]).to(
-        device
-    )
+    pos_weight = torch.Tensor([pos_weight]).to(device)
 
-    model = SimpleModel(feat_dim=40, time_dim=972, mid_dim=30, out_dim=1).to(device)
+    model = Model(**model_kwargs).to(device)
 
     ModelTrainer(
         batch_size=batch_size,
@@ -98,25 +211,79 @@ def train(
     )
 
 
-def main(experiment_name: str = "debug"):
+def experiment(
+    name: str,
+    seed: int,
+    epochs: int,
+    batch_size: int,
+    feature_classname: str,
+    model_classname: str,
+    in_distribution: bool,
+    real_dir="/home/markhuang/Data/WaveFake/real",
+    fake_dir="/home/markhuang/Data/WaveFake/fake",
+    amount_to_use=None,
+):
 
     root_save_dir = Path("saved")
-    save_dir = root_save_dir / experiment_name
+    save_dir = root_save_dir / name
     save_dir.mkdir(parents=True, exist_ok=True)
     log_file = save_dir / f"{timestamp_seconds()}.log"
 
-    set_seed_all(42)
+    set_seed_all(seed)
     init_logger(log_file)
+
     train(
-        real_dir="/home/markhuang/Data/WaveFake/real",
-        fake_dir="/home/markhuang/Data/WaveFake/fake/ljspeech_melgan",
-        amount_to_use=None,
-        epochs=50,
-        device="cuda:1",
-        batch_size=256,
+        real_dir=real_dir,
+        fake_dir=fake_dir,
+        amount_to_use=amount_to_use,
+        epochs=epochs,
+        device="cuda",
+        batch_size=batch_size,
         save_dir=save_dir,
+        feature_classname=feature_classname,
+        model_classname=model_classname,
+        in_distribution=in_distribution,
     )
 
 
+def debug():
+    experiment(
+        name="debug",
+        seed=0,
+        epochs=5,
+        batch_size=16,
+        feature_classname="lfcc",
+        model_classname="ShallowCNN",
+        in_distribution=True,
+        real_dir="/home/markhh/Documents/DeepFakeAudioDetection/LJ_Speech",
+        fake_dir="/home/markhh/Documents/DeepFakeAudioDetection/WaveFake_generated_audio",
+        amount_to_use=200,
+    )
+
+
+def main():
+    for model_classname in ("SimpleLSTM", "ShallowCNN"):
+        for feature_classname in ("lfcc", "mfcc"):
+            for in_distribution in (True, False):
+                exp_setup = "I" if in_distribution else "O"
+                exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
+                try:
+                    print(f">>>>> Starting experiment: {exp_name}")
+                    experiment(
+                        name=exp_name,
+                        seed=0,
+                        epochs=50,
+                        batch_size=512,
+                        feature_classname=feature_classname,
+                        model_classname=model_classname,
+                        in_distribution=in_distribution,
+                    )
+                    print(f">>>>> Experiment Done: {exp_name}\n\n")
+                except Exception as e:
+                    print(f">>>>> Experiment Failed: {exp_name}\n\n")
+                    LOGGER.exception(e)
+
+
 if __name__ == "__main__":
-    main(experiment_name="in_dist_melgan_exp1.1")
+    # debug()
+    main()

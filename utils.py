@@ -63,3 +63,7 @@ def save_checkpoint(epoch, model, optimizer, model_kwargs, filename):
     }
     time.sleep(3)
     torch.save(state, filename)
+
+
+def save_pred():
+    ...
