@@ -2,12 +2,13 @@ import logging
 from pathlib import Path
 from typing import Callable, Optional, Union
 
+import numpy as np
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
 
 from metrics import compute_roc_auc_eer
-from utils import save_checkpoint
+from utils import save_checkpoint, save_pred
 
 LOGGER = logging.getLogger(__name__)
 
@@ -143,10 +144,8 @@ class ModelTrainer(Trainer):
             # get test accuracy
             test_acc = (num_correct / num_total) * 100
             # get all labels and predictions
-            y_true = torch.cat(y_true, dim=0).numpy()
-            y_pred = torch.cat(y_pred, dim=0).numpy()
-            # TODO: save predictions
-            ...
+            y_true: np.ndarray = torch.cat(y_true, dim=0).numpy()
+            y_pred: np.ndarray = torch.cat(y_pred, dim=0).numpy()
             # get auc and eer
             test_auc, test_eer = compute_roc_auc_eer(y_true, y_pred)
 
@@ -159,6 +158,7 @@ class ModelTrainer(Trainer):
                 LOGGER.info(f"[{epoch:03d}]: Best Test Accuracy: {round(best_acc, 3)}")
 
                 if save_dir:
+                    # save model checkpoint
                     save_path = save_dir / "best.pt"
                     save_checkpoint(
                         epoch=epoch,
@@ -168,5 +168,9 @@ class ModelTrainer(Trainer):
                         filename=save_path,
                     )
                     LOGGER.info(f"[{epoch:03d}]: Best Model Saved: {save_path}")
+                    # save labels and predictions
+                    save_path = save_dir / "best_pred.json"
+                    save_pred(y_true, y_pred, save_path)
+                    LOGGER.info(f"[{epoch:03d}]: Prediction Saved: {save_path}")
 
         return None

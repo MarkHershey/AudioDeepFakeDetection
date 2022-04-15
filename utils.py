@@ -1,3 +1,4 @@
+import json
 import os
 import random
 import time
@@ -54,7 +55,7 @@ def set_benchmark_mode() -> None:
     return None
 
 
-def save_checkpoint(epoch, model, optimizer, model_kwargs, filename):
+def save_checkpoint(epoch, model, optimizer, model_kwargs, filename: Union[str, Path]):
     state = {
         "epoch": epoch,
         "state_dict": model.state_dict(),
@@ -65,5 +66,12 @@ def save_checkpoint(epoch, model, optimizer, model_kwargs, filename):
     torch.save(state, filename)
 
 
-def save_pred():
-    ...
+def save_pred(y_true: np.ndarray, y_pred: np.ndarray, filename: Union[str, Path]):
+    pred_to_save = {
+        "y_true": np.squeeze(y_true).tolist(),
+        "y_pred": np.squeeze(y_pred).tolist(),
+    }
+    with filename.open(mode="w") as f:
+        json.dump(pred_to_save, f)
+        f.close()
+    return None

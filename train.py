@@ -1,4 +1,3 @@
-"""This file is a simple example script training a CNN model on mel spectrograms."""
 import argparse
 import json
 import logging
@@ -120,7 +119,9 @@ def train(
     assert real_dir.is_dir()
     assert fake_dir.is_dir()
     melgan_dir = fake_dir / "ljspeech_melgan"
+    melganLarge_dir = fake_dir / "ljspeech_melgan_large"
     assert melgan_dir.is_dir()
+    assert melganLarge_dir.is_dir()
 
     LOGGER.info("Loading data...")
 
@@ -199,7 +200,7 @@ def train(
         epochs=epochs,
         device=device,
         optimizer_kwargs={
-            "lr": 0.0001,
+            "lr": 0.0005,
             "weight_decay": 0.0001,
         },
     ).train(
@@ -253,7 +254,7 @@ def debug():
         epochs=5,
         batch_size=16,
         feature_classname="lfcc",
-        model_classname="ShallowCNN",
+        model_classname="SimpleLSTM",
         in_distribution=True,
         real_dir="/home/markhh/Documents/DeepFakeAudioDetection/LJ_Speech",
         fake_dir="/home/markhh/Documents/DeepFakeAudioDetection/WaveFake_generated_audio",
@@ -262,9 +263,9 @@ def debug():
 
 
 def main():
-    for model_classname in ("SimpleLSTM", "ShallowCNN"):
+    for model_classname in ("ShallowCNN", "SimpleLSTM"):
         for feature_classname in ("lfcc", "mfcc"):
-            for in_distribution in (True, False):
+            for in_distribution in [True]:
                 exp_setup = "I" if in_distribution else "O"
                 exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
                 try:
@@ -272,7 +273,7 @@ def main():
                     experiment(
                         name=exp_name,
                         seed=0,
-                        epochs=50,
+                        epochs=20,
                         batch_size=512,
                         feature_classname=feature_classname,
                         model_classname=model_classname,
