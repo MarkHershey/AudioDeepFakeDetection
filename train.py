@@ -11,7 +11,7 @@ from torch.utils.data import ConcatDataset
 
 from DataLoader import lfcc, load_directory_split_train_test, mfcc
 from models.cnn import ShallowCNN
-from models.lstm import SimpleLSTM
+from models.lstm import SimpleLSTM, WaveLSTM
 from trainer import ModelTrainer
 from utils import set_seed_all
 
@@ -73,7 +73,7 @@ def train(
         feature_classname:
             classname of feature extractor (possible: "wave", "mfcc", "lfcc")
         model_classname:
-            classname of model (possible: "SimpleLSTM", "ShallowCNN")
+            classname of model (possible: "SimpleLSTM", "ShallowCNN", "WaveLSTM)
         in_distribution:
             whether to use in-distribution data (default: True)
                 - True: use 1:1 real:fake data (split melgan for training and test)
@@ -84,29 +84,34 @@ def train(
     """
     feature_classname = feature_classname.lower()
     assert feature_classname in ("wave", "lfcc", "mfcc")
-    assert model_classname in ("SimpleLSTM", "ShallowCNN")
+    assert model_classname in ("SimpleLSTM", "ShallowCNN", "WaveLSTM")
 
     # get feature transformation function
     feature_fn = None if feature_classname == "wave" else eval(feature_classname)
     assert feature_fn in (None, lfcc, mfcc)
     # get model constructor
     Model = eval(model_classname)
-    assert Model in (SimpleLSTM, ShallowCNN)
+    assert Model in (SimpleLSTM, ShallowCNN, WaveLSTM)
 
     model_kwargs_map = {
         "SimpleLSTM": {
-            "wave": {"feat_dim": 40, "time_dim": 972, "mid_dim": 30, "out_dim": 1},
             "lfcc": {"feat_dim": 40, "time_dim": 972, "mid_dim": 30, "out_dim": 1},
             "mfcc": {"feat_dim": 40, "time_dim": 972, "mid_dim": 30, "out_dim": 1},
         },
         "ShallowCNN": {
-            "wave": {"in_features": 1, "out_dim": 1},
             "lfcc": {"in_features": 1, "out_dim": 1},
             "mfcc": {"in_features": 1, "out_dim": 1},
+        },
+        "WaveLSTM": {
+            "wave": {"feat_dim": 64600, "time_dim": 1000, "mid_dim": 30, "out_dim": 1}
         },
     }
 
     model_kwargs: dict = model_kwargs_map.get(model_classname).get(feature_classname)
+    if model_kwargs is None:
+        raise ValueError(
+            f"model_kwargs not found for {model_classname} and {feature_classname}"
+        )
 
     LOGGER.info(f"Training model: {model_classname}")
     LOGGER.info(f"Input feature : {feature_classname}")
@@ -223,6 +228,7 @@ def experiment(
     real_dir="/home/markhuang/Data/WaveFake/real",
     fake_dir="/home/markhuang/Data/WaveFake/fake",
     amount_to_use=None,
+    device="cuda",
 ):
 
     root_save_dir = Path("saved")
@@ -238,7 +244,7 @@ def experiment(
         fake_dir=fake_dir,
         amount_to_use=amount_to_use,
         epochs=epochs,
-        device="cuda",
+        device=device,
         batch_size=batch_size,
         save_dir=save_dir,
         feature_classname=feature_classname,
@@ -263,7 +269,7 @@ def debug():
 
 
 def main():
-    for model_classname in ("ShallowCNN", "SimpleLSTM"):
+    for model_classname in ("SimpleLSTM", "ShallowCNN"):
         for feature_classname in ("lfcc", "mfcc"):
             for in_distribution in [True]:
                 exp_setup = "I" if in_distribution else "O"
@@ -272,12 +278,35 @@ def main():
                     print(f">>>>> Starting experiment: {exp_name}")
                     experiment(
                         name=exp_name,
-                        seed=0,
+                        seed=42,
                         epochs=20,
                         batch_size=512,
                         feature_classname=feature_classname,
                         model_classname=model_classname,
                         in_distribution=in_distribution,
+                        device="cuda:1",
+                    )
+                    print(f">>>>> Experiment Done: {exp_name}\n\n")
+                except Exception as e:
+                    print(f">>>>> Experiment Failed: {exp_name}\n\n")
+                    LOGGER.exception(e)
+
+    for model_classname in ["WaveLSTM"]:
+        for feature_classname in ["wave"]:
+            for in_distribution in [True]:
+                exp_setup = "I" if in_distribution else "O"
+                exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
+                try:
+                    print(f">>>>> Starting experiment: {exp_name}")
+                    experiment(
+                        name=exp_name,
+                        seed=42,
+                        epochs=20,
+                        batch_size=512,
+                        feature_classname=feature_classname,
+                        model_classname=model_classname,
+                        in_distribution=in_distribution,
+                        device="cuda:1",
                     )
                     print(f">>>>> Experiment Done: {exp_name}\n\n")
                 except Exception as e:

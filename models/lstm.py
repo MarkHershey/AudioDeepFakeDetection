@@ -89,8 +89,10 @@ if __name__ == "__main__":
     x = torch.Tensor(np.random.rand(8, 40, 972))
     y = model(x)
     print(y.shape)
+    print(y)
 
     model = WaveLSTM(feat_dim=64600, time_dim=1000, mid_dim=30, out_dim=1)
     x = torch.Tensor(np.random.rand(8, 64600))
     y = model(x)
     print(y.shape)
+    print(y)
