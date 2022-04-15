@@ -1,0 +1,133 @@
+2022-04-15 03:12:42,138 - INFO - Training model: SimpleLSTM
+2022-04-15 03:12:42,138 - INFO - Input feature : lfcc
+2022-04-15 03:12:42,138 - INFO - Model kwargs  : {
+  "feat_dim": 40,
+  "time_dim": 972,
+  "mid_dim": 30,
+  "out_dim": 1
+}
+2022-04-15 03:12:42,138 - INFO - Loading data...
+2022-04-15 03:12:42,276 - INFO - Loading data from /home/markhuang/Data/WaveFake/real...!
+2022-04-15 03:12:42,373 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_melgan...!
+2022-04-15 03:12:42,373 - INFO - Training model on 20960 audio files.
+2022-04-15 03:12:42,373 - INFO - Testing model on  5240 audio files.
+2022-04-15 03:12:42,373 - INFO - Train/Test ratio: 4.0
+2022-04-15 03:12:42,373 - INFO - Real/Fake ratio in training: 1.0 (pos_weight)
+2022-04-15 03:22:57,746 - INFO - [000]: loss: 0.6934 - train acc: 49.91 - test acc: 50.84 - test eer : 0.277
+2022-04-15 03:22:57,747 - INFO - [000]: Best Test Accuracy: 50.84
+2022-04-15 03:23:00,757 - INFO - [000]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 03:33:12,916 - INFO - [001]: loss: 0.6926 - train acc: 51.9 - test acc: 54.14 - test eer : 0.42
+2022-04-15 03:33:12,916 - INFO - [001]: Best Test Accuracy: 54.141
+2022-04-15 03:33:15,924 - INFO - [001]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 03:43:27,188 - INFO - [002]: loss: 0.691 - train acc: 55.26 - test acc: 57.92 - test eer : 0.566
+2022-04-15 03:43:27,188 - INFO - [002]: Best Test Accuracy: 57.92
+2022-04-15 03:43:30,198 - INFO - [002]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 03:53:42,885 - INFO - [003]: loss: 0.686 - train acc: 58.61 - test acc: 60.9 - test eer : 0.47
+2022-04-15 03:53:42,885 - INFO - [003]: Best Test Accuracy: 60.897
+2022-04-15 03:53:45,896 - INFO - [003]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 04:03:57,480 - INFO - [004]: loss: 0.671 - train acc: 61.99 - test acc: 64.05 - test eer : 0.52
+2022-04-15 04:03:57,480 - INFO - [004]: Best Test Accuracy: 64.046
+2022-04-15 04:04:00,488 - INFO - [004]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 04:14:13,368 - INFO - [005]: loss: 0.6414 - train acc: 66.2 - test acc: 69.47 - test eer : 0.267
+2022-04-15 04:14:13,368 - INFO - [005]: Best Test Accuracy: 69.466
+2022-04-15 04:14:16,376 - INFO - [005]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 04:24:28,196 - INFO - [006]: loss: 0.5873 - train acc: 72.75 - test acc: 74.01 - test eer : 0.187
+2022-04-15 04:24:28,196 - INFO - [006]: Best Test Accuracy: 74.008
+2022-04-15 04:24:31,207 - INFO - [006]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 04:34:42,830 - INFO - [007]: loss: 0.4998 - train acc: 78.72 - test acc: 79.41 - test eer : 0.112
+2022-04-15 04:34:42,830 - INFO - [007]: Best Test Accuracy: 79.408
+2022-04-15 04:34:45,839 - INFO - [007]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 04:44:58,488 - INFO - [008]: loss: 0.3904 - train acc: 84.53 - test acc: 86.68 - test eer : 0.165
+2022-04-15 04:44:58,488 - INFO - [008]: Best Test Accuracy: 86.679
+2022-04-15 04:45:01,499 - INFO - [008]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 04:55:13,531 - INFO - [009]: loss: 0.2917 - train acc: 88.93 - test acc: 90.02 - test eer : 0.077
+2022-04-15 04:55:13,531 - INFO - [009]: Best Test Accuracy: 90.019
+2022-04-15 04:55:16,537 - INFO - [009]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 05:05:29,647 - INFO - [010]: loss: 0.2144 - train acc: 92.02 - test acc: 91.66 - test eer : 0.046
+2022-04-15 05:05:29,647 - INFO - [010]: Best Test Accuracy: 91.66
+2022-04-15 05:05:32,657 - INFO - [010]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 05:15:45,207 - INFO - [011]: loss: 0.1646 - train acc: 93.63 - test acc: 93.11 - test eer : 0.034
+2022-04-15 05:15:45,207 - INFO - [011]: Best Test Accuracy: 93.111
+2022-04-15 05:15:48,218 - INFO - [011]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 05:25:59,840 - INFO - [012]: loss: 0.1277 - train acc: 95.24 - test acc: 94.68 - test eer : 0.044
+2022-04-15 05:25:59,840 - INFO - [012]: Best Test Accuracy: 94.676
+2022-04-15 05:26:02,850 - INFO - [012]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 05:36:15,187 - INFO - [013]: loss: 0.1028 - train acc: 96.14 - test acc: 95.36 - test eer : 0.029
+2022-04-15 05:36:15,187 - INFO - [013]: Best Test Accuracy: 95.363
+2022-04-15 05:36:18,196 - INFO - [013]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 05:46:29,616 - INFO - [014]: loss: 0.083 - train acc: 96.98 - test acc: 96.09 - test eer : 0.032
+2022-04-15 05:46:29,616 - INFO - [014]: Best Test Accuracy: 96.088
+2022-04-15 05:46:32,626 - INFO - [014]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 05:56:45,264 - INFO - [015]: loss: 0.0697 - train acc: 97.56 - test acc: 96.34 - test eer : 0.018
+2022-04-15 05:56:45,264 - INFO - [015]: Best Test Accuracy: 96.336
+2022-04-15 05:56:48,274 - INFO - [015]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 06:06:59,947 - INFO - [016]: loss: 0.0581 - train acc: 98.04 - test acc: 96.72 - test eer : 0.016
+2022-04-15 06:06:59,947 - INFO - [016]: Best Test Accuracy: 96.718
+2022-04-15 06:07:02,957 - INFO - [016]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 06:17:14,158 - INFO - [017]: loss: 0.0497 - train acc: 98.33 - test acc: 97.14 - test eer : 0.016
+2022-04-15 06:17:14,158 - INFO - [017]: Best Test Accuracy: 97.137
+2022-04-15 06:17:17,168 - INFO - [017]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 06:27:29,293 - INFO - [018]: loss: 0.0415 - train acc: 98.63 - test acc: 97.23 - test eer : 0.009
+2022-04-15 06:27:29,293 - INFO - [018]: Best Test Accuracy: 97.233
+2022-04-15 06:27:32,303 - INFO - [018]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 06:37:44,242 - INFO - [019]: loss: 0.0362 - train acc: 98.79 - test acc: 97.63 - test eer : 0.011
+2022-04-15 06:37:44,242 - INFO - [019]: Best Test Accuracy: 97.634
+2022-04-15 06:37:47,253 - INFO - [019]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 06:47:59,252 - INFO - [020]: loss: 0.0313 - train acc: 98.96 - test acc: 97.67 - test eer : 0.008
+2022-04-15 06:47:59,252 - INFO - [020]: Best Test Accuracy: 97.672
+2022-04-15 06:48:02,262 - INFO - [020]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 06:58:13,946 - INFO - [021]: loss: 0.0277 - train acc: 99.1 - test acc: 98.11 - test eer : 0.011
+2022-04-15 06:58:13,946 - INFO - [021]: Best Test Accuracy: 98.111
+2022-04-15 06:58:16,956 - INFO - [021]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 07:08:28,871 - INFO - [022]: loss: 0.0235 - train acc: 99.27 - test acc: 98.26 - test eer : 0.012
+2022-04-15 07:08:28,871 - INFO - [022]: Best Test Accuracy: 98.263
+2022-04-15 07:08:31,880 - INFO - [022]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 07:18:43,566 - INFO - [023]: loss: 0.0199 - train acc: 99.37 - test acc: 98.38 - test eer : 0.012
+2022-04-15 07:18:43,566 - INFO - [023]: Best Test Accuracy: 98.378
+2022-04-15 07:18:46,576 - INFO - [023]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 07:28:58,091 - INFO - [024]: loss: 0.0174 - train acc: 99.45 - test acc: 98.44 - test eer : 0.009
+2022-04-15 07:28:58,091 - INFO - [024]: Best Test Accuracy: 98.435
+2022-04-15 07:29:01,103 - INFO - [024]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 07:39:12,994 - INFO - [025]: loss: 0.0156 - train acc: 99.55 - test acc: 98.34 - test eer : 0.006
+2022-04-15 07:49:23,155 - INFO - [026]: loss: 0.0133 - train acc: 99.62 - test acc: 98.8 - test eer : 0.012
+2022-04-15 07:49:23,155 - INFO - [026]: Best Test Accuracy: 98.798
+2022-04-15 07:49:26,165 - INFO - [026]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 07:59:37,975 - INFO - [027]: loss: 0.0121 - train acc: 99.62 - test acc: 98.74 - test eer : 0.009
+2022-04-15 08:09:47,258 - INFO - [028]: loss: 0.0102 - train acc: 99.74 - test acc: 98.74 - test eer : 0.008
+2022-04-15 08:19:55,371 - INFO - [029]: loss: 0.0089 - train acc: 99.79 - test acc: 98.93 - test eer : 0.008
+2022-04-15 08:19:55,371 - INFO - [029]: Best Test Accuracy: 98.931
+2022-04-15 08:19:58,382 - INFO - [029]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 08:30:05,819 - INFO - [030]: loss: 0.0079 - train acc: 99.84 - test acc: 98.99 - test eer : 0.008
+2022-04-15 08:30:05,819 - INFO - [030]: Best Test Accuracy: 98.989
+2022-04-15 08:30:08,829 - INFO - [030]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 08:40:14,012 - INFO - [031]: loss: 0.0067 - train acc: 99.84 - test acc: 98.97 - test eer : 0.01
+2022-04-15 08:50:19,327 - INFO - [032]: loss: 0.0059 - train acc: 99.9 - test acc: 99.03 - test eer : 0.005
+2022-04-15 08:50:19,327 - INFO - [032]: Best Test Accuracy: 99.027
+2022-04-15 08:50:22,337 - INFO - [032]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 09:00:27,543 - INFO - [033]: loss: 0.0051 - train acc: 99.88 - test acc: 99.03 - test eer : 0.007
+2022-04-15 09:10:30,477 - INFO - [034]: loss: 0.0049 - train acc: 99.91 - test acc: 98.97 - test eer : 0.005
+2022-04-15 09:20:35,492 - INFO - [035]: loss: 0.0039 - train acc: 99.94 - test acc: 98.97 - test eer : 0.005
+2022-04-15 09:30:40,326 - INFO - [036]: loss: 0.0036 - train acc: 99.95 - test acc: 98.97 - test eer : 0.005
+2022-04-15 09:40:43,151 - INFO - [037]: loss: 0.0031 - train acc: 99.96 - test acc: 99.1 - test eer : 0.006
+2022-04-15 09:40:43,151 - INFO - [037]: Best Test Accuracy: 99.103
+2022-04-15 09:40:46,162 - INFO - [037]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 09:50:49,840 - INFO - [038]: loss: 0.0027 - train acc: 99.96 - test acc: 99.12 - test eer : 0.006
+2022-04-15 09:50:49,840 - INFO - [038]: Best Test Accuracy: 99.122
+2022-04-15 09:50:52,851 - INFO - [038]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 10:00:54,946 - INFO - [039]: loss: 0.0024 - train acc: 99.97 - test acc: 99.1 - test eer : 0.005
+2022-04-15 10:10:55,192 - INFO - [040]: loss: 0.0021 - train acc: 99.98 - test acc: 99.12 - test eer : 0.005
+2022-04-15 10:20:54,874 - INFO - [041]: loss: 0.0018 - train acc: 99.99 - test acc: 99.14 - test eer : 0.005
+2022-04-15 10:20:54,874 - INFO - [041]: Best Test Accuracy: 99.141
+2022-04-15 10:20:57,884 - INFO - [041]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 10:30:55,846 - INFO - [042]: loss: 0.0016 - train acc: 99.99 - test acc: 99.16 - test eer : 0.005
+2022-04-15 10:30:55,846 - INFO - [042]: Best Test Accuracy: 99.16
+2022-04-15 10:30:58,856 - INFO - [042]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 10:41:01,652 - INFO - [043]: loss: 0.0015 - train acc: 99.98 - test acc: 99.14 - test eer : 0.005
+2022-04-15 10:51:05,758 - INFO - [044]: loss: 0.0014 - train acc: 100.0 - test acc: 99.27 - test eer : 0.007
+2022-04-15 10:51:05,758 - INFO - [044]: Best Test Accuracy: 99.275
+2022-04-15 10:51:08,767 - INFO - [044]: Best Model Saved: saved/SimpleLSTM_lfcc_I/best.pt
+2022-04-15 11:01:12,578 - INFO - [045]: loss: 0.0013 - train acc: 99.99 - test acc: 99.2 - test eer : 0.006
+2022-04-15 11:11:14,377 - INFO - [046]: loss: 0.001 - train acc: 100.0 - test acc: 99.2 - test eer : 0.005
+2022-04-15 11:21:12,316 - INFO - [047]: loss: 0.0009 - train acc: 100.0 - test acc: 99.2 - test eer : 0.005
+2022-04-15 11:31:13,414 - INFO - [048]: loss: 0.0009 - train acc: 100.0 - test acc: 99.2 - test eer : 0.005
+2022-04-15 11:41:17,522 - INFO - [049]: loss: 0.0007 - train acc: 100.0 - test acc: 99.22 - test eer : 0.006
