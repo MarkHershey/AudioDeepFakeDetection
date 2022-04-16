@@ -46,7 +46,8 @@ class WaveLSTM(nn.Module):
     def __init__(self, feat_dim: int, time_dim: int, mid_dim: int, out_dim: int):
         super(WaveLSTM, self).__init__()
 
-        self.fc1 = nn.Linear(in_features=feat_dim, out_features=time_dim)
+        self.fc1 = nn.Linear(in_features=feat_dim, out_features=2000)
+        self.fc2 = nn.Linear(in_features=2000, out_features=time_dim)
 
         self.lstm = nn.LSTM(
             input_size=1,
@@ -68,9 +69,10 @@ class WaveLSTM(nn.Module):
         """
         B = x.size(0)
         x = torch.unsqueeze(x, 1)  # (B, 1, feat_dim)
-        x = self.fc1(x)  # (B, 1, 1000)
+        x = self.fc1(x)  # (B, 1, 2000)
+        x = self.fc2(x)  # (B, 1, time_dim)
 
-        x = x.permute(0, 2, 1)  # (B, 1000, 1)
+        x = x.permute(0, 2, 1)  # (B, time_dim, 1)
 
         lstm_out, _ = self.lstm(x)  # (B, T, C=mid_dim * 2)
 

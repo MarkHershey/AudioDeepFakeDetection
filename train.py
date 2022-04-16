@@ -103,7 +103,7 @@ def train(
             "mfcc": {"in_features": 1, "out_dim": 1},
         },
         "WaveLSTM": {
-            "wave": {"feat_dim": 64600, "time_dim": 1000, "mid_dim": 30, "out_dim": 1}
+            "wave": {"feat_dim": 64600, "time_dim": 500, "mid_dim": 30, "out_dim": 1}
         },
     }
 
@@ -261,8 +261,8 @@ def debug():
         seed=0,
         epochs=5,
         batch_size=16,
-        feature_classname="lfcc",
-        model_classname="SimpleLSTM",
+        feature_classname="wave",
+        model_classname="WaveLSTM",
         in_distribution=True,
         real_dir="/home/markhh/Documents/DeepFakeAudioDetection/LJ_Speech",
         fake_dir="/home/markhh/Documents/DeepFakeAudioDetection/WaveFake_generated_audio",
@@ -271,9 +271,9 @@ def debug():
 
 
 def main():
-    for model_classname in ["SimpleLSTM"]:
-        for feature_classname in ["lfcc"]:
-            for in_distribution in [False]:
+    for model_classname in ["WaveLSTM"]:
+        for feature_classname in ["wave"]:
+            for in_distribution in [True]:
                 exp_setup = "I" if in_distribution else "O"
                 exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
                 try:
@@ -281,7 +281,7 @@ def main():
                     experiment(
                         name=exp_name,
                         seed=42,
-                        epochs=20,
+                        epochs=30,
                         batch_size=256,
                         feature_classname=feature_classname,
                         model_classname=model_classname,
@@ -293,11 +293,9 @@ def main():
                     print(f">>>>> Experiment Failed: {exp_name}\n\n")
                     LOGGER.exception(e)
 
-    return
-
-    for model_classname in ["WaveLSTM"]:
-        for feature_classname in ["wave"]:
-            for in_distribution in [True]:
+    for model_classname in ["ShallowCNN"]:
+        for feature_classname in ["lfcc"]:
+            for in_distribution in [False]:
                 exp_setup = "I" if in_distribution else "O"
                 exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
                 try:
@@ -306,7 +304,7 @@ def main():
                         name=exp_name,
                         seed=42,
                         epochs=20,
-                        batch_size=512,
+                        batch_size=256,
                         feature_classname=feature_classname,
                         model_classname=model_classname,
                         in_distribution=in_distribution,
