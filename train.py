@@ -107,7 +107,7 @@ def train(
             "mfcc": {"in_features": 1, "out_dim": 1},
         },
         "WaveLSTM": {
-            "wave": {"feat_dim": 64600, "time_dim": 1000, "mid_dim": 30, "out_dim": 1}
+            "wave": {"feat_dim": 64600, "time_dim": 500, "mid_dim": 30, "out_dim": 1}
         },
         "MLP" : {
             "mfcc": {"in_dim":80, "out_dim": 1},
@@ -251,6 +251,8 @@ def experiment(
     set_seed_all(seed)
     init_logger(log_file)
 
+    LOGGER.info(f"Batch size: {batch_size}, seed: {seed}, epochs: {epochs}")
+
     train(
         real_dir=real_dir,
         fake_dir=fake_dir,
@@ -271,8 +273,8 @@ def debug():
         seed=0,
         epochs=5,
         batch_size=16,
-        feature_classname="lfcc",
-        model_classname="SimpleLSTM",
+        feature_classname="wave",
+        model_classname="WaveLSTM",
         in_distribution=True,
         real_dir="/home/markhh/Documents/DeepFakeAudioDetection/LJ_Speech",
         fake_dir="/home/markhh/Documents/DeepFakeAudioDetection/WaveFake_generated_audio",
@@ -281,9 +283,30 @@ def debug():
 
 
 def main():
-    # for model_classname in ("SimpleLSTM", "ShallowCNN"):
-    for model_classname in ["MLP"]: 
-        # for feature_classname in ("lfcc", "mfcc"):
+    # for model_classname in ["WaveLSTM"]:
+    for model_classname in ["TSSD"]:
+        for feature_classname in ["wave"]:
+            for in_distribution in [True]:
+                exp_setup = "I" if in_distribution else "O"
+                exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
+                try:
+                    print(f">>>>> Starting experiment: {exp_name}")
+                    experiment(
+                        name=exp_name,
+                        seed=42,
+                        epochs=30,
+                        batch_size=256,
+                        feature_classname=feature_classname,
+                        model_classname=model_classname,
+                        in_distribution=in_distribution,
+                        device="cuda",
+                    )
+                    print(f">>>>> Experiment Done: {exp_name}\n\n")
+                except Exception as e:
+                    print(f">>>>> Experiment Failed: {exp_name}\n\n")
+                    LOGGER.exception(e)
+
+    for model_classname in ["MLP"]:
         for feature_classname in ["mfcc"]:
             for in_distribution in [True]:
                 exp_setup = "I" if in_distribution else "O"
@@ -294,30 +317,7 @@ def main():
                         name=exp_name,
                         seed=42,
                         epochs=20,
-                        batch_size=512,
-                        feature_classname=feature_classname,
-                        model_classname=model_classname,
-                        in_distribution=in_distribution,
-                        device="cuda:1",
-                    )
-                    print(f">>>>> Experiment Done: {exp_name}\n\n")
-                except Exception as e:
-                    print(f">>>>> Experiment Failed: {exp_name}\n\n")
-                    LOGGER.exception(e)
-
-    # for model_classname in ["WaveLSTM"]:
-    for model_classname in ['TSSD']:
-        for feature_classname in ["wave"]:
-            for in_distribution in [True]:
-                exp_setup = "I" if in_distribution else "O"
-                exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
-                try:
-                    print(f">>>>> Starting experiment: {exp_name}")
-                    experiment(
-                        name=exp_name,
-                        seed=42,
-                        epochs=20,
-                        batch_size=512,
+                        batch_size=256,
                         feature_classname=feature_classname,
                         model_classname=model_classname,
                         in_distribution=in_distribution,
