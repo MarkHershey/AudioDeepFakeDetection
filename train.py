@@ -239,6 +239,8 @@ def experiment(
     set_seed_all(seed)
     init_logger(log_file)
 
+    LOGGER.info(f"Batch size: {batch_size}, seed: {seed}, epochs: {epochs}")
+
     train(
         real_dir=real_dir,
         fake_dir=fake_dir,
@@ -269,9 +271,9 @@ def debug():
 
 
 def main():
-    for model_classname in ("SimpleLSTM", "ShallowCNN"):
-        for feature_classname in ("lfcc", "mfcc"):
-            for in_distribution in [True]:
+    for model_classname in ["SimpleLSTM"]:
+        for feature_classname in ["lfcc"]:
+            for in_distribution in [False]:
                 exp_setup = "I" if in_distribution else "O"
                 exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
                 try:
@@ -280,7 +282,7 @@ def main():
                         name=exp_name,
                         seed=42,
                         epochs=20,
-                        batch_size=512,
+                        batch_size=256,
                         feature_classname=feature_classname,
                         model_classname=model_classname,
                         in_distribution=in_distribution,
@@ -290,6 +292,8 @@ def main():
                 except Exception as e:
                     print(f">>>>> Experiment Failed: {exp_name}\n\n")
                     LOGGER.exception(e)
+
+    return
 
     for model_classname in ["WaveLSTM"]:
         for feature_classname in ["wave"]:
