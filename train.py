@@ -88,7 +88,7 @@ def train(
     """
     feature_classname = feature_classname.lower()
     assert feature_classname in ("wave", "lfcc", "mfcc")
-    assert model_classname in ("SimpleLSTM", "ShallowCNN", "WaveLSTM", "MLP")
+    assert model_classname in ("SimpleLSTM", "ShallowCNN", "WaveLSTM", "MLP", "TSSD")
 
     # get feature transformation function
     feature_fn = None if feature_classname == "wave" else eval(feature_classname)
@@ -236,9 +236,9 @@ def experiment(
     model_classname: str,
     in_distribution: bool,
     # real_dir="/home/markhuang/Data/WaveFake/real",
-    real_dir = "C:/Users/Admin/Downloads/LJSpeech-1.1/LJSpeech-1.1",
+    real_dir = "/content/WaveFake-main/LJSpeech-1.1/",
     # fake_dir="/home/markhuang/Data/WaveFake/fake",
-    fake_dir = "C:/Users/Admin/Downloads/generated_audio/generated_audio",
+    fake_dir = "/content/WaveFake-main/generated_audio/",
     amount_to_use=None,
     device="cuda",
 ):
@@ -306,27 +306,27 @@ def main():
                     print(f">>>>> Experiment Failed: {exp_name}\n\n")
                     LOGGER.exception(e)
 
-    for model_classname in ["MLP"]:
-        for feature_classname in ["mfcc"]:
-            for in_distribution in [True]:
-                exp_setup = "I" if in_distribution else "O"
-                exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
-                try:
-                    print(f">>>>> Starting experiment: {exp_name}")
-                    experiment(
-                        name=exp_name,
-                        seed=42,
-                        epochs=20,
-                        batch_size=256,
-                        feature_classname=feature_classname,
-                        model_classname=model_classname,
-                        in_distribution=in_distribution,
-                        device="cuda:1",
-                    )
-                    print(f">>>>> Experiment Done: {exp_name}\n\n")
-                except Exception as e:
-                    print(f">>>>> Experiment Failed: {exp_name}\n\n")
-                    LOGGER.exception(e)
+    # for model_classname in ["MLP"]:
+    #     for feature_classname in ["mfcc"]:
+    #         for in_distribution in [True]:
+    #             exp_setup = "I" if in_distribution else "O"
+    #             exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
+    #             try:
+    #                 print(f">>>>> Starting experiment: {exp_name}")
+    #                 experiment(
+    #                     name=exp_name,
+    #                     seed=42,
+    #                     epochs=20,
+    #                     batch_size=256,
+    #                     feature_classname=feature_classname,
+    #                     model_classname=model_classname,
+    #                     in_distribution=in_distribution,
+    #                     device="cuda",
+    #                 )
+    #                 print(f">>>>> Experiment Done: {exp_name}\n\n")
+    #             except Exception as e:
+    #                 print(f">>>>> Experiment Failed: {exp_name}\n\n")
+    #                 LOGGER.exception(e)
 
 
 if __name__ == "__main__":
