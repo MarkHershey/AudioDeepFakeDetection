@@ -236,9 +236,9 @@ def experiment(
     model_classname: str,
     in_distribution: bool,
     # real_dir="/home/markhuang/Data/WaveFake/real",
-    real_dir = "/content/WaveFake-main/LJSpeech-1.1/",
+    real_dir = "/content/WaveFake-main/LJSpeech-1.1",
     # fake_dir="/home/markhuang/Data/WaveFake/fake",
-    fake_dir = "/content/WaveFake-main/generated_audio/",
+    fake_dir = "/content/WaveFake-main/generated_audio",
     amount_to_use=None,
     device="cuda",
 ):
@@ -306,35 +306,36 @@ def main():
                     print(f">>>>> Experiment Failed: {exp_name}\n\n")
                     LOGGER.exception(e)
 
-    # for model_classname in ["MLP"]:
-    #     for feature_classname in ["mfcc"]:
-    #         for in_distribution in [True]:
-    #             exp_setup = "I" if in_distribution else "O"
-    #             exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
-    #             try:
-    #                 print(f">>>>> Starting experiment: {exp_name}")
-    #                 experiment(
-    #                     name=exp_name,
-    #                     seed=42,
-    #                     epochs=20,
-    #                     batch_size=256,
-    #                     feature_classname=feature_classname,
-    #                     model_classname=model_classname,
-    #                     in_distribution=in_distribution,
-    #                     device="cuda",
-    #                 )
-    #                 print(f">>>>> Experiment Done: {exp_name}\n\n")
-    #             except Exception as e:
-    #                 print(f">>>>> Experiment Failed: {exp_name}\n\n")
-    #                 LOGGER.exception(e)
+    for model_classname in ["MLP"]:
+        for feature_classname in ["mfcc"]:
+            for in_distribution in [True]:
+                exp_setup = "I" if in_distribution else "O"
+                exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
+                try:
+                    print(f">>>>> Starting experiment: {exp_name}")
+                    experiment(
+                        name=exp_name,
+                        seed=42,
+                        epochs=20,
+                        batch_size=256,
+                        feature_classname=feature_classname,
+                        model_classname=model_classname,
+                        in_distribution=in_distribution,
+                        device="cuda",
+                    )
+                    print(f">>>>> Experiment Done: {exp_name}\n\n")
+                except Exception as e:
+                    print(f">>>>> Experiment Failed: {exp_name}\n\n")
+                    LOGGER.exception(e)
 
 
 if __name__ == "__main__":
     # debug()
     # print(torch.cuda.is_available())
     # print(torch.cuda.device_count())
+
     # Reqd for Windows CUDA 
-    os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-    os.environ["CUDA_VISIBLE_DEVICES"]="1"
-    os.environ["CUDA_LAUNCH_BLOCKING"] = '1'
+    # os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+    # os.environ["CUDA_VISIBLE_DEVICES"]="1"
+    # os.environ["CUDA_LAUNCH_BLOCKING"] = '1'
     main()

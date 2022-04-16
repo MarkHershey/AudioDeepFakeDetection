@@ -11,7 +11,7 @@ import numpy as np
 import torch
 import torchaudio
 from torch.utils.data import ConcatDataset, DataLoader, Dataset
-# from torchaudio.functional import apply_codec
+from torchaudio.functional import apply_codec
 
 from module.lfcc import LFCC
 from utils import find_wav_files
