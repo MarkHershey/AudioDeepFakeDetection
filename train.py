@@ -1,4 +1,6 @@
+import os
 import argparse
+from ctypes import c_int
 import json
 import logging
 import warnings
@@ -12,6 +14,8 @@ from torch.utils.data import ConcatDataset
 from DataLoader import lfcc, load_directory_split_train_test, mfcc
 from models.cnn import ShallowCNN
 from models.lstm import SimpleLSTM, WaveLSTM
+from models.mlp import MLP
+from models.tssd import TSSD
 from trainer import ModelTrainer
 from utils import set_seed_all
 
@@ -73,7 +77,7 @@ def train(
         feature_classname:
             classname of feature extractor (possible: "wave", "mfcc", "lfcc")
         model_classname:
-            classname of model (possible: "SimpleLSTM", "ShallowCNN", "WaveLSTM)
+            classname of model (possible: "SimpleLSTM", "ShallowCNN", "WaveLSTM", "MLP")
         in_distribution:
             whether to use in-distribution data (default: True)
                 - True: use 1:1 real:fake data (split melgan for training and test)
@@ -84,14 +88,14 @@ def train(
     """
     feature_classname = feature_classname.lower()
     assert feature_classname in ("wave", "lfcc", "mfcc")
-    assert model_classname in ("SimpleLSTM", "ShallowCNN", "WaveLSTM")
+    assert model_classname in ("SimpleLSTM", "ShallowCNN", "WaveLSTM", "MLP")
 
     # get feature transformation function
     feature_fn = None if feature_classname == "wave" else eval(feature_classname)
     assert feature_fn in (None, lfcc, mfcc)
     # get model constructor
     Model = eval(model_classname)
-    assert Model in (SimpleLSTM, ShallowCNN, WaveLSTM)
+    assert Model in (SimpleLSTM, ShallowCNN, WaveLSTM, MLP, TSSD)
 
     model_kwargs_map = {
         "SimpleLSTM": {
@@ -104,6 +108,12 @@ def train(
         },
         "WaveLSTM": {
             "wave": {"feat_dim": 64600, "time_dim": 1000, "mid_dim": 30, "out_dim": 1}
+        },
+        "MLP" : {
+            "mfcc": {"in_dim":80, "out_dim": 1},
+        },
+        "TSSD": {
+            "wave": {"in_dim": 96000},
         },
     }
 
@@ -225,8 +235,10 @@ def experiment(
     feature_classname: str,
     model_classname: str,
     in_distribution: bool,
-    real_dir="/home/markhuang/Data/WaveFake/real",
-    fake_dir="/home/markhuang/Data/WaveFake/fake",
+    # real_dir="/home/markhuang/Data/WaveFake/real",
+    real_dir = "C:/Users/Admin/Downloads/LJSpeech-1.1/LJSpeech-1.1",
+    # fake_dir="/home/markhuang/Data/WaveFake/fake",
+    fake_dir = "C:/Users/Admin/Downloads/generated_audio/generated_audio",
     amount_to_use=None,
     device="cuda",
 ):
@@ -269,8 +281,10 @@ def debug():
 
 
 def main():
-    for model_classname in ("SimpleLSTM", "ShallowCNN"):
-        for feature_classname in ("lfcc", "mfcc"):
+    # for model_classname in ("SimpleLSTM", "ShallowCNN"):
+    for model_classname in ["MLP"]: 
+        # for feature_classname in ("lfcc", "mfcc"):
+        for feature_classname in ["mfcc"]:
             for in_distribution in [True]:
                 exp_setup = "I" if in_distribution else "O"
                 exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
@@ -291,7 +305,8 @@ def main():
                     print(f">>>>> Experiment Failed: {exp_name}\n\n")
                     LOGGER.exception(e)
 
-    for model_classname in ["WaveLSTM"]:
+    # for model_classname in ["WaveLSTM"]:
+    for model_classname in ['TSSD']:
         for feature_classname in ["wave"]:
             for in_distribution in [True]:
                 exp_setup = "I" if in_distribution else "O"
@@ -316,4 +331,10 @@ def main():
 
 if __name__ == "__main__":
     # debug()
+    # print(torch.cuda.is_available())
+    # print(torch.cuda.device_count())
+    # Reqd for Windows CUDA 
+    os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+    os.environ["CUDA_VISIBLE_DEVICES"]="1"
+    os.environ["CUDA_LAUNCH_BLOCKING"] = '1'
     main()
