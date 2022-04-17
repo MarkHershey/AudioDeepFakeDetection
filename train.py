@@ -1,6 +1,3 @@
-import os
-import argparse
-from ctypes import c_int
 import json
 import logging
 import warnings
@@ -109,11 +106,11 @@ def train(
         "WaveLSTM": {
             "wave": {"feat_dim": 64600, "time_dim": 500, "mid_dim": 30, "out_dim": 1}
         },
-        "MLP" : {
-            "mfcc": {"in_dim":80, "out_dim": 1},
+        "MLP": {
+            "mfcc": {"in_dim": 40 * 972, "out_dim": 1},
         },
         "TSSD": {
-            "wave": {"in_dim": 96000},
+            "wave": {"in_dim": 64600},
         },
     }
 
@@ -235,10 +232,8 @@ def experiment(
     feature_classname: str,
     model_classname: str,
     in_distribution: bool,
-    # real_dir="/home/markhuang/Data/WaveFake/real",
-    real_dir = "/content/WaveFake-main/LJSpeech-1.1",
-    # fake_dir="/home/markhuang/Data/WaveFake/fake",
-    fake_dir = "/content/WaveFake-main/generated_audio",
+    real_dir="/home/markhuang/Data/WaveFake/real",
+    fake_dir="/home/markhuang/Data/WaveFake/fake",
     amount_to_use=None,
     device="cuda",
 ):
@@ -299,7 +294,7 @@ def main():
                         feature_classname=feature_classname,
                         model_classname=model_classname,
                         in_distribution=in_distribution,
-                        device="cuda",
+                        device="cuda:1",
                     )
                     print(f">>>>> Experiment Done: {exp_name}\n\n")
                 except Exception as e:
@@ -321,7 +316,7 @@ def main():
                         feature_classname=feature_classname,
                         model_classname=model_classname,
                         in_distribution=in_distribution,
-                        device="cuda",
+                        device="cuda:1",
                     )
                     print(f">>>>> Experiment Done: {exp_name}\n\n")
                 except Exception as e:
@@ -331,11 +326,4 @@ def main():
 
 if __name__ == "__main__":
     # debug()
-    # print(torch.cuda.is_available())
-    # print(torch.cuda.device_count())
-
-    # Reqd for Windows CUDA 
-    # os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-    # os.environ["CUDA_VISIBLE_DEVICES"]="1"
-    # os.environ["CUDA_LAUNCH_BLOCKING"] = '1'
     main()
