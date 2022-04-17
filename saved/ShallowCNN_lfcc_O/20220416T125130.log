@@ -1,0 +1,64 @@
+2022-04-16 12:51:30,852 - INFO - Batch size: 256, seed: 42, epochs: 20
+2022-04-16 12:51:30,852 - INFO - Training model: ShallowCNN
+2022-04-16 12:51:30,852 - INFO - Input feature : lfcc
+2022-04-16 12:51:30,852 - INFO - Model kwargs  : {
+  "in_features": 1,
+  "out_dim": 1
+}
+2022-04-16 12:51:30,852 - INFO - Loading data...
+2022-04-16 12:51:30,994 - INFO - Loading data from /home/markhuang/Data/WaveFake/real...!
+2022-04-16 12:51:31,091 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_melgan...!
+2022-04-16 12:51:31,191 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_parallel_wavegan...!
+2022-04-16 12:51:31,369 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_hifiGAN...!
+2022-04-16 12:51:31,466 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_waveglow...!
+2022-04-16 12:51:31,565 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_multi_band_melgan...!
+2022-04-16 12:51:31,665 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_full_band_melgan...!
+2022-04-16 12:51:31,888 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_melgan_large...!
+2022-04-16 12:51:31,888 - INFO - Training model on 88294 audio files.
+2022-04-16 12:51:31,888 - INFO - Testing model on  5240 audio files.
+2022-04-16 12:51:31,888 - INFO - Train/Test ratio: 16.85
+2022-04-16 12:51:31,889 - INFO - Real/Fake ratio in training: 0.135 (pos_weight)
+2022-04-16 13:32:30,580 - INFO - [000]: loss: 0.0814 - train acc: 87.95 - test acc: 50.02 - test eer : 0.0
+2022-04-16 13:32:30,580 - INFO - [000]: Best Test Accuracy: 50.019
+2022-04-16 13:32:33,611 - INFO - [000]: Best Model Saved: saved/ShallowCNN_lfcc_O/best.pt
+2022-04-16 13:32:33,615 - INFO - [000]: Prediction Saved: saved/ShallowCNN_lfcc_O/best_pred.json
+2022-04-16 14:12:07,677 - INFO - [001]: loss: 0.0828 - train acc: 88.22 - test acc: 50.15 - test eer : 0.0
+2022-04-16 14:12:07,677 - INFO - [001]: Best Test Accuracy: 50.153
+2022-04-16 14:12:10,809 - INFO - [001]: Best Model Saved: saved/ShallowCNN_lfcc_O/best.pt
+2022-04-16 14:12:10,815 - INFO - [001]: Prediction Saved: saved/ShallowCNN_lfcc_O/best_pred.json
+2022-04-16 14:51:40,679 - INFO - [002]: loss: 0.0749 - train acc: 89.4 - test acc: 50.0 - test eer : 0.0
+2022-04-16 15:30:40,635 - INFO - [003]: loss: 0.0595 - train acc: 89.33 - test acc: 64.79 - test eer : 0.004
+2022-04-16 15:30:40,635 - INFO - [003]: Best Test Accuracy: 64.79
+2022-04-16 15:30:43,766 - INFO - [003]: Best Model Saved: saved/ShallowCNN_lfcc_O/best.pt
+2022-04-16 15:30:43,773 - INFO - [003]: Prediction Saved: saved/ShallowCNN_lfcc_O/best_pred.json
+2022-04-16 16:10:30,587 - INFO - [004]: loss: 0.0728 - train acc: 90.12 - test acc: 50.0 - test eer : 0.0
+2022-04-16 16:50:12,945 - INFO - [005]: loss: 0.0624 - train acc: 89.55 - test acc: 83.57 - test eer : 0.034
+2022-04-16 16:50:12,945 - INFO - [005]: Best Test Accuracy: 83.569
+2022-04-16 16:50:16,108 - INFO - [005]: Best Model Saved: saved/ShallowCNN_lfcc_O/best.pt
+2022-04-16 16:50:16,112 - INFO - [005]: Prediction Saved: saved/ShallowCNN_lfcc_O/best_pred.json
+2022-04-16 17:29:54,807 - INFO - [006]: loss: 0.0186 - train acc: 96.59 - test acc: 90.38 - test eer : 0.092
+2022-04-16 17:29:54,807 - INFO - [006]: Best Test Accuracy: 90.382
+2022-04-16 17:29:57,938 - INFO - [006]: Best Model Saved: saved/ShallowCNN_lfcc_O/best.pt
+2022-04-16 17:29:57,946 - INFO - [006]: Prediction Saved: saved/ShallowCNN_lfcc_O/best_pred.json
+2022-04-16 18:09:43,296 - INFO - [007]: loss: 0.0131 - train acc: 97.8 - test acc: 88.87 - test eer : 0.043
+2022-04-16 18:49:24,488 - INFO - [008]: loss: 0.0081 - train acc: 98.61 - test acc: 87.21 - test eer : 0.236
+2022-04-16 19:29:09,502 - INFO - [009]: loss: 0.0108 - train acc: 98.32 - test acc: 90.76 - test eer : 0.149
+2022-04-16 19:29:09,502 - INFO - [009]: Best Test Accuracy: 90.763
+2022-04-16 19:29:12,633 - INFO - [009]: Best Model Saved: saved/ShallowCNN_lfcc_O/best.pt
+2022-04-16 19:29:12,639 - INFO - [009]: Prediction Saved: saved/ShallowCNN_lfcc_O/best_pred.json
+2022-04-16 20:08:56,034 - INFO - [010]: loss: 0.0064 - train acc: 98.93 - test acc: 92.46 - test eer : 0.057
+2022-04-16 20:08:56,034 - INFO - [010]: Best Test Accuracy: 92.462
+2022-04-16 20:08:59,173 - INFO - [010]: Best Model Saved: saved/ShallowCNN_lfcc_O/best.pt
+2022-04-16 20:08:59,177 - INFO - [010]: Prediction Saved: saved/ShallowCNN_lfcc_O/best_pred.json
+2022-04-16 20:48:41,761 - INFO - [011]: loss: 0.0066 - train acc: 98.99 - test acc: 82.19 - test eer : 0.006
+2022-04-16 21:28:27,547 - INFO - [012]: loss: 0.0048 - train acc: 99.18 - test acc: 92.96 - test eer : 0.037
+2022-04-16 21:28:27,548 - INFO - [012]: Best Test Accuracy: 92.958
+2022-04-16 21:28:30,681 - INFO - [012]: Best Model Saved: saved/ShallowCNN_lfcc_O/best.pt
+2022-04-16 21:28:30,688 - INFO - [012]: Prediction Saved: saved/ShallowCNN_lfcc_O/best_pred.json
+2022-04-16 22:08:27,625 - INFO - [013]: loss: 0.0043 - train acc: 99.28 - test acc: 91.24 - test eer : 0.024
+2022-04-16 22:48:30,626 - INFO - [014]: loss: 0.0049 - train acc: 99.19 - test acc: 86.7 - test eer : 0.253
+2022-04-16 23:26:27,928 - INFO - [015]: loss: 0.0028 - train acc: 99.51 - test acc: 90.46 - test eer : 0.015
+2022-04-17 00:03:02,061 - INFO - [016]: loss: 0.0066 - train acc: 99.03 - test acc: 89.22 - test eer : 0.196
+2022-04-17 00:39:37,473 - INFO - [017]: loss: 0.0026 - train acc: 99.54 - test acc: 92.54 - test eer : 0.106
+2022-04-17 01:16:16,165 - INFO - [018]: loss: 0.0032 - train acc: 99.46 - test acc: 83.15 - test eer : 0.329
+2022-04-17 01:52:54,808 - INFO - [019]: loss: 0.003 - train acc: 99.53 - test acc: 90.5 - test eer : 0.17
