@@ -43,22 +43,24 @@ class SimpleLSTM(nn.Module):
 
 
 class WaveLSTM(nn.Module):
-    def __init__(self, feat_dim: int, time_dim: int, mid_dim: int, out_dim: int):
+    def __init__(self, num_frames: int, input_len: int, hidden_dim: int, out_dim: int):
         super(WaveLSTM, self).__init__()
 
-        self.fc1 = nn.Linear(in_features=feat_dim, out_features=2000)
-        self.fc2 = nn.Linear(in_features=2000, out_features=time_dim)
+        self.num_frames = num_frames
+        self.num_feats = input_len // num_frames
 
         self.lstm = nn.LSTM(
-            input_size=1,
-            hidden_size=mid_dim,
+            input_size=self.num_feats,
+            hidden_size=hidden_dim,
             num_layers=2,
             bidirectional=True,
             batch_first=True,
             dropout=0.01,
         )
-        self.conv = nn.Conv1d(in_channels=mid_dim * 2, out_channels=10, kernel_size=1)
-        self.fc = nn.Linear(in_features=time_dim * 10, out_features=out_dim)
+        self.conv = nn.Conv1d(
+            in_channels=hidden_dim * 2, out_channels=10, kernel_size=1
+        )
+        self.fc = nn.Linear(in_features=self.num_frames * 10, out_features=out_dim)
 
     def forward(self, x: torch.Tensor):
         """
@@ -68,15 +70,11 @@ class WaveLSTM(nn.Module):
             output representation [Tensor] (batch_size, out_dim)
         """
         B = x.size(0)
-        x = torch.unsqueeze(x, 1)  # (B, 1, feat_dim)
-        x = self.fc1(x)  # (B, 1, 2000)
-        x = self.fc2(x)  # (B, 1, time_dim)
+        x = x.reshape(B, self.num_frames, self.num_feats)
 
-        x = x.permute(0, 2, 1)  # (B, time_dim, 1)
+        lstm_out, _ = self.lstm(x)  # (B, T, C=hidden_dim * 2)
 
-        lstm_out, _ = self.lstm(x)  # (B, T, C=mid_dim * 2)
-
-        feat = lstm_out.permute(0, 2, 1)  # (B, C=mid_dim * 2, T)
+        feat = lstm_out.permute(0, 2, 1)  # (B, C=hidden_dim * 2, T)
 
         feat = self.conv(feat)  # (B, C, T)
         feat = F.relu(feat)  # (B, C, T)
@@ -87,13 +85,13 @@ class WaveLSTM(nn.Module):
 
 
 if __name__ == "__main__":
-    model = SimpleLSTM(feat_dim=40, time_dim=972, mid_dim=30, out_dim=1)
-    x = torch.Tensor(np.random.rand(8, 40, 972))
-    y = model(x)
-    print(y.shape)
-    print(y)
+    # model = SimpleLSTM(feat_dim=40, time_dim=972, mid_dim=30, out_dim=1)
+    # x = torch.Tensor(np.random.rand(8, 40, 972))
+    # y = model(x)
+    # print(y.shape)
+    # print(y)
 
-    model = WaveLSTM(feat_dim=64600, time_dim=1000, mid_dim=30, out_dim=1)
+    model = WaveLSTM(num_frames=10, input_len=64600, hidden_dim=30, out_dim=1)
     x = torch.Tensor(np.random.rand(8, 64600))
     y = model(x)
     print(y.shape)

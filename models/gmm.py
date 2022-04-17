@@ -1,11 +1,7 @@
-
 import logging
-from typing import Type
 
-import numpy as np
 import torch
 import torch.distributions as D
-from dfadetect.datasets import TransformDataset
 from torch import nn
 from torch.nn import functional as F
 
@@ -23,10 +19,10 @@ class GMM(nn.Module):
     """
 
     def __init__(
-            self,
-            k: int,
-            data: torch.Tensor,
-            covariance_type: str = "full",
+        self,
+        k: int,
+        data: torch.Tensor,
+        covariance_type: str = "full",
     ) -> None:
         """Initialize the GMM model.
         Args:
@@ -51,10 +47,11 @@ class GMM(nn.Module):
             log_prob (torch.Tensor): Log probabilities of each data point in X. (n_sample, )
         """
         if not self._fitted:
-            raise NotFittedException()
+            raise Exception()
 
-        weighted_log_prob = self._comp.log_prob(X.unsqueeze(
-            1)) + torch.log_softmax(self._mix.logits, dim=-1)
+        weighted_log_prob = self._comp.log_prob(X.unsqueeze(1)) + torch.log_softmax(
+            self._mix.logits, dim=-1
+        )
         return torch.logsumexp(weighted_log_prob, dim=1, keepdim=True)
 
     def load_state_dict(self, *args, **kwargs):
@@ -81,7 +78,8 @@ class GMM(nn.Module):
 
     def _build_distributions(self):
         raise NotImplementedError(
-            "_build_distributions must be implemented by subclass!")
+            "_build_distributions must be implemented by subclass!"
+        )
 
     def _build_distributions(self):
         # create mutlivariate gaussian
@@ -95,7 +93,7 @@ class GMM(nn.Module):
             # we use tril matrix
             self._comp = D.MultivariateNormal(self.loc, scale_tril=cov)
         else:
-            raise UnsupportedCovarinaceType()
+            raise Exception()
 
         # create mixing weights
         self._mix = D.Categorical(F.softmax(self.pi, dim=0))
@@ -103,8 +101,12 @@ class GMM(nn.Module):
     def _initalize(self, data: torch.Tensor):
         # equal prior distribution
         d = data.size(1)
-        pi = torch.full(fill_value=(1. / self.k),
-                        size=[self.k, ])
+        pi = torch.full(
+            fill_value=(1.0 / self.k),
+            size=[
+                self.k,
+            ],
+        )
 
         # draw from Gaussian distribution
         loc = torch.randn(self.k, d)
@@ -113,11 +115,9 @@ class GMM(nn.Module):
 
         # simple covariance matrix
         if self.covariance_type == "full":
-            cov = torch.stack([torch.eye(d)
-                               for _ in range(self.k)])
+            cov = torch.stack([torch.eye(d) for _ in range(self.k)])
         elif self.covariance_type == "diag":
-            cov = torch.stack([torch.ones(d)
-                               for _ in range(self.k)])
+            cov = torch.stack([torch.ones(d) for _ in range(self.k)])
 
         self._initalize_parameters(pi, loc, cov)
         self._build_distributions()

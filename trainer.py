@@ -150,7 +150,7 @@ class ModelTrainer(Trainer):
             test_auc, test_eer = compute_roc_auc_eer(y_true, y_pred)
 
             LOGGER.info(
-                f"[{epoch:03d}]: loss: {round(total_loss, 4)} - train acc: {round(train_acc, 2)} - test acc: {round(test_acc, 2)} - test eer : {round(test_eer, 3)}"
+                f"[{epoch:03d}]: loss: {round(total_loss, 4)} - train acc: {round(train_acc, 2)} - test acc: {round(test_acc, 2)} - test eer : {round(test_eer, 4)}"
             )
 
             if test_acc > best_acc:

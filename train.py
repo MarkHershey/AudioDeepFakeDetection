@@ -12,6 +12,7 @@ from DataLoader import lfcc, load_directory_split_train_test, mfcc
 from models.cnn import ShallowCNN
 from models.lstm import SimpleLSTM, WaveLSTM
 from models.mlp import MLP
+from models.rnn import WaveRNN
 from models.tssd import TSSD
 from trainer import ModelTrainer
 from utils import set_seed_all
@@ -19,6 +20,36 @@ from utils import set_seed_all
 warnings.filterwarnings("ignore")
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.DEBUG)
+
+
+KWARGS_MAP = {
+    "SimpleLSTM": {
+        "lfcc": {"feat_dim": 40, "time_dim": 972, "mid_dim": 30, "out_dim": 1},
+        "mfcc": {"feat_dim": 40, "time_dim": 972, "mid_dim": 30, "out_dim": 1},
+    },
+    "ShallowCNN": {
+        "lfcc": {"in_features": 1, "out_dim": 1},
+        "mfcc": {"in_features": 1, "out_dim": 1},
+    },
+    "MLP": {
+        "lfcc": {"in_dim": 40 * 972, "out_dim": 1},
+        "mfcc": {"in_dim": 40 * 972, "out_dim": 1},
+    },
+    "TSSD": {
+        "wave": {"in_dim": 64600},
+    },
+    "WaveRNN": {
+        "wave": {"num_frames": 10, "input_length": 64600},
+    },
+    "WaveLSTM": {
+        "wave": {
+            "num_frames": 10,
+            "input_len": 64600,
+            "hidden_dim": 30,
+            "out_dim": 1,
+        }
+    },
+}
 
 
 def init_logger(log_file: Union[Path, str]) -> None:
@@ -85,36 +116,23 @@ def train(
     """
     feature_classname = feature_classname.lower()
     assert feature_classname in ("wave", "lfcc", "mfcc")
-    assert model_classname in ("SimpleLSTM", "ShallowCNN", "WaveLSTM", "MLP", "TSSD")
+    assert model_classname in (
+        "SimpleLSTM",
+        "ShallowCNN",
+        "WaveLSTM",
+        "MLP",
+        "TSSD",
+        "WaveRNN",
+    )
 
     # get feature transformation function
     feature_fn = None if feature_classname == "wave" else eval(feature_classname)
     assert feature_fn in (None, lfcc, mfcc)
     # get model constructor
     Model = eval(model_classname)
-    assert Model in (SimpleLSTM, ShallowCNN, WaveLSTM, MLP, TSSD)
+    assert Model in (SimpleLSTM, ShallowCNN, WaveLSTM, MLP, TSSD, WaveRNN)
 
-    model_kwargs_map = {
-        "SimpleLSTM": {
-            "lfcc": {"feat_dim": 40, "time_dim": 972, "mid_dim": 30, "out_dim": 1},
-            "mfcc": {"feat_dim": 40, "time_dim": 972, "mid_dim": 30, "out_dim": 1},
-        },
-        "ShallowCNN": {
-            "lfcc": {"in_features": 1, "out_dim": 1},
-            "mfcc": {"in_features": 1, "out_dim": 1},
-        },
-        "WaveLSTM": {
-            "wave": {"feat_dim": 64600, "time_dim": 500, "mid_dim": 30, "out_dim": 1}
-        },
-        "MLP": {
-            "mfcc": {"in_dim": 40 * 972, "out_dim": 1},
-        },
-        "TSSD": {
-            "wave": {"in_dim": 64600},
-        },
-    }
-
-    model_kwargs: dict = model_kwargs_map.get(model_classname).get(feature_classname)
+    model_kwargs: dict = KWARGS_MAP.get(model_classname).get(feature_classname)
     if model_kwargs is None:
         raise ValueError(
             f"model_kwargs not found for {model_classname} and {feature_classname}"
@@ -263,18 +281,29 @@ def experiment(
 
 
 def debug():
-    experiment(
-        name="debug",
-        seed=0,
-        epochs=5,
-        batch_size=16,
-        feature_classname="wave",
-        model_classname="WaveLSTM",
-        in_distribution=True,
-        real_dir="/home/markhh/Documents/DeepFakeAudioDetection/LJ_Speech",
-        fake_dir="/home/markhh/Documents/DeepFakeAudioDetection/WaveFake_generated_audio",
-        amount_to_use=200,
-    )
+    for model_classname in KWARGS_MAP.keys():
+        for feature_classname in KWARGS_MAP[model_classname].keys():
+            for in_distribution in [True, False]:
+                exp_setup = "I" if in_distribution else "O"
+                exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
+                try:
+                    print(f">>>>> DEBUGGING: {exp_name}")
+                    experiment(
+                        name="debug",
+                        seed=0,
+                        epochs=3,
+                        batch_size=16,
+                        feature_classname=feature_classname,
+                        model_classname=model_classname,
+                        in_distribution=in_distribution,
+                        real_dir="/home/markhh/Documents/DeepFakeAudioDetection/LJ_Speech",
+                        fake_dir="/home/markhh/Documents/DeepFakeAudioDetection/WaveFake_generated_audio",
+                        amount_to_use=160,
+                    )
+                    print(f">>>>> DEBUGGING Done: {exp_name}\n\n")
+                except Exception as e:
+                    print(f">>>>> DEBUGGING Failed: {exp_name}\n\n")
+                    LOGGER.exception(e)
 
 
 def main():
@@ -325,5 +354,5 @@ def main():
 
 
 if __name__ == "__main__":
-    # debug()
-    main()
+    debug()
+    # main()

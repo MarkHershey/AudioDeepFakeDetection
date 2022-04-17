@@ -115,9 +115,9 @@ class AudioDataset(Dataset):
             )
             waveform = apply_codec(waveform, sample_rate, format="gsm")
 
-        audio_path = path
+        audio_path = str(path)
 
-        return waveform, sample_rate, audio_path
+        return waveform, sample_rate, str(audio_path)
 
     def __len__(self) -> int:
         return len(self._paths)
@@ -135,17 +135,17 @@ class PadDataset(Dataset):
         waveform_len = waveform.shape[0]
         if waveform_len >= self.cut:
             if self.label is None:
-                return waveform[: self.cut], sample_rate, audio_path
+                return waveform[: self.cut], sample_rate, str(audio_path)
             else:
-                return waveform[: self.cut], sample_rate, audio_path, self.label
+                return waveform[: self.cut], sample_rate, str(audio_path), self.label
         # need to pad
         num_repeats = int(self.cut / waveform_len) + 1
         padded_waveform = torch.tile(waveform, (1, num_repeats))[:, : self.cut][0]
 
         if self.label is None:
-            return padded_waveform, sample_rate, audio_path
+            return padded_waveform, sample_rate, str(audio_path)
         else:
-            return padded_waveform, sample_rate, audio_path, self.label
+            return padded_waveform, sample_rate, str(audio_path), self.label
 
     def __len__(self):
         return len(self.dataset)
@@ -194,7 +194,7 @@ class TransformDataset(Dataset):
             else:
                 self._transform = self._transform_constructor(**self._transform_kwargs)
 
-        return self._transform(waveform), sample_rate, audio_path, label
+        return self._transform(waveform), sample_rate, str(audio_path), label
 
 
 class DoubleDeltaTransform(torch.nn.Module):
@@ -372,11 +372,10 @@ if __name__ == "__main__":
     for waveform, sample_rate, audio_path, label in dataset_test:
         count += 1
         # print(waveform.shape, sample_rate, audio_path, label)
+        print(count)
         # if count == 50:
         #     break
-        print(count)
-        print(audio_path.name)
-        audio_files.append(audio_path.name)
+        audio_files.append(Path(audio_path).name)
 
     with open("audio_files.txt", "w") as f:
         for audio_file in audio_files:

@@ -1,11 +1,12 @@
 # Utility script to analyze the results of the various models.
 # Created by James Raphael Tiovalen (2022)
 
-import os
 import json
-import matplotlib.pyplot as plt
+import os
+
 import librosa
 import librosa.display
+import matplotlib.pyplot as plt
 
 models = [
     "MLP_mfcc_I",
