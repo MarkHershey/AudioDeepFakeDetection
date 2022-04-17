@@ -1,5 +1,5 @@
 # Utility script to analyze the results of the various models.
-# Created by James Raphael Tiovalen (2021)
+# Created by James Raphael Tiovalen (2022)
 
 import json
 
@@ -17,6 +17,9 @@ models = [
 ]
 
 if __name__ == "__main__":
+    with open("testing_audio_names.txt") as data_filename_file:
+        data_filenames = data_filename_file.readlines()
+
     # By interesting, we mean that some of the models wrongly classified the data point.
     interesting_data_points_results = []
     for dataset_idx in range(5240):
@@ -34,8 +37,9 @@ if __name__ == "__main__":
             wrong_model_indexes = [
                 idx for idx, (i, j) in enumerate(single_data_point_result) if i != j
             ]
+            data_point = data_filenames[dataset_idx].strip()
             interesting_data_points_results.append(
-                (dataset_idx, [models[i] for i in wrong_model_indexes])
+                (data_point, [models[i] for i in wrong_model_indexes])
             )
 
     print(interesting_data_points_results)
