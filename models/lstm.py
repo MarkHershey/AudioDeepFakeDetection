@@ -5,7 +5,14 @@ from torch.nn import functional as F
 
 
 class SimpleLSTM(nn.Module):
-    def __init__(self, feat_dim: int, time_dim: int, mid_dim: int, out_dim: int):
+    def __init__(
+        self,
+        feat_dim: int,
+        time_dim: int,
+        mid_dim: int,
+        out_dim: int,
+        **kwargs,
+    ):
         super(SimpleLSTM, self).__init__()
 
         self.lstm = nn.LSTM(
@@ -43,7 +50,14 @@ class SimpleLSTM(nn.Module):
 
 
 class WaveLSTM(nn.Module):
-    def __init__(self, num_frames: int, input_len: int, hidden_dim: int, out_dim: int):
+    def __init__(
+        self,
+        num_frames: int,
+        input_len: int,
+        hidden_dim: int,
+        out_dim: int,
+        **kwargs,
+    ):
         super(WaveLSTM, self).__init__()
 
         self.num_frames = num_frames

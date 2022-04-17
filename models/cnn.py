@@ -6,7 +6,7 @@ from torch.nn import functional as F
 
 
 class ShallowCNN(nn.Module):
-    def __init__(self, in_features, out_dim):
+    def __init__(self, in_features, out_dim, **kwargs):
         super(ShallowCNN, self).__init__()
         self.conv1 = nn.Conv2d(in_features, 32, kernel_size=4, stride=1, padding=1)
         self.conv2 = nn.Conv2d(32, 48, kernel_size=5, stride=1, padding=1)

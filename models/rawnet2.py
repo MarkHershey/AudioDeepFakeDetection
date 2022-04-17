@@ -166,7 +166,7 @@ class Residual_block(nn.Module):
 
 
 class RawNet(nn.Module):
-    def __init__(self, d_args, device):
+    def __init__(self, d_args, device, **kwargs):
         super(RawNet, self).__init__()
 
         self.device = device

@@ -23,6 +23,7 @@ class GMM(nn.Module):
         k: int,
         data: torch.Tensor,
         covariance_type: str = "full",
+        **kwargs,
     ) -> None:
         """Initialize the GMM model.
         Args:

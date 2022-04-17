@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 
 class RSM1D(nn.Module):
-    def __init__(self, channels_in=None, channels_out=None):
+    def __init__(self, channels_in=None, channels_out=None, **kwargs):
         super().__init__()
         self.channels_in = channels_in
         self.channels_out = channels_out
@@ -55,7 +55,7 @@ class RSM1D(nn.Module):
 
 
 class TSSD(nn.Module):  # Res-TSSDNet
-    def __init__(self, in_dim):
+    def __init__(self, in_dim, **kwargs):
         super().__init__()
         self.conv1 = nn.Conv1d(
             in_channels=1, out_channels=16, kernel_size=7, padding=3, bias=False

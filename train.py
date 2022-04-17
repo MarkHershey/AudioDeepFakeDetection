@@ -7,6 +7,7 @@ from typing import Callable, List, Optional, Union
 import torch
 from puts import timestamp_seconds
 from torch.utils.data import ConcatDataset
+from torchinfo import summary
 
 from DataLoader import lfcc, load_directory_split_train_test, mfcc
 from models.cnn import ShallowCNN
@@ -137,6 +138,7 @@ def train(
         raise ValueError(
             f"model_kwargs not found for {model_classname} and {feature_classname}"
         )
+    model_kwargs.update({"device": device})
 
     LOGGER.info(f"Training model: {model_classname}")
     LOGGER.info(f"Input feature : {feature_classname}")
@@ -224,6 +226,12 @@ def train(
     pos_weight = torch.Tensor([pos_weight]).to(device)
 
     model = Model(**model_kwargs).to(device)
+    input_size = (
+        (batch_size, 64600) if feature_classname == "wave" else (batch_size, 40, 972)
+    )
+    model_stats = summary(model, input_size, verbose=0)
+    summary_str = str(model_stats)
+    LOGGER.info(f"Model summary:\n{summary_str}")
 
     ModelTrainer(
         batch_size=batch_size,

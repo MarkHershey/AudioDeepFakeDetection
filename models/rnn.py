@@ -6,7 +6,14 @@ from torch import nn
 
 
 class RNNCell(nn.Module):
-    def __init__(self, input_size, hidden_size, bias=True, nonlinearity="tanh"):
+    def __init__(
+        self,
+        input_size,
+        hidden_size,
+        bias=True,
+        nonlinearity="tanh",
+        **kwargs,
+    ):
         super(RNNCell, self).__init__()
         self.input_size = input_size
         self.hidden_size = hidden_size
@@ -41,7 +48,8 @@ class SimpleRNN(nn.Module):
         output_size,
         bias=True,
         activation="tanh",
-        device="cpu",
+        device="cuda",
+        **kwargs,
     ):
         super(SimpleRNN, self).__init__()
         self.input_size = input_size
@@ -112,7 +120,8 @@ class RNNClassification(nn.Module):
         bias: bool = True,
         activation: str = "tanh",
         dropoput_rate: float = 0.1,
-        device: str = "cpu",
+        device: str = "cuda",
+        **kwargs,
     ):
         super(RNNClassification, self).__init__()
         if input_length % num_frames != 0:

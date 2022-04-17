@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 
 class MLP(nn.Module):
-    def __init__(self, in_dim, out_dim=1):
+    def __init__(self, in_dim, out_dim=1, **kwargs):
         super().__init__()
         self.fc1 = nn.Linear(in_dim, 120)
         self.fc2 = nn.Linear(120, 80)
