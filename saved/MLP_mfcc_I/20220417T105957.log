@@ -1,0 +1,33 @@
+2022-04-17 10:59:57,670 - INFO - Batch size: 256, seed: 42, epochs: 20
+2022-04-17 10:59:57,670 - INFO - Training model: MLP
+2022-04-17 10:59:57,670 - INFO - Input feature : mfcc
+2022-04-17 10:59:57,670 - INFO - Model kwargs  : {
+  "in_dim": 80,
+  "out_dim": 1
+}
+2022-04-17 10:59:57,670 - INFO - Loading data...
+2022-04-17 10:59:57,766 - INFO - Loading data from /home/markhuang/Data/WaveFake/real...!
+2022-04-17 10:59:57,913 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_melgan...!
+2022-04-17 10:59:57,913 - INFO - Training model on 20960 audio files.
+2022-04-17 10:59:57,913 - INFO - Testing model on  5240 audio files.
+2022-04-17 10:59:57,913 - INFO - Train/Test ratio: 4.0
+2022-04-17 10:59:57,913 - INFO - Real/Fake ratio in training: 1.0 (pos_weight)
+2022-04-17 11:00:07,065 - ERROR - mat1 and mat2 shapes cannot be multiplied (10240x972 and 80x120)
+Traceback (most recent call last):
+  File "train.py", line 316, in main
+    experiment(
+  File "train.py", line 256, in experiment
+    train(
+  File "train.py", line 213, in train
+    ModelTrainer(
+  File "/home/markhuang/code/AudioDeepFakeDetection/trainer.py", line 99, in train
+    batch_out = model(batch_x)  # (B, 1)
+  File "/home/markhuang/code/AudioDeepFakeDetection/venv/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1129, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/markhuang/code/AudioDeepFakeDetection/models/mlp.py", line 14, in forward
+    y = F.relu(self.fc1(x))
+  File "/home/markhuang/code/AudioDeepFakeDetection/venv/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1129, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/markhuang/code/AudioDeepFakeDetection/venv/lib/python3.8/site-packages/torch/nn/modules/linear.py", line 103, in forward
+    return F.linear(input, self.weight, self.bias)
+RuntimeError: mat1 and mat2 shapes cannot be multiplied (10240x972 and 80x120)
