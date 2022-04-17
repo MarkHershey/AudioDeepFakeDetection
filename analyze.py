@@ -5,8 +5,8 @@ import json
 import os
 
 import librosa
-import librosa.display
-import matplotlib.pyplot as plt
+import torchaudio
+from module.lfcc import LFCC
 
 models = [
     "MLP_mfcc_I",
@@ -20,6 +20,74 @@ models = [
     "TSSD_wave_O",
     "WaveLSTM_wave_I",
 ]
+
+
+def plot_waveform(waveform, sample_rate, title="Waveform", xlim=None, ylim=None):
+    waveform = waveform.numpy()
+
+    num_channels, num_frames = waveform.shape
+    time_axis = torch.arange(0, num_frames) / sample_rate
+
+    figure, axes = plt.subplots(num_channels, 1)
+    if num_channels == 1:
+        axes = [axes]
+    for c in range(num_channels):
+        axes[c].plot(time_axis, waveform[c], linewidth=1)
+        axes[c].grid(True)
+        if num_channels > 1:
+            axes[c].set_ylabel(f"Channel {c+1}")
+        if xlim:
+            axes[c].set_xlim(xlim)
+        if ylim:
+            axes[c].set_ylim(ylim)
+    figure.suptitle(title)
+    plt.show()
+
+
+def plot_specgram(waveform, sample_rate, title="Spectrogram", xlim=None):
+    waveform = waveform.numpy()
+
+    num_channels, num_frames = waveform.shape
+    time_axis = torch.arange(0, num_frames) / sample_rate
+
+    figure, axes = plt.subplots(num_channels, 1)
+    if num_channels == 1:
+        axes = [axes]
+    for c in range(num_channels):
+        axes[c].specgram(waveform[c], Fs=sample_rate)
+        if num_channels > 1:
+            axes[c].set_ylabel(f"Channel {c+1}")
+        if xlim:
+            axes[c].set_xlim(xlim)
+    figure.suptitle(title)
+    plt.show()
+
+
+def plot_spectrogram(spec, title=None, ylabel="freq_bin", aspect="auto", xmax=None):
+    fig, axs = plt.subplots(1, 1)
+    axs.set_title(title or "Spectrogram (dB)")
+    axs.set_ylabel(ylabel)
+    axs.set_xlabel("frame")
+    im = axs.imshow(librosa.power_to_db(spec), origin="lower", aspect=aspect)
+    if xmax:
+        axs.set_xlim((0, xmax))
+    fig.colorbar(im, ax=axs, format="%+2.0f dB")
+    plt.show()
+
+
+def plot_mfcc(audio_path):
+    waveform, sample_rate = torchaudio.load(audio_path)
+    mfcc_transform = torchaudio.transforms.MFCC(sample_rate=sample_rate)
+    mfcc = mfcc_transform(waveform)
+    plot_spectrogram(mfcc[0], title=f"{audio_path} (MFCC)")
+
+
+def plot_lfcc(audio_path):
+    waveform, sample_rate = torchaudio.load(audio_path)
+    lfcc_transform = LFCC(sample_rate=sample_rate)
+    lfcc = lfcc_transform(waveform)
+    plot_spectrogram(lfcc[0], title=f"{audio_path} (LFCC)")
+
 
 if __name__ == "__main__":
     with open("testing_audio_names.txt") as data_filename_file:
@@ -54,12 +122,5 @@ if __name__ == "__main__":
     for file in os.listdir(anomaly_directory):
         f = os.path.join(anomaly_directory, file)
         if os.path.isfile(f):
-            # Plot MFCC feature
-            audio_path = f
-            fig, ax = plt.subplots()
-            x, sr = librosa.load(audio_path)
-            mfccs = librosa.feature.mfcc(x, sr=sr)
-            img = librosa.display.specshow(mfccs, sr=sr, x_axis="time", ax=ax)
-            ax.set(title=f"{f} (MFCC)")
-            fig.colorbar(img, ax=ax)
-            plt.show()
+            plot_mfcc(f)
+            plot_lfcc(f)
