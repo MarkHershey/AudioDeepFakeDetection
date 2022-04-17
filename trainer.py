@@ -87,7 +87,7 @@ class ModelTrainer(Trainer):
             num_correct = 0.0
             num_total = 0.0
 
-            for _, (batch_x, _, batch_y) in enumerate(train_loader):
+            for _, (batch_x, _, _, batch_y) in enumerate(train_loader):
                 # get actual batch size
                 curr_batch_size = batch_x.size(0)
                 num_total += curr_batch_size
@@ -124,7 +124,7 @@ class ModelTrainer(Trainer):
             y_true = []
             y_pred = []
 
-            for batch_x, _, batch_y in test_loader:
+            for batch_x, _, _, batch_y in test_loader:
                 # get actual batch size
                 curr_batch_size = batch_x.size(0)
                 num_total += curr_batch_size
