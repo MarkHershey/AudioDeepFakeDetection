@@ -1,7 +1,11 @@
 # Utility script to analyze the results of the various models.
 # Created by James Raphael Tiovalen (2022)
 
+import os
 import json
+import matplotlib.pyplot as plt
+import librosa
+import librosa.display
 
 models = [
     "MLP_mfcc_I",
@@ -43,3 +47,18 @@ if __name__ == "__main__":
             )
 
     print(interesting_data_points_results)
+
+    anomaly_directory = "anomalies"
+
+    for file in os.listdir(anomaly_directory):
+        f = os.path.join(anomaly_directory, file)
+        if os.path.isfile(f):
+            # Plot MFCC feature
+            audio_path = f
+            fig, ax = plt.subplots()
+            x, sr = librosa.load(audio_path)
+            mfccs = librosa.feature.mfcc(x, sr=sr)
+            img = librosa.display.specshow(mfccs, sr=sr, x_axis="time", ax=ax)
+            ax.set(title=f"{f} (MFCC)")
+            fig.colorbar(img, ax=ax)
+            plt.show()
