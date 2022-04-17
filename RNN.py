@@ -10,8 +10,6 @@ class RNNCell(nn.Module):
         self.hidden_size = hidden_size
         self.bias = bias
         self.nonlinearity = nonlinearity
-        if self.nonlinearity not in ["tanh", "relu"]:
-            raise ValueError("Invalid nonlinearity selected for RNN.")
         self.x2h = nn.Linear(input_size, hidden_size, bias=bias)
         self.h2h = nn.Linear(hidden_size, hidden_size, bias=bias)
         self.reset_parameters()
@@ -23,23 +21,13 @@ class RNNCell(nn.Module):
 
 
     def forward(self, input, hx=None):
-
-        # Inputs:
-        #       input: of shape (batch_size, input_size)
-        #       hx: of shape (batch_size, hidden_size)
-        # Output:
-        #       hy: of shape (batch_size, hidden_size)
-
         if hx is None:
             hx = input.new_zeros(input.size(0), self.hidden_size)
-
         hy = (self.x2h(input) + self.h2h(hx))
-
         if self.nonlinearity == "tanh":
             hy = torch.tanh(hy)
         else:
             hy = torch.relu(hy)
-
         return hy
     
 class SimpleRNN(nn.Module):
@@ -50,9 +38,7 @@ class SimpleRNN(nn.Module):
         self.num_layers = num_layers
         self.bias = bias
         self.output_size = output_size
-
         self.rnn_cell_list = nn.ModuleList()
-
         if activation == 'tanh':
             self.rnn_cell_list.append(RNNCell(self.input_size,
                                                    self.hidden_size,
@@ -76,48 +62,31 @@ class SimpleRNN(nn.Module):
                                                    "relu"))
         else:
             raise ValueError("Invalid activation.")
-
         self.fc = nn.Linear(self.hidden_size, self.output_size)
 
 
     def forward(self, input, hx=None):
-
-        # Input of shape (batch_size, seqence length, input_size)
-        #
-        # Output of shape (batch_size, output_size)
-
         if hx is None:
             if torch.cuda.is_available():
                 h0 =torch.zeros(self.num_layers, input.size(0), self.hidden_size).cuda()
             else:
                 h0 =torch.zeros(self.num_layers, input.size(0), self.hidden_size)
-
         else:
              h0 = hx
-
         outs = []
-
         hidden = list()
         for layer in range(self.num_layers):
             hidden.append(h0[layer, :, :])
-
         for t in range(input.size(1)):
-
             for layer in range(self.num_layers):
-
                 if layer == 0:
                     hidden_l = self.rnn_cell_list[layer](input[:, t, :], hidden[layer])
                 else:
                     hidden_l = self.rnn_cell_list[layer](hidden[layer - 1],hidden[layer])
                 hidden[layer] = hidden_l
-
                 hidden[layer] = hidden_l
-
             outs.append(hidden_l)
-
-        # Take only last time step. Modify for seq to seq
         out = outs[-1].squeeze()
-
         out = self.fc(out)
 
 

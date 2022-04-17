@@ -1,0 +1,57 @@
+2022-04-17 16:32:09,239 - INFO - epoch 0 instance 0 loss: 0.001387
+2022-04-17 16:32:36,936 - INFO - epoch 0 instance 5 loss: 0.012235
+2022-04-17 16:32:58,990 - INFO - epoch 0 instance 10 loss: 0.048378
+2022-04-17 16:33:19,546 - INFO - epoch 0 instance 15 loss: 0.022536
+2022-04-17 16:33:37,091 - INFO - epoch 0 instance 20 loss: 0.012266
+2022-04-17 16:33:54,968 - INFO - epoch 0 instance 25 loss: 0.009877
+2022-04-17 16:34:12,397 - INFO - epoch 0 instance 30 loss: 0.009237
+2022-04-17 16:34:28,861 - INFO - epoch 0 instance 35 loss: 0.007859
+2022-04-17 16:34:46,206 - INFO - epoch 0 instance 40 loss: 0.007732
+2022-04-17 16:35:02,943 - INFO - epoch 0 instance 45 loss: 0.007410
+2022-04-17 16:36:28,140 - INFO - f1:0.000000
+2022-04-17 16:36:28,242 - INFO - epoch 1 instance 0 loss: 0.001403
+2022-04-17 16:36:28,833 - INFO - epoch 1 instance 5 loss: 0.007326
+2022-04-17 16:36:29,380 - INFO - epoch 1 instance 10 loss: 0.007095
+2022-04-17 16:36:29,913 - INFO - epoch 1 instance 15 loss: 0.006975
+2022-04-17 16:36:30,483 - INFO - epoch 1 instance 20 loss: 0.007057
+2022-04-17 16:36:31,092 - INFO - epoch 1 instance 25 loss: 0.006998
+2022-04-17 16:36:31,604 - INFO - epoch 1 instance 30 loss: 0.007122
+2022-04-17 16:36:32,187 - INFO - epoch 1 instance 35 loss: 0.007094
+2022-04-17 16:36:32,842 - INFO - epoch 1 instance 40 loss: 0.007253
+2022-04-17 16:36:33,356 - INFO - epoch 1 instance 45 loss: 0.007206
+2022-04-17 16:36:34,637 - INFO - f1:0.000000
+2022-04-17 16:36:34,744 - INFO - epoch 2 instance 0 loss: 0.001418
+2022-04-17 16:36:35,300 - INFO - epoch 2 instance 5 loss: 0.007164
+2022-04-17 16:36:35,860 - INFO - epoch 2 instance 10 loss: 0.007226
+2022-04-17 16:36:36,414 - INFO - epoch 2 instance 15 loss: 0.007261
+2022-04-17 16:36:36,981 - INFO - epoch 2 instance 20 loss: 0.007374
+2022-04-17 16:36:37,532 - INFO - epoch 2 instance 25 loss: 0.007370
+2022-04-17 16:36:38,088 - INFO - epoch 2 instance 30 loss: 0.007095
+2022-04-17 16:36:38,669 - INFO - epoch 2 instance 35 loss: 0.007038
+2022-04-17 16:36:39,342 - INFO - epoch 2 instance 40 loss: 0.007003
+2022-04-17 16:36:39,997 - INFO - epoch 2 instance 45 loss: 0.007018
+2022-04-17 16:36:41,845 - INFO - f1:0.000000
+2022-04-17 16:36:41,963 - INFO - epoch 3 instance 0 loss: 0.001412
+2022-04-17 16:36:42,528 - INFO - epoch 3 instance 5 loss: 0.007004
+2022-04-17 16:36:43,117 - INFO - epoch 3 instance 10 loss: 0.007068
+2022-04-17 16:36:43,702 - INFO - epoch 3 instance 15 loss: 0.006968
+2022-04-17 16:36:44,238 - INFO - epoch 3 instance 20 loss: 0.007066
+2022-04-17 16:36:44,766 - INFO - epoch 3 instance 25 loss: 0.007051
+2022-04-17 16:36:45,298 - INFO - epoch 3 instance 30 loss: 0.007003
+2022-04-17 16:36:45,833 - INFO - epoch 3 instance 35 loss: 0.007121
+2022-04-17 16:36:46,388 - INFO - epoch 3 instance 40 loss: 0.007109
+2022-04-17 16:36:46,966 - INFO - epoch 3 instance 45 loss: 0.006925
+2022-04-17 16:36:48,240 - INFO - f1:0.000000
+2022-04-17 16:36:48,352 - INFO - epoch 4 instance 0 loss: 0.001380
+2022-04-17 16:36:48,946 - INFO - epoch 4 instance 5 loss: 0.006946
+2022-04-17 16:36:49,537 - INFO - epoch 4 instance 10 loss: 0.006951
+2022-04-17 16:36:50,106 - INFO - epoch 4 instance 15 loss: 0.006943
+2022-04-17 16:36:50,688 - INFO - epoch 4 instance 20 loss: 0.006995
+2022-04-17 16:36:51,246 - INFO - epoch 4 instance 25 loss: 0.007144
+2022-04-17 16:36:51,815 - INFO - epoch 4 instance 30 loss: 0.007071
+2022-04-17 16:36:52,370 - INFO - epoch 4 instance 35 loss: 0.007152
+2022-04-17 16:36:52,942 - INFO - epoch 4 instance 40 loss: 0.006962
+2022-04-17 16:36:53,515 - INFO - epoch 4 instance 45 loss: 0.006956
+2022-04-17 16:36:55,489 - INFO - f1:0.000000
+2022-04-17 16:36:55,490 - INFO - Test Result: ========================================================================
+2022-04-17 16:36:56,094 - INFO - f1:0.000000

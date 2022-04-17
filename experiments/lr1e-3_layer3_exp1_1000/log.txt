@@ -1,0 +1,44 @@
+2022-04-17 20:57:02,351 - INFO - epoch 0 instance 0 loss: 0.001395
+2022-04-17 20:59:14,980 - INFO - epoch 0 instance 500 loss: 0.158102
+2022-04-17 21:01:41,624 - INFO - epoch 0 instance 1000 loss: 0.053043
+2022-04-17 21:04:15,176 - INFO - epoch 0 instance 1500 loss: 0.037003
+2022-04-17 21:07:02,565 - INFO - epoch 0 instance 2000 loss: 0.054507
+2022-04-17 21:09:42,546 - INFO - epoch 0 instance 2500 loss: 0.032574
+2022-04-17 21:14:04,204 - INFO - f1:95.630000
+2022-04-17 21:14:04,205 - INFO - eer:0.230000
+2022-04-17 21:14:04,345 - INFO - epoch 1 instance 0 loss: 0.000400
+2022-04-17 21:15:04,841 - INFO - epoch 1 instance 500 loss: 0.021896
+2022-04-17 21:16:18,887 - INFO - epoch 1 instance 1000 loss: 0.025119
+2022-04-17 21:17:37,677 - INFO - epoch 1 instance 1500 loss: 0.044993
+2022-04-17 21:19:03,986 - INFO - epoch 1 instance 2000 loss: 0.025455
+2022-04-17 21:20:34,538 - INFO - epoch 1 instance 2500 loss: 0.022963
+2022-04-17 21:22:44,600 - INFO - f1:99.310000
+2022-04-17 21:22:44,600 - INFO - eer:0.110000
+2022-04-17 21:22:44,912 - INFO - epoch 2 instance 0 loss: 0.000005
+2022-04-17 21:24:12,101 - INFO - epoch 2 instance 500 loss: 0.024342
+2022-04-17 21:25:30,079 - INFO - epoch 2 instance 1000 loss: 0.018412
+2022-04-17 21:26:47,731 - INFO - epoch 2 instance 1500 loss: 0.049620
+2022-04-17 21:28:04,111 - INFO - epoch 2 instance 2000 loss: 0.024191
+2022-04-17 21:29:17,419 - INFO - epoch 2 instance 2500 loss: 0.023678
+2022-04-17 21:31:06,501 - INFO - f1:97.080000
+2022-04-17 21:31:06,502 - INFO - eer:0.150000
+2022-04-17 21:31:06,697 - INFO - epoch 3 instance 0 loss: 0.001300
+2022-04-17 21:32:37,847 - INFO - epoch 3 instance 500 loss: 0.014810
+2022-04-17 21:34:11,669 - INFO - epoch 3 instance 1000 loss: 0.014123
+2022-04-17 21:35:43,786 - INFO - epoch 3 instance 1500 loss: 0.023773
+2022-04-17 21:37:10,227 - INFO - epoch 3 instance 2000 loss: 0.014638
+2022-04-17 21:38:26,001 - INFO - epoch 3 instance 2500 loss: 0.017343
+2022-04-17 21:40:07,357 - INFO - f1:99.060000
+2022-04-17 21:40:07,358 - INFO - eer:0.190000
+2022-04-17 21:40:07,397 - INFO - epoch 4 instance 0 loss: 0.001422
+2022-04-17 21:41:34,313 - INFO - epoch 4 instance 500 loss: 0.015871
+2022-04-17 21:42:47,295 - INFO - epoch 4 instance 1000 loss: 0.013751
+2022-04-17 21:44:11,338 - INFO - epoch 4 instance 1500 loss: 0.015575
+2022-04-17 21:45:43,452 - INFO - epoch 4 instance 2000 loss: 0.017151
+2022-04-17 21:47:06,499 - INFO - epoch 4 instance 2500 loss: 0.012481
+2022-04-17 21:49:13,525 - INFO - f1:99.230000
+2022-04-17 21:49:13,525 - INFO - eer:0.530000
+2022-04-17 21:49:13,686 - INFO - epoch 5 instance 0 loss: 0.000001
+2022-04-17 21:50:44,572 - INFO - epoch 5 instance 500 loss: 0.009409
+2022-04-17 21:52:02,340 - INFO - epoch 5 instance 1000 loss: 0.006602
+2022-04-17 21:53:20,733 - INFO - epoch 5 instance 1500 loss: 0.011712
