@@ -253,7 +253,7 @@ def experiment(
     real_dir="/home/markhuang/Data/WaveFake/real",
     fake_dir="/home/markhuang/Data/WaveFake/fake",
     amount_to_use=None,
-    device="cuda",
+    device="cuda" if torch.cuda.is_available() else "cpu",
 ):
 
     root_save_dir = Path("saved")
@@ -307,32 +307,9 @@ def debug():
 
 
 def main():
-    # for model_classname in ["WaveLSTM"]:
-    for model_classname in ["TSSD"]:
-        for feature_classname in ["wave"]:
-            for in_distribution in [True]:
-                exp_setup = "I" if in_distribution else "O"
-                exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
-                try:
-                    print(f">>>>> Starting experiment: {exp_name}")
-                    experiment(
-                        name=exp_name,
-                        seed=42,
-                        epochs=30,
-                        batch_size=256,
-                        feature_classname=feature_classname,
-                        model_classname=model_classname,
-                        in_distribution=in_distribution,
-                        device="cuda:1",
-                    )
-                    print(f">>>>> Experiment Done: {exp_name}\n\n")
-                except Exception as e:
-                    print(f">>>>> Experiment Failed: {exp_name}\n\n")
-                    LOGGER.exception(e)
-
-    for model_classname in ["MLP"]:
-        for feature_classname in ["mfcc"]:
-            for in_distribution in [True]:
+    for in_distribution in [True, False]:
+        for model_classname in ["WaveRNN", "WaveLSTM"]:
+            for feature_classname in ["wave"]:
                 exp_setup = "I" if in_distribution else "O"
                 exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
                 try:
@@ -345,7 +322,6 @@ def main():
                         feature_classname=feature_classname,
                         model_classname=model_classname,
                         in_distribution=in_distribution,
-                        device="cuda:1",
                     )
                     print(f">>>>> Experiment Done: {exp_name}\n\n")
                 except Exception as e:
@@ -354,5 +330,5 @@ def main():
 
 
 if __name__ == "__main__":
-    debug()
-    # main()
+    # debug()
+    main()
