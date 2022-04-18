@@ -42,6 +42,77 @@
             </article>
             <article class="message">
                 <div class="message-header">
+                    <p>Overall Results</p>
+                </div>
+                <div class="message-body">
+                    <p>We will first go through the overall results of our various models.</p>
+                    <p>Note that the model names is in the following format: <i>network_feature_{in/out_dist}</i>.</p>
+                    <br>
+                    <table class="table has-text-centered mx-auto">
+                        <thead>
+                            <tr>
+                                <th><abbr title="Number">No</abbr></th>
+                                <th>Model</th>
+                                <th><abbr title="Equal Error Rate">EER</abbr></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>1</th>
+                                <th>MLP_mfcc_I</th>
+                                <th>0.00</th>
+                            </tr>
+                            <tr>
+                                <th>2</th>
+                                <th>ShallowCNN_lfcc_I</th>
+                                <th>0.00</th>
+                            </tr>
+                            <tr>
+                                <th>3</th>
+                                <th>ShallowCNN_lfcc_O</th>
+                                <th>0.00</th>
+                            </tr>
+                            <tr>
+                                <th>4</th>
+                                <th>ShallowCNN_mfcc_I</th>
+                                <th>0.00</th>
+                            </tr>
+                            <tr>
+                                <th>5</th>
+                                <th>SimpleLSTM_lfcc_I</th>
+                                <th>0.00</th>
+                            </tr>
+                            <tr>
+                                <th>6</th>
+                                <th>SimpleLSTM_lfcc_O</th>
+                                <th>0.00</th>
+                            </tr>
+                            <tr>
+                                <th>7</th>
+                                <th>SimpleLSTM_mfcc_I</th>
+                                <th>0.00</th>
+                            </tr>
+                            <tr>
+                                <th>8</th>
+                                <th>TSSD_wave_I</th>
+                                <th>0.00</th>
+                            </tr>
+                            <tr>
+                                <th>9</th>
+                                <th>TSSD_wave_O</th>
+                                <th>0.00</th>
+                            </tr>
+                            <tr>
+                                <th>10</th>
+                                <th>WaveLSTM_wave_I</th>
+                                <th>0.00</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                </article>
+            <article class="message is-warning">
+                <div class="message-header">
                 <p>Interesting Results</p>
                 </div>
                 <div class="message-body content">
@@ -82,7 +153,7 @@
                 <p>If you try to listen to the audio files, they are very similar and virtually indistinguishable to the human ear. Let's take a closer look at their MFCC and LFCC features.</p>
                 </div>
             </article>
-            <article class="message is-warning">
+            <article class="message is-danger">
                 <div class="message-header">
                 <p>MFCC & LFCC Features</p>
                 </div>
