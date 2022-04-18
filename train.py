@@ -372,6 +372,31 @@ def main():
                     LOGGER.exception(e)
 
 
+
+    for model_classname in ["TSSD"]:
+        for feature_classname in ["wave"]:
+            for in_distribution in [False]:
+                exp_setup = "I" if in_distribution else "O"
+                exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
+                try:
+                    print(f">>>>> Starting experiment: {exp_name}")
+                    experiment(
+                        name=exp_name,
+                        seed=42,
+                        epochs=30,
+                        batch_size=256,
+                        feature_classname=feature_classname,
+                        model_classname=model_classname,
+                        in_distribution=in_distribution,
+                        device="cuda:1",
+                    )
+                    print(f">>>>> Experiment Done: {exp_name}\n\n")
+                except Exception as e:
+                    print(f">>>>> Experiment Failed: {exp_name}\n\n")
+                    LOGGER.exception(e)
+
+
+
 if __name__ == "__main__":
     # debug()
     main()
