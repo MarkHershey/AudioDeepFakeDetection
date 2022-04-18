@@ -40,7 +40,7 @@ KWARGS_MAP = {
         "wave": {"in_dim": 64600},
     },
     "WaveRNN": {
-        "wave": {"num_frames": 10, "input_length": 64600},
+        "wave": {"num_frames": 10, "input_length": 64600, "hidden_size": 500},
     },
     "WaveLSTM": {
         "wave": {
@@ -82,6 +82,7 @@ def train(
     feature_classname: str = "wave",
     model_classname: str = "SimpleLSTM",
     in_distribution: bool = True,
+    checkpoint=None,
 ) -> None:
     """
     Train a model on WaveFake data.
@@ -233,6 +234,8 @@ def train(
     summary_str = str(model_stats)
     LOGGER.info(f"Model summary:\n{summary_str}")
 
+    ###########################################################################
+
     ModelTrainer(
         batch_size=batch_size,
         epochs=epochs,
@@ -247,6 +250,7 @@ def train(
         dataset_test=dataset_test,
         save_dir=save_dir,
         pos_weight=pos_weight,
+        checkpoint=checkpoint,
     )
 
 
@@ -258,16 +262,23 @@ def experiment(
     feature_classname: str,
     model_classname: str,
     in_distribution: bool,
-    real_dir="/home/markhuang/Data/WaveFake/real",
-    fake_dir="/home/markhuang/Data/WaveFake/fake",
-    amount_to_use=None,
-    device="cuda" if torch.cuda.is_available() else "cpu",
+    real_dir: str = "/home/markhuang/Data/WaveFake/real",
+    fake_dir: str = "/home/markhuang/Data/WaveFake/fake",
+    amount_to_use: Union[int, None] = None,
+    device: str = "cuda" if torch.cuda.is_available() else "cpu",
+    restore: bool = False,
 ):
 
     root_save_dir = Path("saved")
     save_dir = root_save_dir / name
     save_dir.mkdir(parents=True, exist_ok=True)
     log_file = save_dir / f"{timestamp_seconds()}.log"
+    restore_path = save_dir / "best.pt"
+    if restore and restore_path.is_file():
+        LOGGER.info(f"Restoring from {restore_path}")
+        ckpt = torch.load(restore_path, map_location=lambda storage, loc: storage)
+    else:
+        ckpt = None
 
     set_seed_all(seed)
     init_logger(log_file)
@@ -285,6 +296,7 @@ def experiment(
         feature_classname=feature_classname,
         model_classname=model_classname,
         in_distribution=in_distribution,
+        checkpoint=ckpt,
     )
 
 
@@ -316,7 +328,7 @@ def debug():
 
 def main():
     for in_distribution in [True, False]:
-        for model_classname in ["WaveRNN", "WaveLSTM"]:
+        for model_classname in ["WaveRNN"]:
             for feature_classname in ["wave"]:
                 exp_setup = "I" if in_distribution else "O"
                 exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
@@ -325,11 +337,34 @@ def main():
                     experiment(
                         name=exp_name,
                         seed=42,
-                        epochs=20,
-                        batch_size=256,
+                        epochs=25,
+                        batch_size=512,
                         feature_classname=feature_classname,
                         model_classname=model_classname,
                         in_distribution=in_distribution,
+                        restore=False,
+                    )
+                    print(f">>>>> Experiment Done: {exp_name}\n\n")
+                except Exception as e:
+                    print(f">>>>> Experiment Failed: {exp_name}\n\n")
+                    LOGGER.exception(e)
+
+    for in_distribution in [True, False]:
+        for model_classname in ["WaveLSTM"]:
+            for feature_classname in ["wave"]:
+                exp_setup = "I" if in_distribution else "O"
+                exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
+                try:
+                    print(f">>>>> Starting experiment: {exp_name}")
+                    experiment(
+                        name=exp_name,
+                        seed=42,
+                        epochs=30,
+                        batch_size=512,
+                        feature_classname=feature_classname,
+                        model_classname=model_classname,
+                        in_distribution=in_distribution,
+                        restore=True,
                     )
                     print(f">>>>> Experiment Done: {exp_name}\n\n")
                 except Exception as e:

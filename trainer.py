@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
 
-from metrics import compute_roc_auc_eer
+from metrics import alt_compute_eer
 from utils import save_checkpoint, save_pred
 
 LOGGER = logging.getLogger(__name__)
@@ -56,6 +56,7 @@ class ModelTrainer(Trainer):
         dataset_test: Dataset,  # test or validation
         save_dir: Union[str, Path] = None,  # directory to save model checkpoints
         pos_weight: Optional[torch.FloatTensor] = None,
+        checkpoint: dict = None,
     ) -> None:
         if save_dir:
             save_dir: Path = Path(save_dir)
@@ -76,10 +77,21 @@ class ModelTrainer(Trainer):
 
         criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
         optim = self.optimizer_fn(model.parameters(), **self.optimizer_kwargs)
+        start_epoch = 0
+
+        #######################################################################
+
+        if checkpoint is not None:
+            model.load_state_dict(checkpoint["state_dict"])
+            optim.load_state_dict(checkpoint["optimizer"])
+            start_epoch = checkpoint["epoch"] + 1
+            LOGGER.info(f"Loaded checkpoint from epoch {start_epoch - 1}")
+
+        #######################################################################
 
         best_model = None
         best_acc = 0
-        for epoch in range(self.epochs):
+        for epoch in range(start_epoch, self.epochs):
             ###################################################################
             # train
             model.train()
@@ -147,7 +159,7 @@ class ModelTrainer(Trainer):
             y_true: np.ndarray = torch.cat(y_true, dim=0).numpy()
             y_pred: np.ndarray = torch.cat(y_pred, dim=0).numpy()
             # get auc and eer
-            test_auc, test_eer = compute_roc_auc_eer(y_true, y_pred)
+            test_eer = alt_compute_eer(y_true, y_pred)
 
             LOGGER.info(
                 f"[{epoch:03d}]: loss: {round(total_loss, 4)} - train acc: {round(train_acc, 2)} - test acc: {round(test_acc, 2)} - test eer : {round(test_eer, 4)}"
@@ -155,7 +167,7 @@ class ModelTrainer(Trainer):
 
             if test_acc > best_acc:
                 best_acc = test_acc
-                LOGGER.info(f"[{epoch:03d}]: Best Test Accuracy: {round(best_acc, 3)}")
+                LOGGER.info(f"Best Test Accuracy: {round(best_acc, 3)}")
 
                 if save_dir:
                     # save model checkpoint
@@ -167,10 +179,10 @@ class ModelTrainer(Trainer):
                         model_kwargs=self.__dict__,
                         filename=save_path,
                     )
-                    LOGGER.info(f"[{epoch:03d}]: Best Model Saved: {save_path}")
+                    LOGGER.info(f"Best Model Saved: {save_path}")
                     # save labels and predictions
                     save_path = save_dir / "best_pred.json"
                     save_pred(y_true, y_pred, save_path)
-                    LOGGER.info(f"[{epoch:03d}]: Prediction Saved: {save_path}")
+                    LOGGER.info(f"Prediction Saved: {save_path}")
 
         return None

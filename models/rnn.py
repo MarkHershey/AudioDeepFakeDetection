@@ -48,7 +48,7 @@ class SimpleRNN(nn.Module):
         output_size,
         bias=True,
         activation="tanh",
-        device="cuda",
+        device="cpu",
         **kwargs,
     ):
         super(SimpleRNN, self).__init__()
@@ -116,11 +116,12 @@ class RNNClassification(nn.Module):
         num_class: int = 1,
         num_frames: int = 10,
         input_length: int = 64600,
-        num_layers: int = 1,
+        hidden_size: int = 1000,
+        num_layers: int = 2,
         bias: bool = True,
         activation: str = "tanh",
         dropoput_rate: float = 0.1,
-        device: str = "cuda",
+        device: str = "cpu",
         **kwargs,
     ):
         super(RNNClassification, self).__init__()
@@ -131,7 +132,6 @@ class RNNClassification(nn.Module):
         self.num_feats = input_length // num_frames
 
         input_size = self.num_feats
-        hidden_size = self.num_feats
         output_size = self.num_feats // 2
 
         self.rnn = SimpleRNN(
