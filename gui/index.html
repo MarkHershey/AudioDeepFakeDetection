@@ -9,6 +9,27 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <script defer src="https://unpkg.com/img-comparison-slider@7/dist/index.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/img-comparison-slider@7/dist/styles.css"/>
+    <style type="text/css">
+        img-comparison-slider {
+            --divider-width: 5px;
+            --divider-color: #ff0000;
+            --default-handle-color: #ff0000;
+            --default-handle-opacity: 1.0;
+            --default-handle-width: clamp(40px, 10vw, 200px);
+        }
+
+        img-comparison-slider:focus {
+            --default-handle-opacity: 0;
+        }
+
+        .custom-animated-handle {
+            transition: transform 0.2s;
+        }
+
+        .slider-with-animated-handle:hover .custom-animated-handle {
+            transform: scale(1.2);
+        }
+    </style>
 </head>
 
 <body>
@@ -187,16 +208,22 @@
                 <ul>
                     <li>
                         <p>LJ048-0107</p>
-                        <img-comparison-slider>
+                        <img-comparison-slider class="slider-with-animated-handle">
                             <img slot="first" src="../assets/MFCC/LJ048-0107-MFCC.png" />
                             <img slot="second" src="../assets/MFCC/LJ048-0107_gen-MFCC.png" />
+                            <svg slot="handle" class="custom-animated-handle" xmlns="http://www.w3.org/2000/svg" width="100" viewBox="-8 -3 16 6">
+                                <path stroke="#ff0000" d="M -5 -2 L -7 0 L -5 2 M -5 -2 L -5 2 M 5 -2 L 7 0 L 5 2 M 5 -2 L 5 2" stroke-width="1" fill="#ff0000" vector-effect="non-scaling-stroke"></path>
+                            </svg>
                         </img-comparison-slider>
                     </li>
                     <li>
                         <p>LJ050-0267</p>
-                        <img-comparison-slider>
+                        <img-comparison-slider class="slider-with-animated-handle">
                             <img slot="first" src="../assets/MFCC/LJ050-0267-MFCC.png" />
                             <img slot="second" src="../assets/MFCC/LJ050-0267_gen-MFCC.png" />
+                            <svg slot="handle" class="custom-animated-handle" xmlns="http://www.w3.org/2000/svg" width="100" viewBox="-8 -3 16 6">
+                                <path stroke="#ff0000" d="M -5 -2 L -7 0 L -5 2 M -5 -2 L -5 2 M 5 -2 L 7 0 L 5 2 M 5 -2 L 5 2" stroke-width="1" fill="#ff0000" vector-effect="non-scaling-stroke"></path>
+                            </svg>
                         </img-comparison-slider>
                     </li>
                 </ul>
@@ -204,16 +231,22 @@
                 <ul>
                     <li>
                         <p>LJ048-0107</p>
-                        <img-comparison-slider>
+                        <img-comparison-slider class="slider-with-animated-handle">
                             <img slot="first" src="../assets/LFCC/LJ048-0107-LFCC.png" />
                             <img slot="second" src="../assets/LFCC/LJ048-0107_gen-LFCC.png" />
+                            <svg slot="handle" class="custom-animated-handle" xmlns="http://www.w3.org/2000/svg" width="100" viewBox="-8 -3 16 6">
+                                <path stroke="#ff0000" d="M -5 -2 L -7 0 L -5 2 M -5 -2 L -5 2 M 5 -2 L 7 0 L 5 2 M 5 -2 L 5 2" stroke-width="1" fill="#ff0000" vector-effect="non-scaling-stroke"></path>
+                            </svg>
                         </img-comparison-slider>
                     </li>
                     <li>
                         <p>LJ050-0267</p>
-                        <img-comparison-slider>
+                        <img-comparison-slider class="slider-with-animated-handle">
                             <img slot="first" src="../assets/LFCC/LJ050-0267-LFCC.png" />
                             <img slot="second" src="../assets/LFCC/LJ050-0267_gen-LFCC.png" />
+                            <svg slot="handle" class="custom-animated-handle" xmlns="http://www.w3.org/2000/svg" width="100" viewBox="-8 -3 16 6">
+                                <path stroke="#ff0000" d="M -5 -2 L -7 0 L -5 2 M -5 -2 L -5 2 M 5 -2 L 7 0 L 5 2 M 5 -2 L 5 2" stroke-width="1" fill="#ff0000" vector-effect="non-scaling-stroke"></path>
+                            </svg>
                         </img-comparison-slider>
                     </li>
                 </ul>
