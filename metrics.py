@@ -75,7 +75,8 @@ def compute_metrics_for_file(
 
 def compute_all():
     save_dir = Path(__file__).parent / "saved"
-    export_filepath = save_dir / "RESULT.md"
+    export_md = save_dir / "README.md"
+    export_html = save_dir / "table.html"
     result = {}
 
     for exp_name in os.listdir(save_dir):
@@ -92,7 +93,7 @@ def compute_all():
             eer2=f"{eer2:.4f}",
         )
 
-    to_write = [
+    md_to_write = [
         "# Empirical Results",
         " ",
         "- Accuracy",
@@ -106,12 +107,36 @@ def compute_all():
 
     for exp_name in sorted(result.keys(), key=lambda x: result[x]["f1"]):
         d = result[exp_name]
-        to_write.append(
+        md_to_write.append(
             f"| {exp_name} | {d['acc']} | {d['f1']} | {d['roc_auc']} | {d['eer']} | {d['eer2']} |"
         )
 
-    with export_filepath.open("w") as f:
-        f.write("\n".join(to_write))
+    with export_md.open("w") as f:
+        f.write("\n".join(md_to_write))
+        print(f"Exported: {export_md}")
+
+    html_to_write = [
+        "<!DOCTYPE html>",
+        "<html>",
+        "<body>",
+        "<h1>Empirical Results</h1>",
+        '<table  class="table has-text-centered mx-auto">',
+        '<thead><tr><td>Experiment</td><td>Accuracy</td><td><abbr title="F1 score">F1</abbr></td><td><abbr title="Area Under the Receiver Operating Characteristic Curve">ROC AUC</abbr></td><td><abbr title="Equal Error Rate">EER</abbr></td></tr></thead>',
+        "</table>",
+        "</body>",
+        "</html>",
+    ]
+
+    for exp_name in sorted(result.keys(), key=lambda x: result[x]["f1"], reverse=True):
+        d = result[exp_name]
+        html_to_write.insert(
+            6,
+            f"<tr><td>{exp_name}</td><td>{d['acc']}</td><td>{d['f1']}</td><td>{d['roc_auc']}</td><td>{d['eer']}</td></tr>",
+        )
+
+    with export_html.open("w") as f:
+        f.write("\n".join(html_to_write))
+        print(f"Exported: {export_html}")
 
 
 if __name__ == "__main__":

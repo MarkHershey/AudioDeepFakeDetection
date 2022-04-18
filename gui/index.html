@@ -51,63 +51,88 @@
                     <table class="table has-text-centered mx-auto">
                         <thead>
                             <tr>
-                                <th><abbr title="Number">No</abbr></th>
-                                <th>Model</th>
-                                <th><abbr title="Equal Error Rate">EER</abbr></th>
+                                <td>Experiment</td>
+                                <td>Accuracy</td>
+                                <td><abbr title="F1 score">F1</abbr></td>
+                                <td>
+                                    <abbr
+                                        title="Area Under the Receiver Operating Characteristic Curve"
+                                        >ROC AUC</abbr
+                                    >
+                                </td>
+                                <td><abbr title="Equal Error Rate">EER</abbr></td>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <th>1</th>
-                                <th>MLP_mfcc_I</th>
-                                <th>0.00</th>
-                            </tr>
-                            <tr>
-                                <th>2</th>
-                                <th>ShallowCNN_lfcc_I</th>
-                                <th>0.00</th>
-                            </tr>
-                            <tr>
-                                <th>3</th>
-                                <th>ShallowCNN_lfcc_O</th>
-                                <th>0.00</th>
-                            </tr>
-                            <tr>
-                                <th>4</th>
-                                <th>ShallowCNN_mfcc_I</th>
-                                <th>0.00</th>
-                            </tr>
-                            <tr>
-                                <th>5</th>
-                                <th>SimpleLSTM_lfcc_I</th>
-                                <th>0.00</th>
-                            </tr>
-                            <tr>
-                                <th>6</th>
-                                <th>SimpleLSTM_lfcc_O</th>
-                                <th>0.00</th>
-                            </tr>
-                            <tr>
-                                <th>7</th>
-                                <th>SimpleLSTM_mfcc_I</th>
-                                <th>0.00</th>
-                            </tr>
-                            <tr>
-                                <th>8</th>
-                                <th>TSSD_wave_I</th>
-                                <th>0.00</th>
-                            </tr>
-                            <tr>
-                                <th>9</th>
-                                <th>TSSD_wave_O</th>
-                                <th>0.00</th>
-                            </tr>
-                            <tr>
-                                <th>10</th>
-                                <th>WaveLSTM_wave_I</th>
-                                <th>0.00</th>
-                            </tr>
-                        </tbody>
+                        <tr>
+                            <td>MLP_mfcc_I</td>
+                            <td>0.500</td>
+                            <td>0.000</td>
+                            <td>0.5000</td>
+                            <td>0.5000</td>
+                        </tr>
+                        <tr>
+                            <td>WaveLSTM_wave_I</td>
+                            <td>0.754</td>
+                            <td>0.746</td>
+                            <td>0.7536</td>
+                            <td>0.2600</td>
+                        </tr>
+                        <tr>
+                            <td>TSSD_wave_O</td>
+                            <td>0.899</td>
+                            <td>0.897</td>
+                            <td>0.8989</td>
+                            <td>0.1164</td>
+                        </tr>
+                        <tr>
+                            <td>ShallowCNN_lfcc_O</td>
+                            <td>0.930</td>
+                            <td>0.927</td>
+                            <td>0.9296</td>
+                            <td>0.0970</td>
+                        </tr>
+                        <tr>
+                            <td>SimpleLSTM_mfcc_I</td>
+                            <td>0.960</td>
+                            <td>0.960</td>
+                            <td>0.9601</td>
+                            <td>0.0404</td>
+                        </tr>
+                        <tr>
+                            <td>SimpleLSTM_lfcc_O</td>
+                            <td>0.965</td>
+                            <td>0.965</td>
+                            <td>0.9651</td>
+                            <td>0.0441</td>
+                        </tr>
+                        <tr>
+                            <td>SimpleLSTM_lfcc_I</td>
+                            <td>0.996</td>
+                            <td>0.996</td>
+                            <td>0.9962</td>
+                            <td>0.0042</td>
+                        </tr>
+                        <tr>
+                            <td>ShallowCNN_mfcc_I</td>
+                            <td>0.997</td>
+                            <td>0.997</td>
+                            <td>0.9968</td>
+                            <td>0.0049</td>
+                        </tr>
+                        <tr>
+                            <td>TSSD_wave_I</td>
+                            <td>0.999</td>
+                            <td>0.999</td>
+                            <td>0.9990</td>
+                            <td>0.0011</td>
+                        </tr>
+                        <tr>
+                            <td>ShallowCNN_lfcc_I</td>
+                            <td>1.000</td>
+                            <td>1.000</td>
+                            <td>0.9996</td>
+                            <td>0.0004</td>
+                        </tr>
                     </table>
                 </div>
                 </article>
