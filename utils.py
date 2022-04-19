@@ -75,3 +75,9 @@ def save_pred(y_true: np.ndarray, y_pred: np.ndarray, filename: Union[str, Path]
         json.dump(pred_to_save, f)
         f.close()
     return None
+
+
+def set_learning_rate(learning_rate: float, optimizer: torch.optim.Optimizer) -> None:
+    for param_group in optimizer.param_groups:
+        param_group["lr"] = learning_rate
+    return None

@@ -96,13 +96,13 @@ def compute_all():
     md_to_write = [
         "# Empirical Results",
         " ",
-        "- Accuracy",
-        "- F1 score",
-        "- Area Under the Receiver Operating Characteristic Curve (ROC AUC)",
-        "- Equal Error Rate (EER)",
+        "-   Accuracy",
+        "-   F1 score",
+        "-   Area Under the Receiver Operating Characteristic Curve (ROC AUC)",
+        "-   Equal Error Rate (EER)",
         " ",
-        "| Experiment | Accuracy | F1 | ROC AUC | EER | EER2 |",
-        "| :--- | ---: | ---: | ---: | ---: | ---: |",
+        "| Experiment | Accuracy | F1 Score | ROC AUC | EER | EER2 |",
+        "| :--------- | :------: | :------: | :-----: | :-: | :--: |",
     ]
 
     for exp_name in sorted(result.keys(), key=lambda x: result[x]["f1"]):

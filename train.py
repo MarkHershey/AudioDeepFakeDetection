@@ -240,10 +240,8 @@ def train(
         batch_size=batch_size,
         epochs=epochs,
         device=device,
-        optimizer_kwargs={
-            "lr": 0.0005,
-            "weight_decay": 0.0001,
-        },
+        lr=0.0001,
+        optimizer_kwargs={"weight_decay": 0.0001},
     ).train(
         model=model,
         dataset_train=dataset_train,
@@ -327,9 +325,53 @@ def debug():
 
 
 def main():
-    for in_distribution in [True, False]:
-        for model_classname in ["WaveRNN"]:
-            for feature_classname in ["wave"]:
+    # for in_distribution in [True, False]:
+    #     for model_classname in ["WaveRNN"]:
+    #         for feature_classname in ["wave"]:
+    #             exp_setup = "I" if in_distribution else "O"
+    #             exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
+    #             try:
+    #                 print(f">>>>> Starting experiment: {exp_name}")
+    #                 experiment(
+    #                     name=exp_name,
+    #                     seed=42,
+    #                     epochs=25,
+    #                     batch_size=512,
+    #                     feature_classname=feature_classname,
+    #                     model_classname=model_classname,
+    #                     in_distribution=in_distribution,
+    #                     restore=False,
+    #                 )
+    #                 print(f">>>>> Experiment Done: {exp_name}\n\n")
+    #             except Exception as e:
+    #                 print(f">>>>> Experiment Failed: {exp_name}\n\n")
+    #                 LOGGER.exception(e)
+
+    # for in_distribution in [True, False]:
+    #     for model_classname in ["WaveLSTM"]:
+    #         for feature_classname in ["wave"]:
+    #             exp_setup = "I" if in_distribution else "O"
+    #             exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
+    #             try:
+    #                 print(f">>>>> Starting experiment: {exp_name}")
+    #                 experiment(
+    #                     name=exp_name,
+    #                     seed=42,
+    #                     epochs=30,
+    #                     batch_size=512,
+    #                     feature_classname=feature_classname,
+    #                     model_classname=model_classname,
+    #                     in_distribution=in_distribution,
+    #                     restore=True,
+    #                 )
+    #                 print(f">>>>> Experiment Done: {exp_name}\n\n")
+    #             except Exception as e:
+    #                 print(f">>>>> Experiment Failed: {exp_name}\n\n")
+    #                 LOGGER.exception(e)
+
+    for model_classname in ["TSSD"]:
+        for feature_classname in ["wave"]:
+            for in_distribution in [True]:
                 exp_setup = "I" if in_distribution else "O"
                 exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
                 try:
@@ -338,29 +380,7 @@ def main():
                         name=exp_name,
                         seed=42,
                         epochs=25,
-                        batch_size=512,
-                        feature_classname=feature_classname,
-                        model_classname=model_classname,
-                        in_distribution=in_distribution,
-                        restore=False,
-                    )
-                    print(f">>>>> Experiment Done: {exp_name}\n\n")
-                except Exception as e:
-                    print(f">>>>> Experiment Failed: {exp_name}\n\n")
-                    LOGGER.exception(e)
-
-    for in_distribution in [True, False]:
-        for model_classname in ["WaveLSTM"]:
-            for feature_classname in ["wave"]:
-                exp_setup = "I" if in_distribution else "O"
-                exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
-                try:
-                    print(f">>>>> Starting experiment: {exp_name}")
-                    experiment(
-                        name=exp_name,
-                        seed=42,
-                        epochs=30,
-                        batch_size=512,
+                        batch_size=256,
                         feature_classname=feature_classname,
                         model_classname=model_classname,
                         in_distribution=in_distribution,
@@ -370,31 +390,6 @@ def main():
                 except Exception as e:
                     print(f">>>>> Experiment Failed: {exp_name}\n\n")
                     LOGGER.exception(e)
-
-
-
-    for model_classname in ["TSSD"]:
-        for feature_classname in ["wave"]:
-            for in_distribution in [False]:
-                exp_setup = "I" if in_distribution else "O"
-                exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
-                try:
-                    print(f">>>>> Starting experiment: {exp_name}")
-                    experiment(
-                        name=exp_name,
-                        seed=42,
-                        epochs=30,
-                        batch_size=256,
-                        feature_classname=feature_classname,
-                        model_classname=model_classname,
-                        in_distribution=in_distribution,
-                        device="cuda:1",
-                    )
-                    print(f">>>>> Experiment Done: {exp_name}\n\n")
-                except Exception as e:
-                    print(f">>>>> Experiment Failed: {exp_name}\n\n")
-                    LOGGER.exception(e)
-
 
 
 if __name__ == "__main__":

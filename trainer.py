@@ -8,7 +8,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
 
 from metrics import alt_compute_eer
-from utils import save_checkpoint, save_pred
+from utils import save_checkpoint, save_pred, set_learning_rate
 
 LOGGER = logging.getLogger(__name__)
 
@@ -31,12 +31,14 @@ class Trainer(object):
         epochs: int,
         batch_size: int,
         device: str,
+        lr: float = 1e-3,
         optimizer_fn: Callable = torch.optim.Adam,
-        optimizer_kwargs: Optional[dict] = {"lr": 1e-3},
+        optimizer_kwargs: Optional[dict] = {},
     ) -> None:
         self.epochs = int(epochs)
         self.batch_size = int(batch_size)
         self.device = device
+        self.lr = lr
         self.optimizer_fn = optimizer_fn
         self.optimizer_kwargs = optimizer_kwargs
 
@@ -44,6 +46,7 @@ class Trainer(object):
         assert self.batch_size > 0
         assert isinstance(optimizer_fn, Callable)
         assert isinstance(optimizer_kwargs, dict)
+        self.optimizer_kwargs["lr"] = self.lr
 
 
 class ModelTrainer(Trainer):
@@ -86,6 +89,8 @@ class ModelTrainer(Trainer):
             optim.load_state_dict(checkpoint["optimizer"])
             start_epoch = checkpoint["epoch"] + 1
             LOGGER.info(f"Loaded checkpoint from epoch {start_epoch - 1}")
+
+        set_learning_rate(self.lr, optim)
 
         #######################################################################
 

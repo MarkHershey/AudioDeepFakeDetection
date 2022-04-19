@@ -1,0 +1,28 @@
+name: compile_results
+
+on:
+    push:
+        branches:
+            - master
+jobs:
+    run_script:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-python@v2
+              with:
+                  python-version: 3.x
+            - name: Install Dependencies
+              run: |
+                  pip3 install --upgrade pip wheel setuptools arxiv-dl
+                  pip3 install -r requirements.txt
+            - name: Run the Script
+              run: |
+                  python3 metrics.py
+            - name: Push to Master
+              run: |
+                  git config user.name github-actions
+                  git config user.email github-actions@github.com
+                  git add --all
+                  git commit -m "Compile experimental results"
+                  git push origin HEAD:master
