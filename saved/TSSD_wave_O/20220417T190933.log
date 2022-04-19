@@ -1,0 +1,94 @@
+2022-04-17 19:09:33,718 - INFO - Batch size: 256, seed: 42, epochs: 30
+2022-04-17 19:09:33,718 - INFO - Training model: TSSD
+2022-04-17 19:09:33,718 - INFO - Input feature : wave
+2022-04-17 19:09:33,718 - INFO - Model kwargs  : {
+  "in_dim": 64600
+}
+2022-04-17 19:09:33,719 - INFO - Loading data...
+2022-04-17 19:09:33,852 - INFO - Loading data from /home/markhuang/Data/WaveFake/real...!
+2022-04-17 19:09:33,948 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_melgan...!
+2022-04-17 19:09:34,044 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_parallel_wavegan...!
+2022-04-17 19:09:34,214 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_hifiGAN...!
+2022-04-17 19:09:34,309 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_waveglow...!
+2022-04-17 19:09:34,405 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_multi_band_melgan...!
+2022-04-17 19:09:34,501 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_full_band_melgan...!
+2022-04-17 19:09:34,720 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_melgan_large...!
+2022-04-17 19:09:34,720 - INFO - Training model on 88294 audio files.
+2022-04-17 19:09:34,720 - INFO - Testing model on  5240 audio files.
+2022-04-17 19:09:34,720 - INFO - Train/Test ratio: 16.85
+2022-04-17 19:09:34,720 - INFO - Real/Fake ratio in training: 0.135 (pos_weight)
+2022-04-17 19:43:46,983 - INFO - [000]: loss: 0.0906 - train acc: 87.92 - test acc: 50.0 - test eer : 0.0
+2022-04-17 19:43:46,983 - INFO - [000]: Best Test Accuracy: 50.0
+2022-04-17 19:43:50,007 - INFO - [000]: Best Model Saved: saved/TSSD_wave_O/best.pt
+2022-04-17 19:43:50,011 - INFO - [000]: Prediction Saved: saved/TSSD_wave_O/best_pred.json
+2022-04-17 20:18:07,299 - INFO - [001]: loss: 0.0585 - train acc: 89.04 - test acc: 58.49 - test eer : 0.009
+2022-04-17 20:18:07,299 - INFO - [001]: Best Test Accuracy: 58.492
+2022-04-17 20:18:10,321 - INFO - [001]: Best Model Saved: saved/TSSD_wave_O/best.pt
+2022-04-17 20:18:10,325 - INFO - [001]: Prediction Saved: saved/TSSD_wave_O/best_pred.json
+2022-04-17 20:52:27,713 - INFO - [002]: loss: 0.0325 - train acc: 93.43 - test acc: 68.3 - test eer : 0.013
+2022-04-17 20:52:27,713 - INFO - [002]: Best Test Accuracy: 68.302
+2022-04-17 20:52:30,735 - INFO - [002]: Best Model Saved: saved/TSSD_wave_O/best.pt
+2022-04-17 20:52:30,739 - INFO - [002]: Prediction Saved: saved/TSSD_wave_O/best_pred.json
+2022-04-17 21:26:52,639 - INFO - [003]: loss: 0.021 - train acc: 95.94 - test acc: 85.15 - test eer : 0.252
+2022-04-17 21:26:52,639 - INFO - [003]: Best Test Accuracy: 85.153
+2022-04-17 21:26:55,662 - INFO - [003]: Best Model Saved: saved/TSSD_wave_O/best.pt
+2022-04-17 21:26:55,665 - INFO - [003]: Prediction Saved: saved/TSSD_wave_O/best_pred.json
+2022-04-17 22:01:25,446 - INFO - [004]: loss: 0.0159 - train acc: 97.1 - test acc: 70.17 - test eer : 0.005
+2022-04-17 22:35:58,125 - INFO - [005]: loss: 0.0126 - train acc: 97.75 - test acc: 85.46 - test eer : 0.196
+2022-04-17 22:35:58,125 - INFO - [005]: Best Test Accuracy: 85.458
+2022-04-17 22:36:01,177 - INFO - [005]: Best Model Saved: saved/TSSD_wave_O/best.pt
+2022-04-17 22:36:01,184 - INFO - [005]: Prediction Saved: saved/TSSD_wave_O/best_pred.json
+2022-04-17 23:10:37,925 - INFO - [006]: loss: 0.0109 - train acc: 98.07 - test acc: 88.68 - test eer : 0.067
+2022-04-17 23:10:37,926 - INFO - [006]: Best Test Accuracy: 88.683
+2022-04-17 23:10:40,947 - INFO - [006]: Best Model Saved: saved/TSSD_wave_O/best.pt
+2022-04-17 23:10:40,951 - INFO - [006]: Prediction Saved: saved/TSSD_wave_O/best_pred.json
+2022-04-17 23:45:20,235 - INFO - [007]: loss: 0.0088 - train acc: 98.42 - test acc: 90.23 - test eer : 0.094
+2022-04-17 23:45:20,236 - INFO - [007]: Best Test Accuracy: 90.229
+2022-04-17 23:45:23,258 - INFO - [007]: Best Model Saved: saved/TSSD_wave_O/best.pt
+2022-04-17 23:45:23,262 - INFO - [007]: Prediction Saved: saved/TSSD_wave_O/best_pred.json
+2022-04-18 00:20:05,214 - INFO - [008]: loss: 0.0082 - train acc: 98.55 - test acc: 86.79 - test eer : 0.027
+2022-04-18 00:54:47,421 - INFO - [009]: loss: 0.0066 - train acc: 98.85 - test acc: 78.74 - test eer : 0.002
+2022-04-18 01:29:31,847 - INFO - [010]: loss: 0.0076 - train acc: 98.66 - test acc: 87.98 - test eer : 0.012
+2022-04-18 02:04:19,771 - INFO - [011]: loss: 0.006 - train acc: 98.96 - test acc: 90.0 - test eer : 0.155
+2022-04-18 02:39:05,090 - INFO - [012]: loss: 0.0066 - train acc: 98.84 - test acc: 91.2 - test eer : 0.123
+2022-04-18 02:39:05,090 - INFO - [012]: Best Test Accuracy: 91.202
+2022-04-18 02:39:08,114 - INFO - [012]: Best Model Saved: saved/TSSD_wave_O/best.pt
+2022-04-18 02:39:08,117 - INFO - [012]: Prediction Saved: saved/TSSD_wave_O/best_pred.json
+2022-04-18 03:13:55,377 - INFO - [013]: loss: 0.0054 - train acc: 99.07 - test acc: 90.8 - test eer : 0.149
+2022-04-18 03:48:44,462 - INFO - [014]: loss: 0.0053 - train acc: 99.06 - test acc: 91.66 - test eer : 0.098
+2022-04-18 03:48:44,463 - INFO - [014]: Best Test Accuracy: 91.66
+2022-04-18 03:48:47,487 - INFO - [014]: Best Model Saved: saved/TSSD_wave_O/best.pt
+2022-04-18 03:48:47,491 - INFO - [014]: Prediction Saved: saved/TSSD_wave_O/best_pred.json
+2022-04-18 04:23:36,846 - INFO - [015]: loss: 0.0047 - train acc: 99.23 - test acc: 85.99 - test eer : 0.265
+2022-04-18 04:58:24,710 - INFO - [016]: loss: 0.0049 - train acc: 99.14 - test acc: 91.7 - test eer : 0.099
+2022-04-18 04:58:24,710 - INFO - [016]: Best Test Accuracy: 91.698
+2022-04-18 04:58:27,733 - INFO - [016]: Best Model Saved: saved/TSSD_wave_O/best.pt
+2022-04-18 04:58:27,737 - INFO - [016]: Prediction Saved: saved/TSSD_wave_O/best_pred.json
+2022-04-18 05:33:15,602 - INFO - [017]: loss: 0.0043 - train acc: 99.26 - test acc: 90.74 - test eer : 0.02
+2022-04-18 06:08:02,946 - INFO - [018]: loss: 0.0042 - train acc: 99.28 - test acc: 92.96 - test eer : 0.079
+2022-04-18 06:08:02,946 - INFO - [018]: Best Test Accuracy: 92.958
+2022-04-18 06:08:05,969 - INFO - [018]: Best Model Saved: saved/TSSD_wave_O/best.pt
+2022-04-18 06:08:05,972 - INFO - [018]: Prediction Saved: saved/TSSD_wave_O/best_pred.json
+2022-04-18 06:42:50,837 - INFO - [019]: loss: 0.0039 - train acc: 99.31 - test acc: 94.01 - test eer : 0.049
+2022-04-18 06:42:50,837 - INFO - [019]: Best Test Accuracy: 94.008
+2022-04-18 06:42:53,859 - INFO - [019]: Best Model Saved: saved/TSSD_wave_O/best.pt
+2022-04-18 06:42:53,863 - INFO - [019]: Prediction Saved: saved/TSSD_wave_O/best_pred.json
+2022-04-18 07:17:35,820 - INFO - [020]: loss: 0.0048 - train acc: 99.17 - test acc: 93.76 - test eer : 0.041
+2022-04-18 07:52:16,875 - INFO - [021]: loss: 0.0033 - train acc: 99.43 - test acc: 94.1 - test eer : 0.056
+2022-04-18 07:52:16,875 - INFO - [021]: Best Test Accuracy: 94.103
+2022-04-18 07:52:19,903 - INFO - [021]: Best Model Saved: saved/TSSD_wave_O/best.pt
+2022-04-18 07:52:19,909 - INFO - [021]: Prediction Saved: saved/TSSD_wave_O/best_pred.json
+2022-04-18 08:26:56,712 - INFO - [022]: loss: 0.0042 - train acc: 99.28 - test acc: 93.89 - test eer : 0.024
+2022-04-18 09:01:26,500 - INFO - [023]: loss: 0.0031 - train acc: 99.46 - test acc: 83.55 - test eer : 0.002
+2022-04-18 09:35:51,908 - INFO - [024]: loss: 0.0036 - train acc: 99.41 - test acc: 93.36 - test eer : 0.098
+2022-04-18 10:10:14,642 - INFO - [025]: loss: 0.0031 - train acc: 99.47 - test acc: 89.27 - test eer : 0.198
+2022-04-18 10:44:35,511 - INFO - [026]: loss: 0.0039 - train acc: 99.33 - test acc: 95.57 - test eer : 0.019
+2022-04-18 10:44:35,512 - INFO - [026]: Best Test Accuracy: 95.573
+2022-04-18 10:44:38,535 - INFO - [026]: Best Model Saved: saved/TSSD_wave_O/best.pt
+2022-04-18 10:44:38,538 - INFO - [026]: Prediction Saved: saved/TSSD_wave_O/best_pred.json
+2022-04-18 11:19:05,940 - INFO - [027]: loss: 0.0031 - train acc: 99.46 - test acc: 90.61 - test eer : 0.016
+2022-04-18 11:53:51,562 - INFO - [028]: loss: 0.0034 - train acc: 99.4 - test acc: 93.7 - test eer : 0.015
+2022-04-18 12:28:37,700 - INFO - [029]: loss: 0.0022 - train acc: 99.63 - test acc: 95.61 - test eer : 0.058
+2022-04-18 12:28:37,700 - INFO - [029]: Best Test Accuracy: 95.611
+2022-04-18 12:28:40,722 - INFO - [029]: Best Model Saved: saved/TSSD_wave_O/best.pt
+2022-04-18 12:28:40,726 - INFO - [029]: Prediction Saved: saved/TSSD_wave_O/best_pred.json
