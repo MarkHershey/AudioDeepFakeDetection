@@ -1,0 +1,94 @@
+2022-04-19 10:23:24,260 - INFO - Batch size: 256, seed: 42, epochs: 25
+2022-04-19 10:23:24,260 - INFO - Training model: TSSD
+2022-04-19 10:23:24,260 - INFO - Input feature : wave
+2022-04-19 10:23:24,260 - INFO - Model kwargs  : {
+  "in_dim": 64600,
+  "device": "cuda"
+}
+2022-04-19 10:23:24,260 - INFO - Loading data...
+2022-04-19 10:23:24,356 - INFO - Loading data from /home/markhuang/Data/WaveFake/real...!
+2022-04-19 10:23:24,452 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_melgan...!
+2022-04-19 10:23:24,452 - INFO - Training model on 20960 audio files.
+2022-04-19 10:23:24,452 - INFO - Testing model on  5240 audio files.
+2022-04-19 10:23:24,452 - INFO - Train/Test ratio: 4.0
+2022-04-19 10:23:24,452 - INFO - Real/Fake ratio in training: 1.0 (pos_weight)
+2022-04-19 10:23:27,460 - INFO - Model summary:
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+TSSD                                     --                        --
+├─Conv1d: 1-1                            [256, 16, 64600]          112
+├─BatchNorm1d: 1-2                       [256, 16, 64600]          32
+├─RSM1D: 1-3                             [256, 32, 16150]          --
+│    └─Conv1d: 2-1                       [256, 32, 16150]          1,536
+│    └─BatchNorm1d: 2-2                  [256, 32, 16150]          64
+│    └─Conv1d: 2-3                       [256, 32, 16150]          3,072
+│    └─BatchNorm1d: 2-4                  [256, 32, 16150]          64
+│    └─Conv1d: 2-5                       [256, 32, 16150]          3,072
+│    └─Conv1d: 2-6                       [256, 32, 16150]          512
+│    └─BatchNorm1d: 2-7                  [256, 32, 16150]          64
+├─RSM1D: 1-4                             [256, 64, 4037]           --
+│    └─Conv1d: 2-8                       [256, 64, 4037]           6,144
+│    └─BatchNorm1d: 2-9                  [256, 64, 4037]           128
+│    └─Conv1d: 2-10                      [256, 64, 4037]           12,288
+│    └─BatchNorm1d: 2-11                 [256, 64, 4037]           128
+│    └─Conv1d: 2-12                      [256, 64, 4037]           12,288
+│    └─Conv1d: 2-13                      [256, 64, 4037]           2,048
+│    └─BatchNorm1d: 2-14                 [256, 64, 4037]           128
+├─RSM1D: 1-5                             [256, 128, 1009]          --
+│    └─Conv1d: 2-15                      [256, 128, 1009]          24,576
+│    └─BatchNorm1d: 2-16                 [256, 128, 1009]          256
+│    └─Conv1d: 2-17                      [256, 128, 1009]          49,152
+│    └─BatchNorm1d: 2-18                 [256, 128, 1009]          256
+│    └─Conv1d: 2-19                      [256, 128, 1009]          49,152
+│    └─Conv1d: 2-20                      [256, 128, 1009]          8,192
+│    └─BatchNorm1d: 2-21                 [256, 128, 1009]          256
+├─RSM1D: 1-6                             [256, 128, 252]           --
+│    └─Conv1d: 2-22                      [256, 128, 252]           49,152
+│    └─BatchNorm1d: 2-23                 [256, 128, 252]           256
+│    └─Conv1d: 2-24                      [256, 128, 252]           49,152
+│    └─BatchNorm1d: 2-25                 [256, 128, 252]           256
+│    └─Conv1d: 2-26                      [256, 128, 252]           49,152
+│    └─Conv1d: 2-27                      [256, 128, 252]           16,384
+│    └─BatchNorm1d: 2-28                 [256, 128, 252]           256
+├─Linear: 1-7                            [256, 64]                 8,256
+├─Linear: 1-8                            [256, 32]                 2,080
+├─Linear: 1-9                            [256, 1]                  33
+==========================================================================================
+Total params: 348,497
+Trainable params: 348,497
+Non-trainable params: 0
+Total mult-adds (G): 114.02
+==========================================================================================
+Input size (MB): 66.15
+Forward/backward pass size (MB): 17660.58
+Params size (MB): 1.39
+Estimated Total Size (MB): 17728.12
+==========================================================================================
+2022-04-19 10:23:27,530 - INFO - Loaded checkpoint from epoch 7
+2022-04-19 10:32:55,451 - INFO - [008]: loss: 0.0011 - train acc: 99.95 - test acc: 99.89 - test eer : 0.0019
+2022-04-19 10:32:55,451 - INFO - Best Test Accuracy: 99.885
+2022-04-19 10:32:58,473 - INFO - Best Model Saved: saved/TSSD_wave_I/best.pt
+2022-04-19 10:32:58,477 - INFO - Prediction Saved: saved/TSSD_wave_I/best_pred.json
+2022-04-19 10:42:35,629 - INFO - [009]: loss: 0.0008 - train acc: 99.97 - test acc: 99.87 - test eer : 0.0023
+2022-04-19 10:52:23,550 - INFO - [010]: loss: 0.0006 - train acc: 99.98 - test acc: 99.87 - test eer : 0.0023
+2022-04-19 11:02:12,030 - INFO - [011]: loss: 0.0006 - train acc: 99.98 - test acc: 99.89 - test eer : 0.0019
+2022-04-19 11:12:00,298 - INFO - [012]: loss: 0.0005 - train acc: 99.98 - test acc: 99.89 - test eer : 0.0019
+2022-04-19 11:21:48,393 - INFO - [013]: loss: 0.0005 - train acc: 99.98 - test acc: 99.89 - test eer : 0.0019
+2022-04-19 11:31:36,309 - INFO - [014]: loss: 0.0004 - train acc: 99.99 - test acc: 99.87 - test eer : 0.0023
+2022-04-19 11:41:23,273 - INFO - [015]: loss: 0.0004 - train acc: 99.99 - test acc: 99.87 - test eer : 0.0023
+2022-04-19 11:51:10,799 - INFO - [016]: loss: 0.0004 - train acc: 99.99 - test acc: 99.83 - test eer : 0.0034
+2022-04-19 12:00:58,019 - INFO - [017]: loss: 0.0003 - train acc: 100.0 - test acc: 99.89 - test eer : 0.0023
+2022-04-19 12:10:44,488 - INFO - [018]: loss: 0.0003 - train acc: 100.0 - test acc: 99.89 - test eer : 0.0023
+2022-04-19 12:20:31,174 - INFO - [019]: loss: 0.0003 - train acc: 100.0 - test acc: 99.92 - test eer : 0.0015
+2022-04-19 12:20:31,174 - INFO - Best Test Accuracy: 99.924
+2022-04-19 12:20:34,202 - INFO - Best Model Saved: saved/TSSD_wave_I/best.pt
+2022-04-19 12:20:34,207 - INFO - Prediction Saved: saved/TSSD_wave_I/best_pred.json
+2022-04-19 12:30:20,191 - INFO - [020]: loss: 0.0003 - train acc: 99.99 - test acc: 99.89 - test eer : 0.0023
+2022-04-19 12:40:07,449 - INFO - [021]: loss: 0.0002 - train acc: 100.0 - test acc: 99.92 - test eer : 0.0015
+2022-04-19 12:49:54,753 - INFO - [022]: loss: 0.0002 - train acc: 100.0 - test acc: 99.94 - test eer : 0.0011
+2022-04-19 12:49:54,753 - INFO - Best Test Accuracy: 99.943
+2022-04-19 12:49:57,774 - INFO - Best Model Saved: saved/TSSD_wave_I/best.pt
+2022-04-19 12:49:57,778 - INFO - Prediction Saved: saved/TSSD_wave_I/best_pred.json
+2022-04-19 12:59:44,932 - INFO - [023]: loss: 0.0002 - train acc: 100.0 - test acc: 99.81 - test eer : 0.0038
+2022-04-19 13:09:31,620 - INFO - [024]: loss: 0.0002 - train acc: 100.0 - test acc: 99.94 - test eer : 0.0011
