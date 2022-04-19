@@ -1,0 +1,89 @@
+2022-04-18 19:58:00,706 - INFO - Batch size: 512, seed: 42, epochs: 25
+2022-04-18 19:58:00,707 - INFO - Training model: WaveRNN
+2022-04-18 19:58:00,707 - INFO - Input feature : wave
+2022-04-18 19:58:00,707 - INFO - Model kwargs  : {
+  "num_frames": 10,
+  "input_length": 64600,
+  "hidden_size": 1000,
+  "device": "cuda"
+}
+2022-04-18 19:58:00,709 - INFO - Loading data...
+2022-04-18 19:58:00,798 - INFO - Loading data from /home/markhuang/Data/WaveFake/real...!
+2022-04-18 19:58:00,928 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_melgan...!
+2022-04-18 19:58:01,128 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_parallel_wavegan...!
+2022-04-18 19:58:01,241 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_waveglow...!
+2022-04-18 19:58:01,473 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_hifiGAN...!
+2022-04-18 19:58:01,581 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_melgan_large...!
+2022-04-18 19:58:01,772 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_full_band_melgan...!
+2022-04-18 19:58:01,880 - INFO - Loading data from /home/markhuang/Data/WaveFake/fake/ljspeech_multi_band_melgan...!
+2022-04-18 19:58:01,880 - INFO - Training model on 88294 audio files.
+2022-04-18 19:58:01,880 - INFO - Testing model on  5240 audio files.
+2022-04-18 19:58:01,880 - INFO - Train/Test ratio: 16.85
+2022-04-18 19:58:01,881 - INFO - Real/Fake ratio in training: 0.135 (pos_weight)
+2022-04-18 19:58:02,170 - INFO - Model summary:
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+RNNClassification                        --                        --
+├─SimpleRNN: 1                           --                        --
+│    └─ModuleList: 2-1                   --                        --
+├─SimpleRNN: 1-1                         [512, 3230]               --
+│    └─ModuleList: 2-1                   --                        --
+│    │    └─RNNCell: 3-1                 [512, 1000]               7,462,000
+│    │    └─RNNCell: 3-2                 [512, 1000]               2,002,000
+│    │    └─RNNCell: 3-3                 [512, 1000]               (recursive)
+│    │    └─RNNCell: 3-4                 [512, 1000]               (recursive)
+│    │    └─RNNCell: 3-5                 [512, 1000]               (recursive)
+│    │    └─RNNCell: 3-6                 [512, 1000]               (recursive)
+│    │    └─RNNCell: 3-7                 [512, 1000]               (recursive)
+│    │    └─RNNCell: 3-8                 [512, 1000]               (recursive)
+│    │    └─RNNCell: 3-9                 [512, 1000]               (recursive)
+│    │    └─RNNCell: 3-10                [512, 1000]               (recursive)
+│    │    └─RNNCell: 3-11                [512, 1000]               (recursive)
+│    │    └─RNNCell: 3-12                [512, 1000]               (recursive)
+│    │    └─RNNCell: 3-13                [512, 1000]               (recursive)
+│    │    └─RNNCell: 3-14                [512, 1000]               (recursive)
+│    │    └─RNNCell: 3-15                [512, 1000]               (recursive)
+│    │    └─RNNCell: 3-16                [512, 1000]               (recursive)
+│    │    └─RNNCell: 3-17                [512, 1000]               (recursive)
+│    │    └─RNNCell: 3-18                [512, 1000]               (recursive)
+│    │    └─RNNCell: 3-19                [512, 1000]               (recursive)
+│    │    └─RNNCell: 3-20                [512, 1000]               (recursive)
+│    └─Linear: 2-2                       [512, 3230]               3,233,230
+├─Dropout: 1-2                           [512, 3230]               --
+├─ReLU: 1-3                              [512, 3230]               --
+├─Linear: 1-4                            [512, 1]                  3,231
+==========================================================================================
+Total params: 12,700,461
+Trainable params: 12,700,461
+Non-trainable params: 0
+Total mult-adds (G): 50.11
+==========================================================================================
+Input size (MB): 132.30
+Forward/backward pass size (MB): 29.62
+Params size (MB): 50.80
+Estimated Total Size (MB): 212.72
+==========================================================================================
+2022-04-18 21:04:36,416 - INFO - [000]: loss: 0.0893 - train acc: 87.88 - test acc: 50.0 - test eer : 0.5
+2022-04-18 21:04:36,416 - INFO - Best Test Accuracy: 50.0
+2022-04-18 21:04:39,703 - INFO - Best Model Saved: saved/WaveRNN_wave_O/best.pt
+2022-04-18 21:04:39,711 - INFO - Prediction Saved: saved/WaveRNN_wave_O/best_pred.json
+2022-04-18 21:43:13,914 - INFO - [001]: loss: 0.0807 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
+2022-04-18 22:21:23,394 - INFO - [002]: loss: 0.0805 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
+2022-04-18 23:00:17,288 - INFO - [003]: loss: 0.0805 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
+2022-04-18 23:39:17,525 - INFO - [004]: loss: 0.0805 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
+2022-04-19 00:18:21,440 - INFO - [005]: loss: 0.0805 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
+2022-04-19 00:57:32,184 - INFO - [006]: loss: 0.0805 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
+2022-04-19 01:36:51,248 - INFO - [007]: loss: 0.0805 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
+2022-04-19 02:16:08,417 - INFO - [008]: loss: 0.0805 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
+2022-04-19 02:55:31,337 - INFO - [009]: loss: 0.0805 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
+2022-04-19 03:34:58,400 - INFO - [010]: loss: 0.0805 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
+2022-04-19 04:14:25,097 - INFO - [011]: loss: 0.0804 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
+2022-04-19 04:53:53,779 - INFO - [012]: loss: 0.0804 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
+2022-04-19 05:33:19,425 - INFO - [013]: loss: 0.0805 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
+2022-04-19 06:12:46,369 - INFO - [014]: loss: 0.0804 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
+2022-04-19 06:50:31,221 - INFO - [015]: loss: 0.0805 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
+2022-04-19 07:27:48,623 - INFO - [016]: loss: 0.0806 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
+2022-04-19 08:05:01,036 - INFO - [017]: loss: 0.0806 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
+2022-04-19 08:42:00,668 - INFO - [018]: loss: 0.0806 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
+2022-04-19 09:18:45,554 - INFO - [019]: loss: 0.0804 - train acc: 88.13 - test acc: 50.0 - test eer : 0.5
