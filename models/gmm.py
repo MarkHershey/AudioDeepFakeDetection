@@ -9,14 +9,6 @@ LOGGER = logging.getLogger(__name__)
 
 
 class GMM(nn.Module):
-    """Base class for Gaussian Mixture Models (GMM).
-    Args:
-        k (int): The number of mixture components.
-        data (torch.Tensor): Data to initialize means from. Must provide more data points than clusters!
-        loc (torch.Tensor): The means of the Gaussian distributions.
-        cov (torch.Tensor): The covariance matrices of the Gaussian distributions.
-        covariance_type (str): Which covariance type to learn? Options: {full, diag}. Default: full.
-    """
 
     def __init__(
         self,
@@ -25,10 +17,7 @@ class GMM(nn.Module):
         covariance_type: str = "full",
         **kwargs,
     ) -> None:
-        """Initialize the GMM model.
-        Args:
-            See class description.
-        """
+
         super().__init__()
         self.k = k
         self.covariance_type = covariance_type
@@ -41,12 +30,6 @@ class GMM(nn.Module):
         self._initalize(data)
 
     def forward(self, X):
-        """Compute the weighted log probabilities for each sample.
-        Args:
-            X (torch.Tensor): Data matrix (n_samples, n_features).
-        Returns:
-            log_prob (torch.Tensor): Log probabilities of each data point in X. (n_sample, )
-        """
         if not self._fitted:
             raise Exception()
 
@@ -88,15 +71,12 @@ class GMM(nn.Module):
             cov = self.cov
             self._comp = D.MultivariateNormal(self.loc, cov)
         elif self.covariance_type == "diag":
-            # since we keep diagonal in log space
             cov = torch.stack([torch.diag(torch.exp(c)) for c in self.cov])
 
-            # we use tril matrix
             self._comp = D.MultivariateNormal(self.loc, scale_tril=cov)
         else:
             raise Exception()
 
-        # create mixing weights
         self._mix = D.Categorical(F.softmax(self.pi, dim=0))
 
     def _initalize(self, data: torch.Tensor):
@@ -108,13 +88,11 @@ class GMM(nn.Module):
                 self.k,
             ],
         )
-
-        # draw from Gaussian distribution
+        
         loc = torch.randn(self.k, d)
         prob = torch.ones(len(data)) / len(data)
         loc = data[torch.multinomial(prob, num_samples=self.k)]
 
-        # simple covariance matrix
         if self.covariance_type == "full":
             cov = torch.stack([torch.eye(d) for _ in range(self.k)])
         elif self.covariance_type == "diag":
