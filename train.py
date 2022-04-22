@@ -11,11 +11,11 @@ from torchinfo import summary
 
 from DataLoader import lfcc, load_directory_split_train_test, mfcc
 from models.cnn import ShallowCNN
+from models.gmm import GMM
 from models.lstm import SimpleLSTM, WaveLSTM
 from models.mlp import MLP
 from models.rnn import WaveRNN
 from models.tssd import TSSD
-from models.gmm import GMM
 from trainer import ModelTrainer
 from utils import set_seed_all
 
@@ -51,9 +51,7 @@ KWARGS_MAP = {
             "out_dim": 1,
         }
     },
-    "GMM": {
-        "mfcc": {"k": 128}
-    },
+    "GMM": {"mfcc": {"k": 128}},
 }
 
 
@@ -129,7 +127,7 @@ def train(
         "MLP",
         "TSSD",
         "WaveRNN",
-        "GMM"
+        "GMM",
     )
 
     # get feature transformation function

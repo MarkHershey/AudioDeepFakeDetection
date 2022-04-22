@@ -9,7 +9,6 @@ LOGGER = logging.getLogger(__name__)
 
 
 class GMM(nn.Module):
-
     def __init__(
         self,
         k: int,
@@ -88,7 +87,7 @@ class GMM(nn.Module):
                 self.k,
             ],
         )
-        
+
         loc = torch.randn(self.k, d)
         prob = torch.ones(len(data)) / len(data)
         loc = data[torch.multinomial(prob, num_samples=self.k)]
