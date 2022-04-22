@@ -1,17 +1,17 @@
+import argparse
 import json
 import logging
 import warnings
 from pathlib import Path
-from typing import Callable, List, Optional, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import torch
-from puts import timestamp_seconds
+from puts import printc, timestamp_seconds
 from torch.utils.data import ConcatDataset
 from torchinfo import summary
 
 from DataLoader import lfcc, load_directory_split_train_test, mfcc
 from models.cnn import ShallowCNN
-from models.gmm import GMM
 from models.lstm import SimpleLSTM, WaveLSTM
 from models.mlp import MLP
 from models.rnn import WaveRNN
@@ -24,7 +24,19 @@ LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.DEBUG)
 
 
-KWARGS_MAP = {
+# all feature classnames
+FEATURE_CLASSNAMES: Tuple[str] = ("wave", "lfcc", "mfcc")
+# all model classnames
+MODEL_CLASSNAMES: Tuple[str] = (
+    "MLP",
+    "WaveRNN",
+    "WaveLSTM",
+    "SimpleLSTM",
+    "ShallowCNN",
+    "TSSD",
+)
+# all model keyword arguments
+KWARGS_MAP: Dict[str, dict] = {
     "SimpleLSTM": {
         "lfcc": {"feat_dim": 40, "time_dim": 972, "mid_dim": 30, "out_dim": 1},
         "mfcc": {"feat_dim": 40, "time_dim": 972, "mid_dim": 30, "out_dim": 1},
@@ -51,7 +63,6 @@ KWARGS_MAP = {
             "out_dim": 1,
         }
     },
-    "GMM": {"mfcc": {"k": 128}},
 }
 
 
@@ -119,16 +130,8 @@ def train(
         None
     """
     feature_classname = feature_classname.lower()
-    assert feature_classname in ("wave", "lfcc", "mfcc")
-    assert model_classname in (
-        "SimpleLSTM",
-        "ShallowCNN",
-        "WaveLSTM",
-        "MLP",
-        "TSSD",
-        "WaveRNN",
-        "GMM",
-    )
+    assert feature_classname in FEATURE_CLASSNAMES
+    assert model_classname in MODEL_CLASSNAMES
 
     # get feature transformation function
     feature_fn = None if feature_classname == "wave" else eval(feature_classname)
@@ -155,9 +158,9 @@ def train(
     assert real_dir.is_dir()
     assert fake_dir.is_dir()
     melgan_dir = fake_dir / "ljspeech_melgan"
-    melganLarge_dir = fake_dir / "ljspeech_melgan_large"
+    # melganLarge_dir = fake_dir / "ljspeech_melgan_large"
     assert melgan_dir.is_dir()
-    assert melganLarge_dir.is_dir()
+    # assert melganLarge_dir.is_dir()
 
     LOGGER.info("Loading data...")
 
@@ -257,17 +260,18 @@ def train(
 
 def experiment(
     name: str,
-    seed: int,
+    real_dir: str,
+    fake_dir: str,
     epochs: int,
     batch_size: int,
     feature_classname: str,
     model_classname: str,
     in_distribution: bool,
-    real_dir: str = "/home/markhuang/Data/WaveFake/real",
-    fake_dir: str = "/home/markhuang/Data/WaveFake/fake",
+    device: str,
+    seed: Optional[int] = None,
     amount_to_use: Union[int, None] = None,
-    device: str = "cuda" if torch.cuda.is_available() else "cpu",
     restore: bool = False,
+    **kwargs,
 ):
 
     root_save_dir = Path("saved")
@@ -281,8 +285,9 @@ def experiment(
     else:
         ckpt = None
 
-    set_seed_all(seed)
     init_logger(log_file)
+    if seed is not None:
+        set_seed_all(seed)
 
     LOGGER.info(f"Batch size: {batch_size}, seed: {seed}, epochs: {epochs}")
 
@@ -301,100 +306,153 @@ def experiment(
     )
 
 
-def debug():
+def debug(real_dir: str, fake_dir: str, device: str):
     for model_classname in KWARGS_MAP.keys():
         for feature_classname in KWARGS_MAP[model_classname].keys():
             for in_distribution in [True, False]:
                 exp_setup = "I" if in_distribution else "O"
                 exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
                 try:
-                    print(f">>>>> DEBUGGING: {exp_name}")
+                    printc(f">>>>> DEBUGGING: {exp_name}")
                     experiment(
                         name="debug",
                         seed=0,
                         epochs=3,
                         batch_size=16,
+                        device=device,
                         feature_classname=feature_classname,
                         model_classname=model_classname,
                         in_distribution=in_distribution,
-                        real_dir="/home/markhh/Documents/DeepFakeAudioDetection/LJ_Speech",
-                        fake_dir="/home/markhh/Documents/DeepFakeAudioDetection/WaveFake_generated_audio",
+                        real_dir=real_dir,
+                        fake_dir=fake_dir,
                         amount_to_use=160,
                     )
-                    print(f">>>>> DEBUGGING Done: {exp_name}\n\n")
+                    printc(f">>>>> DEBUGGING Done: {exp_name}\n\n")
                 except Exception as e:
-                    print(f">>>>> DEBUGGING Failed: {exp_name}\n\n")
+                    printc(f">>>>> DEBUGGING Failed: {exp_name}\n\n", color="red")
                     LOGGER.exception(e)
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--real_dir",
+        "--real",
+        help="Directory containing real data.",
+        type=str,
+        default="data/real",
+    )
+    parser.add_argument(
+        "--fake_dir",
+        "--fake",
+        help="Directory containing fake data.",
+        type=str,
+        default="data/fake",
+    )
+
+    parser.add_argument(
+        "--batch_size",
+        help="Batch size.",
+        type=int,
+        default=256,
+    )
+    parser.add_argument(
+        "--epochs",
+        help="Number of maximum epochs to train.",
+        type=int,
+        default=20,
+    )
+    parser.add_argument(
+        "--seed",
+        help="Random seed.",
+        type=int,
+        default=42,
+    )
+    parser.add_argument(
+        "--feature_classname",
+        help="Feature classname. One of: {}".format(", ".join(FEATURE_CLASSNAMES)),
+        choices=FEATURE_CLASSNAMES,
+        type=str,
+        default="lfcc",
+    )
+    parser.add_argument(
+        "--model_classname",
+        help="Model classname. One of: {}".format(", ".join(MODEL_CLASSNAMES)),
+        choices=MODEL_CLASSNAMES,
+        type=str,
+        default="ShallowCNN",
+    )
+    parser.add_argument(
+        "--in_distribution",
+        "--in_dist",
+        help="Whether to use in distribution experiment setup.",
+        type=bool,
+        default=True,
+    )
+    parser.add_argument(
+        "--device",
+        help="Device to use.",
+        type=str,
+        default="cuda" if torch.cuda.is_available() else "cpu",
+    )
+    parser.add_argument(
+        "--deterministic",
+        help="Whether to use deterministic training (fix random seed).",
+        action="store_true",
+    )
+    parser.add_argument(
+        "--restore",
+        help="Whether to restore from checkpoint.",
+        action="store_true",
+    )
+    parser.add_argument(
+        "--debug",
+        help="Whether to use debug mode.",
+        action="store_true",
+    )
+    parser.add_argument(
+        "--debug_all",
+        help="Whether to use debug mode for all models.",
+        action="store_true",
+    )
+
+    args = parser.parse_args()
+    return args
 
 
 def main():
-    # for in_distribution in [True, False]:
-    #     for model_classname in ["WaveRNN"]:
-    #         for feature_classname in ["wave"]:
-    #             exp_setup = "I" if in_distribution else "O"
-    #             exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
-    #             try:
-    #                 print(f">>>>> Starting experiment: {exp_name}")
-    #                 experiment(
-    #                     name=exp_name,
-    #                     seed=42,
-    #                     epochs=25,
-    #                     batch_size=512,
-    #                     feature_classname=feature_classname,
-    #                     model_classname=model_classname,
-    #                     in_distribution=in_distribution,
-    #                     restore=False,
-    #                 )
-    #                 print(f">>>>> Experiment Done: {exp_name}\n\n")
-    #             except Exception as e:
-    #                 print(f">>>>> Experiment Failed: {exp_name}\n\n")
-    #                 LOGGER.exception(e)
+    args = parse_args()
 
-    # for in_distribution in [True, False]:
-    #     for model_classname in ["WaveLSTM"]:
-    #         for feature_classname in ["wave"]:
-    #             exp_setup = "I" if in_distribution else "O"
-    #             exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
-    #             try:
-    #                 print(f">>>>> Starting experiment: {exp_name}")
-    #                 experiment(
-    #                     name=exp_name,
-    #                     seed=42,
-    #                     epochs=30,
-    #                     batch_size=512,
-    #                     feature_classname=feature_classname,
-    #                     model_classname=model_classname,
-    #                     in_distribution=in_distribution,
-    #                     restore=True,
-    #                 )
-    #                 print(f">>>>> Experiment Done: {exp_name}\n\n")
-    #             except Exception as e:
-    #                 print(f">>>>> Experiment Failed: {exp_name}\n\n")
-    #                 LOGGER.exception(e)
+    if args.debug_all:
+        debug(args.real, args.fake, args.device)
+        return
 
-    for model_classname in ["TSSD"]:
-        for feature_classname in ["wave"]:
-            for in_distribution in [True]:
-                exp_setup = "I" if in_distribution else "O"
-                exp_name = f"{model_classname}_{feature_classname}_{exp_setup}"
-                try:
-                    print(f">>>>> Starting experiment: {exp_name}")
-                    experiment(
-                        name=exp_name,
-                        seed=42,
-                        epochs=25,
-                        batch_size=256,
-                        feature_classname=feature_classname,
-                        model_classname=model_classname,
-                        in_distribution=in_distribution,
-                        restore=True,
-                    )
-                    print(f">>>>> Experiment Done: {exp_name}\n\n")
-                except Exception as e:
-                    print(f">>>>> Experiment Failed: {exp_name}\n\n")
-                    LOGGER.exception(e)
+    exp_setup = "I" if args.in_distribution else "O"
+    exp_name = f"{args.model_classname}_{args.feature_classname}_{exp_setup}"
+    if args.debug:
+        exp_name = "debug"
+    try:
+        printc(f">>>>> Starting experiment: {exp_name}")
+        experiment(
+            name=exp_name,
+            real_dir=args.real_dir,
+            fake_dir=args.fake_dir,
+            epochs=args.epochs,
+            batch_size=args.batch_size,
+            feature_classname=args.feature_classname,
+            model_classname=args.model_classname,
+            in_distribution=args.in_distribution,
+            device=args.device,
+            seed=args.seed if args.deterministic else None,
+            amount_to_use=160 if args.debug else None,
+            restore=args.restore,
+        )
+        printc(f">>>>> Experiment Done: {exp_name}\n\n")
+    except Exception as e:
+        printc(f">>>>> Experiment Failed: {exp_name}\n\n", color="red")
+        LOGGER.exception(e)
 
 
 if __name__ == "__main__":
-    # debug()
     main()

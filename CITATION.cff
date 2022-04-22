@@ -1,0 +1,24 @@
+# YAML 1.2
+---
+cff-version: 1.2.0
+message: "If you use this repository, please cite it as below."
+authors:
+    - affiliation: "Singapore University of Technology and Design"
+      family-names: "Huang"
+      given-names: "Mark He"
+    - affiliation: "Singapore University of Technology and Design"
+      family-names: "Zhang"
+      given-names: "Peiyuan"
+    - affiliation: "Singapore University of Technology and Design"
+      family-names: "Tiovalen"
+      given-names: "James Raphael"
+    - affiliation: "Singapore University of Technology and Design"
+      family-names: "Balaji"
+      given-names: "Madhumitha"
+    - affiliation: "Singapore University of Technology and Design"
+      family-names: "Shyam"
+      given-names: "Sridhar"
+title: "Audio Deep Fake Detection"
+version: 0.0.1
+date-released: 2022-04-25
+url: "https://github.com/MarkHershey/AudioDeepFakeDetection"

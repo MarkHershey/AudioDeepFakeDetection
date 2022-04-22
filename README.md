@@ -2,17 +2,18 @@
 
 ## Setup Environment
 
--   Step 1:
-    ```bash
-    # set up python virtual environment
-    python3 -m venv venv && source venv/bin/activate
-    # make sure your pip is up to date
-    pip install -U pip wheel setuptools
-    # install required dependencies
-    pip install -r requirements.txt
-    ```
--   Step 2:
-    -   Install pytorch that suits your machine: [https://pytorch.org/get-started/locally/](https://pytorch.org/get-started/locally/)
+```bash
+# set up python virtual environment
+python3 -m venv venv && source venv/bin/activate
+
+# make sure your pip is up to date
+pip install -U pip wheel setuptools
+
+# install required dependencies
+pip install -r requirements.txt
+```
+
+-   Install pytorch that suits your machine: [https://pytorch.org/get-started/locally/](https://pytorch.org/get-started/locally/)
 
 ## Setup Datasets
 
@@ -26,22 +27,20 @@ You may download the datasets used in the project from the following URLs:
 After downloading the datasets, you may extract them under `data/real` and `data/fake` respectively. In the end, the `data` directory should look like this:
 
 ```
-
 data
 ├── real
 │   └── wavs
 └── fake
-├── common_voices_prompts_from_conformer_fastspeech2_pwg_ljspeech
-├── jsut_multi_band_melgan
-├── jsut_parallel_wavegan
-├── ljspeech_full_band_melgan
-├── ljspeech_hifiGAN
-├── ljspeech_melgan
-├── ljspeech_melgan_large
-├── ljspeech_multi_band_melgan
-├── ljspeech_parallel_wavegan
-└── ljspeech_waveglow
-
+    ├── common_voices_prompts_from_conformer_fastspeech2_pwg_ljspeech
+    ├── jsut_multi_band_melgan
+    ├── jsut_parallel_wavegan
+    ├── ljspeech_full_band_melgan
+    ├── ljspeech_hifiGAN
+    ├── ljspeech_melgan
+    ├── ljspeech_melgan_large
+    ├── ljspeech_multi_band_melgan
+    ├── ljspeech_parallel_wavegan
+    └── ljspeech_waveglow
 ```
 
 ## Model Checkpoints
@@ -65,8 +64,59 @@ git lfs pull
 
 ## Training
 
-## Evaluation
+Use the [`train.py`](train.py) script to train the model.
+
+```
+usage: train.py [-h] [--real_dir REAL_DIR] [--fake_dir FAKE_DIR] [--batch_size BATCH_SIZE] [--epochs EPOCHS]
+                [--seed SEED] [--feature_classname {wave,lfcc,mfcc}]
+                [--model_classname {MLP,WaveRNN,WaveLSTM,SimpleLSTM,ShallowCNN,TSSD}]
+                [--in_distribution IN_DISTRIBUTION] [--device DEVICE] [--deterministic] [--restore] [--debug]
+                [--debug_all]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --real_dir REAL_DIR, --real REAL_DIR
+                        Directory containing real data.
+  --fake_dir FAKE_DIR, --fake FAKE_DIR
+                        Directory containing fake data.
+  --batch_size BATCH_SIZE
+                        Batch size.
+  --epochs EPOCHS       Number of maximum epochs to train.
+  --seed SEED           Random seed.
+  --feature_classname {wave,lfcc,mfcc}
+                        Feature classname. One of: wave, lfcc, mfcc
+  --model_classname {MLP,WaveRNN,WaveLSTM,SimpleLSTM,ShallowCNN,TSSD}
+                        Model classname. One of: MLP, WaveRNN, WaveLSTM, SimpleLSTM, ShallowCNN, TSSD
+  --in_distribution IN_DISTRIBUTION, --in_dist IN_DISTRIBUTION
+                        Whether to use in distribution experiment setup.
+  --device DEVICE       Device to use.
+  --deterministic       Whether to use deterministic training (fix random seed).
+  --restore             Whether to restore from checkpoint.
+  --debug               Whether to use debug mode.
+  --debug_all           Whether to use debug mode for all models.
+```
+
+Example:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 python train.py --real data/real --fake data/fake --batch_size 128 --epochs 20 --seed 42 --feature_classname lfcc --model_classname ShallowCNN
+
+```
+
+## Evaluation Results
+
+Go to the directory [saved](saved) to see the evaluation results.
+
+Run the following command to re-compute the evaluation results based on saved predictions and labels:
+
+```bash
+python metrics.py
+```
 
 ## Acknowledgements
 
 -   Our code is partially adopted from [WaveFake](https://github.com/RUB-SysSec/WaveFake).
+
+## License
+
+Our project is licensed under the [MIT license](LICENSE)

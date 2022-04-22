@@ -1,5 +1,6 @@
 numpy
 scipy
+librosa
 matplotlib
 scikit-learn
 torchinfo
