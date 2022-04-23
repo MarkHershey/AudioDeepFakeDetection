@@ -339,46 +339,46 @@ def parse_args():
     parser.add_argument(
         "--real_dir",
         "--real",
-        help="Directory containing real data.",
+        help="Directory containing real data. (default: 'data/real')",
         type=str,
         default="data/real",
     )
     parser.add_argument(
         "--fake_dir",
         "--fake",
-        help="Directory containing fake data.",
+        help="Directory containing fake data. (default: 'data/fake')",
         type=str,
         default="data/fake",
     )
 
     parser.add_argument(
         "--batch_size",
-        help="Batch size.",
+        help="Batch size. (default: 256)",
         type=int,
         default=256,
     )
     parser.add_argument(
         "--epochs",
-        help="Number of maximum epochs to train.",
+        help="Number of maximum epochs to train. (default: 20)",
         type=int,
         default=20,
     )
     parser.add_argument(
         "--seed",
-        help="Random seed.",
+        help="Random seed. (default: 42)",
         type=int,
         default=42,
     )
     parser.add_argument(
         "--feature_classname",
-        help="Feature classname. One of: {}".format(", ".join(FEATURE_CLASSNAMES)),
+        help="Feature classname. (default: 'lfcc')",
         choices=FEATURE_CLASSNAMES,
         type=str,
         default="lfcc",
     )
     parser.add_argument(
         "--model_classname",
-        help="Model classname. One of: {}".format(", ".join(MODEL_CLASSNAMES)),
+        help="Model classname. (default: 'ShallowCNN')",
         choices=MODEL_CLASSNAMES,
         type=str,
         default="ShallowCNN",
@@ -386,19 +386,20 @@ def parse_args():
     parser.add_argument(
         "--in_distribution",
         "--in_dist",
-        help="Whether to use in distribution experiment setup.",
+        help="Whether to use in distribution experiment setup. (default: True)",
+        choices=["True", "False"],
         type=bool,
         default=True,
     )
     parser.add_argument(
         "--device",
-        help="Device to use.",
+        help="Device to use. (default: 'cuda' if possible)",
         type=str,
         default="cuda" if torch.cuda.is_available() else "cpu",
     )
     parser.add_argument(
         "--deterministic",
-        help="Whether to use deterministic training (fix random seed).",
+        help="Whether to use deterministic training (reproducible results).",
         action="store_true",
     )
     parser.add_argument(

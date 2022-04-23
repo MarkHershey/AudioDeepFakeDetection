@@ -5,9 +5,9 @@ import json
 import os
 
 import librosa
+import matplotlib.pyplot as plt
 import torch
 import torchaudio
-import matplotlib.pyplot as plt
 
 from module.lfcc import LFCC
 

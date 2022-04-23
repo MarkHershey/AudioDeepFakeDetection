@@ -1,4 +1,8 @@
-# AudioDeepFakeDetection
+# Audio Deep Fake Detection
+
+A Course Project for SUTD 50.039 Theory and Practice of Deep Learning (2022 Spring)
+
+by Mark He Huang, Peiyuan Zhang, James Raphael Tiovalen, Madhumitha Balaji, and Shyam Sridhar.
 
 ## Setup Environment
 
@@ -47,7 +51,7 @@ data
 
 Model checkpoints are included in this repository using [Git Large File Storage (LFS)](https://git-lfs.github.com/).
 
-If you already have `git-lfs` installed, the model checkpoints will be automatically downloaded when command running `git clone` or `git pull`.
+If you already have `git-lfs` installed, the model checkpoints will be automatically downloaded when you run command `git clone` or `git pull`.
 
 If you don't have `git-lfs` installed, you can follow the install instructions [here](https://git-lfs.github.com/). For debain-based linux users, you can install `git-lfs` using the following command:
 
@@ -70,27 +74,27 @@ Use the [`train.py`](train.py) script to train the model.
 usage: train.py [-h] [--real_dir REAL_DIR] [--fake_dir FAKE_DIR] [--batch_size BATCH_SIZE] [--epochs EPOCHS]
                 [--seed SEED] [--feature_classname {wave,lfcc,mfcc}]
                 [--model_classname {MLP,WaveRNN,WaveLSTM,SimpleLSTM,ShallowCNN,TSSD}]
-                [--in_distribution IN_DISTRIBUTION] [--device DEVICE] [--deterministic] [--restore] [--debug]
+                [--in_distribution {True,False}] [--device DEVICE] [--deterministic] [--restore] [--debug]
                 [--debug_all]
 
 optional arguments:
   -h, --help            show this help message and exit
   --real_dir REAL_DIR, --real REAL_DIR
-                        Directory containing real data.
+                        Directory containing real data. (default: 'data/real')
   --fake_dir FAKE_DIR, --fake FAKE_DIR
-                        Directory containing fake data.
+                        Directory containing fake data. (default: 'data/fake')
   --batch_size BATCH_SIZE
-                        Batch size.
-  --epochs EPOCHS       Number of maximum epochs to train.
-  --seed SEED           Random seed.
+                        Batch size. (default: 256)
+  --epochs EPOCHS       Number of maximum epochs to train. (default: 20)
+  --seed SEED           Random seed. (default: 42)
   --feature_classname {wave,lfcc,mfcc}
-                        Feature classname. One of: wave, lfcc, mfcc
+                        Feature classname. (default: 'lfcc')
   --model_classname {MLP,WaveRNN,WaveLSTM,SimpleLSTM,ShallowCNN,TSSD}
-                        Model classname. One of: MLP, WaveRNN, WaveLSTM, SimpleLSTM, ShallowCNN, TSSD
-  --in_distribution IN_DISTRIBUTION, --in_dist IN_DISTRIBUTION
-                        Whether to use in distribution experiment setup.
-  --device DEVICE       Device to use.
-  --deterministic       Whether to use deterministic training (fix random seed).
+                        Model classname. (default: 'ShallowCNN')
+  --in_distribution {True,False}, --in_dist {True,False}
+                        Whether to use in distribution experiment setup. (default: True)
+  --device DEVICE       Device to use. (default: 'cuda' if possible)
+  --deterministic       Whether to use deterministic training (reproducible results).
   --restore             Whether to restore from checkpoint.
   --debug               Whether to use debug mode.
   --debug_all           Whether to use debug mode for all models.
@@ -98,14 +102,21 @@ optional arguments:
 
 Example:
 
+To make sure all models can run successfully on your device, you can run the following command to test:
+
+```bash
+python train.py --debug_all
+```
+
+To train the model `ShallowCNN` with `lfcc` features in the in-distribution setting, you can run the following command:
+
 ```bash
 CUDA_VISIBLE_DEVICES=0 python train.py --real data/real --fake data/fake --batch_size 128 --epochs 20 --seed 42 --feature_classname lfcc --model_classname ShallowCNN
-
 ```
 
 ## Evaluation Results
 
-Go to the directory [saved](saved) to see the evaluation results.
+By default, we directly use test set for training validation, and the best model and the best predictions will be automatically saved in the [`saved`](saved) directory during training. Go to the directory [`saved`](saved) to see the evaluation results.
 
 Run the following command to re-compute the evaluation results based on saved predictions and labels:
 
@@ -115,7 +126,9 @@ python metrics.py
 
 ## Acknowledgements
 
--   Our code is partially adopted from [WaveFake](https://github.com/RUB-SysSec/WaveFake).
+-   We thank [Dr. Matthieu De Mari](https://istd.sutd.edu.sg/people/faculty/matthieu-de-mari) and [Prof. Berrak Sisman](https://istd.sutd.edu.sg/people/faculty/berrak-sisman) for their teaching and guidance.
+-   We thank Joel Frank and Lea Schönherr. Our code is partially adopted from their repository [WaveFake](https://github.com/RUB-SysSec/WaveFake).
+-   We thank [Prof. Liu Jun](https://istd.sutd.edu.sg/people/faculty/liu-jun) for providing GPU resources for conducting experiments for this project.
 
 ## License
 
