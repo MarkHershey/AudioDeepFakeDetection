@@ -90,7 +90,7 @@ if __name__ == "__main__":
     with open("saved/testing_audio_names.txt") as data_filename_file:
         data_filenames = data_filename_file.readlines()
 
-    # By interesting, we mean that some of the models wrongly classified the data point.
+    # By interesting, we mean that some of the models wrongly classified the data point
     interesting_data_points_results = []
     for dataset_idx in range(5240):
         single_data_point_result = []
