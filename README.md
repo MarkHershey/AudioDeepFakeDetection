@@ -13,7 +13,7 @@ pip install -U pip wheel setuptools
 pip install -r requirements.txt
 ```
 
--   Install pytorch that suits your machine: [https://pytorch.org/get-started/locally/](https://pytorch.org/get-started/locally/)
+-   Install PyTorch that suits your machine: [https://pytorch.org/get-started/locally/](https://pytorch.org/get-started/locally/)
 
 ## Setup Datasets
 
@@ -119,4 +119,4 @@ python metrics.py
 
 ## License
 
-Our project is licensed under the [MIT license](LICENSE)
+Our project is licensed under the [MIT License](LICENSE).
