@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 
 from module.lfcc import LFCC
 
+# We only consider and include the qualified models here
 models = [
     "ShallowCNN_lfcc_I",
     "ShallowCNN_lfcc_O",

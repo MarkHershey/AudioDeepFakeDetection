@@ -3,13 +3,13 @@
 ## Setup Environment
 
 ```bash
-# set up python virtual environment
+# Set up Python virtual environment
 python3 -m venv venv && source venv/bin/activate
 
-# make sure your pip is up to date
+# Make sure your PIP is up to date
 pip install -U pip wheel setuptools
 
-# install required dependencies
+# Install required dependencies
 pip install -r requirements.txt
 ```
 
