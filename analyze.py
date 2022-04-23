@@ -5,12 +5,13 @@ import json
 import os
 
 import librosa
+import torch
 import torchaudio
+import matplotlib.pyplot as plt
 
 from module.lfcc import LFCC
 
 models = [
-    "MLP_mfcc_I",
     "ShallowCNN_lfcc_I",
     "ShallowCNN_lfcc_O",
     "ShallowCNN_mfcc_I",
@@ -20,6 +21,7 @@ models = [
     "TSSD_wave_I",
     "TSSD_wave_O",
     "WaveLSTM_wave_I",
+    "WaveRNN_wave_I",
 ]
 
 
@@ -76,6 +78,18 @@ def plot_spectrogram(spec, title=None, ylabel="freq_bin", aspect="auto", xmax=No
     plt.show()
 
 
+def plot_actual_waveform(audio_path):
+    waveform, sample_rate = torchaudio.load(audio_path)
+    plot_waveform(waveform, sample_rate, title=f"{audio_path} (Waveform)")
+
+
+def plot_actual_spectrogram(audio_path):
+    waveform, sample_rate = torchaudio.load(audio_path)
+    spectrogram_transform = torchaudio.transforms.Spectrogram()
+    spectrogram = spectrogram_transform(waveform)
+    plot_spectrogram(spectrogram[0], title=f"{audio_path} (Spectrogram)")
+
+
 def plot_mfcc(audio_path):
     waveform, sample_rate = torchaudio.load(audio_path)
     mfcc_transform = torchaudio.transforms.MFCC(sample_rate=sample_rate)
@@ -94,6 +108,7 @@ if __name__ == "__main__":
     with open("saved/testing_audio_names.txt") as data_filename_file:
         data_filenames = data_filename_file.readlines()
 
+    """
     # By interesting, we mean that some of the models wrongly classified the data point.
     interesting_data_points_results = []
     for dataset_idx in range(5240):
@@ -118,10 +133,13 @@ if __name__ == "__main__":
 
     print(interesting_data_points_results)
 
+    """
     anomaly_directory = "anomalies"
 
     for file in os.listdir(anomaly_directory):
         f = os.path.join(anomaly_directory, file)
         if os.path.isfile(f):
+            plot_actual_waveform(f)
+            plot_actual_spectrogram(f)
             plot_mfcc(f)
             plot_lfcc(f)
