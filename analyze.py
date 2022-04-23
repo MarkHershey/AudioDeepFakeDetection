@@ -48,25 +48,6 @@ def plot_waveform(waveform, sample_rate, title="Waveform", xlim=None, ylim=None)
     plt.show()
 
 
-def plot_specgram(waveform, sample_rate, title="Spectrogram", xlim=None):
-    waveform = waveform.numpy()
-
-    num_channels, num_frames = waveform.shape
-    time_axis = torch.arange(0, num_frames) / sample_rate
-
-    figure, axes = plt.subplots(num_channels, 1)
-    if num_channels == 1:
-        axes = [axes]
-    for c in range(num_channels):
-        axes[c].specgram(waveform[c], Fs=sample_rate)
-        if num_channels > 1:
-            axes[c].set_ylabel(f"Channel {c+1}")
-        if xlim:
-            axes[c].set_xlim(xlim)
-    figure.suptitle(title)
-    plt.show()
-
-
 def plot_spectrogram(spec, title=None, ylabel="freq_bin", aspect="auto", xmax=None):
     fig, axs = plt.subplots(1, 1)
     axs.set_title(title or "Spectrogram (dB)")
@@ -109,7 +90,6 @@ if __name__ == "__main__":
     with open("saved/testing_audio_names.txt") as data_filename_file:
         data_filenames = data_filename_file.readlines()
 
-    """
     # By interesting, we mean that some of the models wrongly classified the data point.
     interesting_data_points_results = []
     for dataset_idx in range(5240):
@@ -134,7 +114,6 @@ if __name__ == "__main__":
 
     print(interesting_data_points_results)
 
-    """
     anomaly_directory = "anomalies"
 
     for file in os.listdir(anomaly_directory):
