@@ -40,6 +40,9 @@ def plot_waveform(waveform, sample_rate, title="Waveform", xlim=None, ylim=None)
         axes[c].grid(True)
         if num_channels > 1:
             axes[c].set_ylabel(f"Channel {c+1}")
+        else:
+            axes[c].set_ylabel("Amplitude")
+        axes[c].set_xlabel("Time (s)")
         if xlim:
             axes[c].set_xlim(xlim)
         if ylim:
