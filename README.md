@@ -4,6 +4,8 @@ A Course Project for SUTD 50.039 Theory and Practice of Deep Learning (2022 Spri
 
 Created by Mark He Huang, Peiyuan Zhang, James Raphael Tiovalen, Madhumitha Balaji, and Shyam Sridhar.
 
+[Project Report](Report.pdf) | [GUI](https://markhh.com/AudioDeepFakeDetection/)
+
 ## Setup Environment
 
 ```bash
