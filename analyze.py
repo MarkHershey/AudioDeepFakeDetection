@@ -117,7 +117,7 @@ if __name__ == "__main__":
 
     print(interesting_data_points_results)
 
-    anomaly_directory = "anomalies"
+    anomaly_directory = "samples/anomalies"
 
     for file in os.listdir(anomaly_directory):
         f = os.path.join(anomaly_directory, file)

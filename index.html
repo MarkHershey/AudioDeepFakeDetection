@@ -29,8 +29,42 @@
         .slider-with-animated-handle:hover .custom-animated-handle {
             transform: scale(1.2);
         }
+
+        .loader-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: #fff;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 6px;
+        }
+        .loader-wrapper .loader {
+            height: 40px;
+            width: 40px;
+        }
+        .loader-wrapper.is-active {
+            opacity: 1;
+            z-index: 1;
+        }
+
+        .is-loading {
+            position: relative;
+        }
+
+        .box {
+            padding: 20px;
+            position: relative;
+            margin-top: 10px;
+        }
     </style>
-    <script type="text/javascript" src="js/loadingOverlay.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f" crossorigin="anonymous"></script>
     <script type="text/javascript">
         let output_to_result_mapping = {
             "0": "Fake",
@@ -145,14 +179,20 @@
             }
         }
         function getCachedAudioResult() {
+            let loader_wrapper = document.getElementsByClassName("loader-wrapper")[0];
+            loader_wrapper.classList.add("is-active");
+            setTimeout(function() {
+                loader_wrapper.classList.remove("is-active");
+            }, 2000);
             let audioFileName = document.getElementById("audio-selector").value;
-            let result = document.createTextNode("Result: " + output_to_result_mapping[cached_inference[audioFileName]]);
-            let newChildNodes = [result];
+            let result_content = document.createElement("b");
+            result_content.innerHTML = output_to_result_mapping[cached_inference[audioFileName]];
+            let newChildNodes = [result_content];
             let resultElement = document.getElementById('audio_result_container');
             if (resultElement.hasChildNodes()) {
                 resultElement.replaceChildren(...newChildNodes);
             } else {
-                resultElement.appendChild(result);
+                resultElement.appendChild(result_content);
             }
         }
     </script>
@@ -212,7 +252,7 @@
             </article>
             <article class="message is-link">
                 <div class="message-header">
-                    <p>Dataset Exploration</p>
+                    <p>Try It Out!</p>
                 </div>
                 <div class="message-body">
                     <p>In this section, you can select either a real audio or a fake audio from our dataset, listen to it, and see how our model performs.</p>
@@ -275,7 +315,14 @@
                     <br>
                     <input id="submit_button" class="button" onclick="getCachedAudioResult();" type="submit" value="Predict">
                     <br>
-                    <div id="audio_result_container"></div>
+                    <div class="box">
+                        <div class="loader-wrapper">
+                            <div class="loader is-loading"></div>
+                        </div>
+                        <div id="audio_result_container">
+                            <p>The prediction result will appear here.</p>
+                        </div>
+                    </div>
                 </div>
             </article>
             <article class="message is-warning">
@@ -288,7 +335,7 @@
                     <li>
                         <p>LJ045-0047</p>
                         <audio controls>
-                            <source src="./anomalies/LJ045-0047.wav" type="audio/wav">
+                            <source src="./samples/anomalies/LJ045-0047.wav" type="audio/wav">
                             Your browser does not support the audio tag.
                         </audio>
                         <p>Transcript: <em>and I told him that</em></p>
@@ -296,7 +343,7 @@
                     <li>
                         <p>LJ045-0087</p>
                         <audio controls>
-                            <source src="./anomalies/LJ045-0087.wav" type="audio/wav">
+                            <source src="./samples/anomalies/LJ045-0087.wav" type="audio/wav">
                             Your browser does not support the audio tag.
                         </audio>
                         <p>Transcript <em>Mrs. Oswald told another of her friends that Oswald was very cold to her, that they very seldom had sexual relations</em></p>
@@ -307,7 +354,7 @@
                     <li>
                         <p>LJ045-0047_gen</p>
                         <audio controls>
-                            <source src="./anomalies/LJ045-0047_gen.wav" type="audio/wav">
+                            <source src="./samples/anomalies/LJ045-0047_gen.wav" type="audio/wav">
                             Your browser does not support the audio tag.
                         </audio>
                         <p><em>and I told him that</em></p>
@@ -315,7 +362,7 @@
                     <li>
                         <p>LJ045-0087_gen</p>
                         <audio controls>
-                            <source src="./anomalies/LJ045-0087_gen.wav" type="audio/wav">
+                            <source src="./samples/anomalies/LJ045-0087_gen.wav" type="audio/wav">
                             Your browser does not support the audio tag.
                         </audio>
                         <p><em>Mrs. Oswald told another of her friends that Oswald was very cold to her, that they very seldom had sexual relations</em></p>
