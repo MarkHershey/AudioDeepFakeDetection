@@ -191,3 +191,70 @@ class ModelTrainer(Trainer):
                     LOGGER.info(f"Prediction Saved: {save_path}")
 
         return None
+
+    def eval(
+        self,
+        model: nn.Module,
+        dataset_test: Dataset,
+        save_dir: Union[str, Path] = None,  # directory to save model predictions
+        checkpoint: dict = None,
+    ) -> None:
+        if save_dir:
+            save_dir: Path = Path(save_dir)
+            if not save_dir.exists():
+                save_dir.mkdir(parents=True)
+
+        test_loader = DataLoader(
+            dataset_test,
+            batch_size=self.batch_size,
+            drop_last=False,
+        )
+        #######################################################################
+
+        if checkpoint is not None:
+            model.load_state_dict(checkpoint["state_dict"])
+            # optim.load_state_dict(checkpoint["optimizer"])
+            start_epoch = checkpoint["epoch"] + 1
+            LOGGER.info(f"Loaded checkpoint from epoch {start_epoch - 1}")
+
+        ###################################################################
+        # evaluation
+        model.eval()
+        num_correct = 0.0
+        num_total = 0.0
+        # save test label and predictions
+        y_true = []
+        y_pred = []
+
+        for batch_x, _, _, batch_y in test_loader:
+            # get actual batch size
+            curr_batch_size = batch_x.size(0)
+            num_total += curr_batch_size
+            # get batch input x
+            batch_x = batch_x.to(self.device)
+            # make batch label y a vector
+            batch_y = batch_y.unsqueeze(1).type(torch.float32).to(self.device)
+            y_true.append(batch_y.clone().detach().int().cpu())
+            # forward / inference
+            batch_out = model(batch_x)
+            # get binary prediction {0, 1}
+            batch_pred = (torch.sigmoid(batch_out) + 0.5).int()
+            y_pred.append(batch_pred.clone().detach().cpu())
+            # count number of correct predictions
+            num_correct += (batch_pred == batch_y.int()).sum(dim=0).item()
+
+        # get test accuracy
+        test_acc = (num_correct / num_total) * 100
+        # get all labels and predictions
+        y_true: np.ndarray = torch.cat(y_true, dim=0).numpy()
+        y_pred: np.ndarray = torch.cat(y_pred, dim=0).numpy()
+        # get auc and eer
+        test_eer = alt_compute_eer(y_true, y_pred)
+
+        LOGGER.info(f"test acc: {round(test_acc, 2)} - test eer : {round(test_eer, 4)}")
+
+        if save_dir:
+            # save labels and predictions
+            save_path = save_dir / "best_pred.json"
+            save_pred(y_true, y_pred, save_path)
+            LOGGER.info(f"Prediction Saved: {save_path}")
