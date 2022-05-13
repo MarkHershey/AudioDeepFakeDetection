@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AudioDeepFakeDetection</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/fontawesome.min.css" integrity="sha256-fSct41tBD7FlN3VQzfnE06gPu8yWHhEZFOTVwOr1cp8=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <script defer src="https://unpkg.com/img-comparison-slider@7/dist/index.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/img-comparison-slider@7/dist/styles.css"/>
@@ -61,10 +63,9 @@
         .box {
             padding: 20px;
             position: relative;
-            margin-top: 10px;
+            margin-top: 15px;
         }
     </style>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f" crossorigin="anonymous"></script>
     <script type="text/javascript">
         let output_to_result_mapping = {
             "0": "Fake",
@@ -156,44 +157,45 @@
         };
         function processAudioSelection() {
             let audioFileName = document.getElementById("audio-selector").value;
+            if (!audioFileName) {
+                return;
+            }
             let sound = document.createElement('audio');
             sound.id = 'selected-audio-player';
             sound.controls = 'controls';
             let divider = document.createElement("br");
-            let transcript_header = document.createTextNode("Transcript: ");
-            let transcript_content = document.createElement("em");
-            transcript_content.innerHTML = cached_transcript[audioFileName];
-            let newChildNodes = [sound, divider, transcript_header, transcript_content];
+            let transcriptHeader = document.createTextNode("Transcript: ");
+            let transcriptContent = document.createElement("em");
+            transcriptContent.innerHTML = cached_transcript[audioFileName];
+            let newChildNodes = [sound, divider, transcriptHeader, transcriptContent];
             fetch('https://markhh.com/AudioDeepFakeDetection/samples/' + audioFileName + ".wav")
             .then(response => response.blob())
             .then(blob=>sound.src = URL.createObjectURL(blob))
             sound.type = 'audio/wav';
             let audioElement = document.getElementById('selected_audio_container');
-            if (audioElement.hasChildNodes()) {
-                audioElement.replaceChildren(...newChildNodes);
-            } else {
-                audioElement.appendChild(sound);
-                audioElement.appendChild(divider);
-                audioElement.appendChild(transcript_header);
-                audioElement.appendChild(transcript_content);
-            }
+            audioElement.replaceChildren(...newChildNodes);
         }
         function getCachedAudioResult() {
-            let loader_wrapper = document.getElementsByClassName("loader-wrapper")[0];
-            loader_wrapper.classList.add("is-active");
+            let randomTimeout = Math.round(Math.random() * (2000 - 1000)) + 1000;
+            let loaderWrapper = document.getElementsByClassName("loader-wrapper")[0];
+            loaderWrapper.classList.add("is-active");
             setTimeout(function() {
-                loader_wrapper.classList.remove("is-active");
-            }, 2000);
+                loaderWrapper.classList.remove("is-active");
+            }, randomTimeout);
             let audioFileName = document.getElementById("audio-selector").value;
-            let result_content = document.createElement("b");
-            result_content.innerHTML = output_to_result_mapping[cached_inference[audioFileName]];
-            let newChildNodes = [result_content];
-            let resultElement = document.getElementById('audio_result_container');
-            if (resultElement.hasChildNodes()) {
-                resultElement.replaceChildren(...newChildNodes);
+            let resultTags = [];
+            if (audioFileName) {
+                let resultHeader = document.createTextNode("The audio file is: ");
+                let resultContent = document.createElement("b");
+                resultContent.innerHTML = output_to_result_mapping[cached_inference[audioFileName]];
+                resultTags.push(resultHeader);
+                resultTags.push(resultContent);
             } else {
-                resultElement.appendChild(result_content);
+                let resultContent = document.createTextNode("Please select an audio file first.");
+                resultTags.push(resultContent);
             }
+            let resultElement = document.getElementById('audio_result_container');
+            resultElement.replaceChildren(...resultTags);
         }
     </script>
 </head>
@@ -235,8 +237,8 @@
                     <p>We will first go through the overall results of our various models.</p>
                     <p>Note that the model names are in the following format: <i>network_feature_{in/out_dist}</i>.</p>
                     <br>
-                    <table  class="table has-text-centered mx-auto">
-                        <thead><tr><td>Experiment</td><td>Accuracy</td><td><abbr title="F1 score">F1</abbr></td><td><abbr title="Area Under the Receiver Operating Characteristic Curve">ROC AUC</abbr></td><td><abbr title="Equal Error Rate">EER</abbr></td></tr></thead>
+                    <table class="table has-text-centered mx-auto is-bordered is-striped is-fullwidth">
+                        <thead><tr class="th is-selected"><td>Experiment</td><td>Accuracy</td><td><abbr title="F1 score">F1</abbr></td><td><abbr title="Area Under the Receiver Operating Characteristic Curve">ROC AUC</abbr></td><td><abbr title="Equal Error Rate">EER</abbr></td></tr></thead>
                         <tr><td>WaveRNN_wave_I</td><td>0.653</td><td>0.649</td><td>0.6527</td><td>0.3502</td></tr>
                         <tr><td>WaveLSTM_wave_I</td><td>0.749</td><td>0.742</td><td>0.7494</td><td>0.2640</td></tr>
                         <tr><td>ShallowCNN_lfcc_O</td><td>0.937</td><td>0.939</td><td>0.9366</td><td>0.0926</td></tr>
@@ -255,65 +257,66 @@
                     <p>Try It Out!</p>
                 </div>
                 <div class="message-body">
-                    <p>In this section, you can select either a real audio or a fake audio from our dataset, listen to it, and see how our model performs.</p>
-                    <p>The selected model is our best model so far: <i>ShallowCNN_lfcc_I</i>.</p>
-                    <br>
-                    <div class="select is-rounded is-primary">
-                        <select id="audio-selector" onchange="processAudioSelection();" onfocus="this.selectedIndex = 0;">
-                            <option value="LJ049-0058">LJ049-0058</option>
-                            <option value="LJ043-0062">LJ043-0062</option>
-                            <option value="LJ042-0089">LJ042-0089</option>
-                            <option value="LJ049-0221">LJ049-0221</option>
-                            <option value="LJ042-0238">LJ042-0238</option>
-                            <option value="LJ045-0202">LJ045-0202</option>
-                            <option value="LJ048-0265">LJ048-0265</option>
-                            <option value="LJ049-0103">LJ049-0103</option>
-                            <option value="LJ046-0243">LJ046-0243</option>
-                            <option value="LJ049-0079">LJ049-0079</option>
-                            <option value="LJ047-0048">LJ047-0048</option>
-                            <option value="LJ043-0069">LJ043-0069</option>
-                            <option value="LJ048-0178">LJ048-0178</option>
-                            <option value="LJ044-0233">LJ044-0233</option>
-                            <option value="LJ042-0222">LJ042-0222</option>
-                            <option value="LJ040-0165">LJ040-0165</option>
-                            <option value="LJ040-0073">LJ040-0073</option>
-                            <option value="LJ045-0182">LJ045-0182</option>
-                            <option value="LJ045-0231">LJ045-0231</option>
-                            <option value="LJ050-0082">LJ050-0082</option>
-                            <option value="LJ049-0058_gen">LJ049-0058_gen</option>
-                            <option value="LJ043-0062_gen">LJ043-0062_gen</option>
-                            <option value="LJ042-0089_gen">LJ042-0089_gen</option>
-                            <option value="LJ049-0221_gen">LJ049-0221_gen</option>
-                            <option value="LJ042-0238_gen">LJ042-0238_gen</option>
-                            <option value="LJ045-0202_gen">LJ045-0202_gen</option>
-                            <option value="LJ048-0265_gen">LJ048-0265_gen</option>
-                            <option value="LJ049-0103_gen">LJ049-0103_gen</option>
-                            <option value="LJ046-0243_gen">LJ046-0243_gen</option>
-                            <option value="LJ049-0079_gen">LJ049-0079_gen</option>
-                            <option value="LJ047-0048_gen">LJ047-0048_gen</option>
-                            <option value="LJ043-0069_gen">LJ043-0069_gen</option>
-                            <option value="LJ048-0178_gen">LJ048-0178_gen</option>
-                            <option value="LJ044-0233_gen">LJ044-0233_gen</option>
-                            <option value="LJ042-0222_gen">LJ042-0222_gen</option>
-                            <option value="LJ040-0165_gen">LJ040-0165_gen</option>
-                            <option value="LJ040-0073_gen">LJ040-0073_gen</option>
-                            <option value="LJ045-0182_gen">LJ045-0182_gen</option>
-                            <option value="LJ045-0231_gen">LJ045-0231_gen</option>
-                            <option value="LJ050-0082_gen">LJ050-0082_gen</option>
-                        </select>
+                    <p>In this section, you can select either a real audio or a fake audio from our dataset, listen to it, and see how our model performs. Any audio file with a "<i>_gen</i>" suffix is fake, otherwise it is real. The selected model is our best model so far: <em>ShallowCNN_lfcc_I</em>.</p>
+                    <div class="control has-icons-left" style="margin-top:10px; margin-bottom:10px;">
+                        <div class="select is-rounded is-link">
+                            <select id="audio-selector" onchange="processAudioSelection();">
+                                <option value="" selected="selected" disabled hidden>Choose here</option>
+                                <option value="LJ049-0058">LJ049-0058</option>
+                                <option value="LJ043-0062">LJ043-0062</option>
+                                <option value="LJ042-0089">LJ042-0089</option>
+                                <option value="LJ049-0221">LJ049-0221</option>
+                                <option value="LJ042-0238">LJ042-0238</option>
+                                <option value="LJ045-0202">LJ045-0202</option>
+                                <option value="LJ048-0265">LJ048-0265</option>
+                                <option value="LJ049-0103">LJ049-0103</option>
+                                <option value="LJ046-0243">LJ046-0243</option>
+                                <option value="LJ049-0079">LJ049-0079</option>
+                                <option value="LJ047-0048">LJ047-0048</option>
+                                <option value="LJ043-0069">LJ043-0069</option>
+                                <option value="LJ048-0178">LJ048-0178</option>
+                                <option value="LJ044-0233">LJ044-0233</option>
+                                <option value="LJ042-0222">LJ042-0222</option>
+                                <option value="LJ040-0165">LJ040-0165</option>
+                                <option value="LJ040-0073">LJ040-0073</option>
+                                <option value="LJ045-0182">LJ045-0182</option>
+                                <option value="LJ045-0231">LJ045-0231</option>
+                                <option value="LJ050-0082">LJ050-0082</option>
+                                <option value="LJ049-0058_gen">LJ049-0058_gen</option>
+                                <option value="LJ043-0062_gen">LJ043-0062_gen</option>
+                                <option value="LJ042-0089_gen">LJ042-0089_gen</option>
+                                <option value="LJ049-0221_gen">LJ049-0221_gen</option>
+                                <option value="LJ042-0238_gen">LJ042-0238_gen</option>
+                                <option value="LJ045-0202_gen">LJ045-0202_gen</option>
+                                <option value="LJ048-0265_gen">LJ048-0265_gen</option>
+                                <option value="LJ049-0103_gen">LJ049-0103_gen</option>
+                                <option value="LJ046-0243_gen">LJ046-0243_gen</option>
+                                <option value="LJ049-0079_gen">LJ049-0079_gen</option>
+                                <option value="LJ047-0048_gen">LJ047-0048_gen</option>
+                                <option value="LJ043-0069_gen">LJ043-0069_gen</option>
+                                <option value="LJ048-0178_gen">LJ048-0178_gen</option>
+                                <option value="LJ044-0233_gen">LJ044-0233_gen</option>
+                                <option value="LJ042-0222_gen">LJ042-0222_gen</option>
+                                <option value="LJ040-0165_gen">LJ040-0165_gen</option>
+                                <option value="LJ040-0073_gen">LJ040-0073_gen</option>
+                                <option value="LJ045-0182_gen">LJ045-0182_gen</option>
+                                <option value="LJ045-0231_gen">LJ045-0231_gen</option>
+                                <option value="LJ050-0082_gen">LJ050-0082_gen</option>
+                            </select>
+                        </div>
+                        <span class="icon is-small is-left has-text-link">
+                            <i class="fas fa-volume-high"></i>
+                        </span>
                     </div>
-                    <br>
-                    <br>
-                    <div id="selected_audio_container">
+                    <div id="selected_audio_container" style="margin-bottom:10px;">
                         <audio id="selected-audio-player" controls>
-                            <source src="samples/LJ049-0058.wav" type="audio/wav">
+                            <source src="" type="audio/wav">
                             Your browser does not support the audio element.
                         </audio>
                         <br>
-                        <p>Transcript: <em>Secondly, agents are instructed to remove the President as quickly as possible from known or impending danger.</em></p>
+                        <p>Transcript: <em></em></p>
                     </div>
-                    <br>
-                    <input id="submit_button" class="button" onclick="getCachedAudioResult();" type="submit" value="Predict">
+                    <button id="submit_button" class="button is-link" onclick="getCachedAudioResult();">Predict</button>
                     <br>
                     <div class="box">
                         <div class="loader-wrapper">
@@ -346,7 +349,7 @@
                             <source src="./samples/anomalies/LJ045-0087.wav" type="audio/wav">
                             Your browser does not support the audio tag.
                         </audio>
-                        <p>Transcript <em>Mrs. Oswald told another of her friends that Oswald was very cold to her, that they very seldom had sexual relations</em></p>
+                        <p>Transcript: <em>Mrs. Oswald told another of her friends that Oswald was very cold to her, that they very seldom had sexual relations</em></p>
                     </li>
                 </ul>
                 <p>The above audio files are the real human voices, obtained from the LJ Speech dataset. Here are the corresponding fake ones generated by MelGAN:</p>
@@ -357,7 +360,7 @@
                             <source src="./samples/anomalies/LJ045-0047_gen.wav" type="audio/wav">
                             Your browser does not support the audio tag.
                         </audio>
-                        <p><em>and I told him that</em></p>
+                        <p>Transcript: <em>and I told him that</em></p>
                     </li>
                     <li>
                         <p>LJ045-0087_gen</p>
@@ -365,10 +368,10 @@
                             <source src="./samples/anomalies/LJ045-0087_gen.wav" type="audio/wav">
                             Your browser does not support the audio tag.
                         </audio>
-                        <p><em>Mrs. Oswald told another of her friends that Oswald was very cold to her, that they very seldom had sexual relations</em></p>
+                        <p>Transcript: <em>Mrs. Oswald told another of her friends that Oswald was very cold to her, that they very seldom had sexual relations</em></p>
                     </li>
                 </ul>
-                <p>If you try to listen to the audio files, they are very similar and virtually indistinguishable to the human ear. Let's take a closer look at their features.</p>
+                <p>If you try to listen to the audio files, they are very similar and virtually indistinguishable to the human ear. If you pay very close attention, you can make out faint distortions in the fake audio files generated by MelGAN. Isolated from each other and without a direct comparison, it is quite difficult to identify and differentiate them. Let's take a closer look at their features.</p>
                 </div>
             </article>
             <article class="message is-danger">
