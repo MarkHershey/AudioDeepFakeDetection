@@ -3,6 +3,7 @@
 
 import json
 import os
+import pprint
 
 import librosa
 import matplotlib.pyplot as plt
@@ -23,6 +24,33 @@ models = [
     "TSSD_wave_O",
     "WaveLSTM_wave_I",
     "WaveRNN_wave_I",
+]
+
+# Best model name
+best_model = "ShallowCNN_lfcc_I"
+
+# Selected data to add for dropdown in GUI showcase
+selected_data = [
+    "LJ049-0058.wav",
+    "LJ043-0062.wav",
+    "LJ042-0089.wav",
+    "LJ049-0221.wav",
+    "LJ042-0238.wav",
+    "LJ045-0202.wav",
+    "LJ048-0265.wav",
+    "LJ049-0103.wav",
+    "LJ046-0243.wav",
+    "LJ049-0079.wav",
+    "LJ047-0048.wav",
+    "LJ043-0069.wav",
+    "LJ048-0178.wav",
+    "LJ044-0233.wav",
+    "LJ042-0222.wav",
+    "LJ040-0165.wav",
+    "LJ040-0073.wav",
+    "LJ045-0182.wav",
+    "LJ045-0231.wav",
+    "LJ050-0082.wav",
 ]
 
 
@@ -92,6 +120,53 @@ def plot_lfcc(audio_path):
 if __name__ == "__main__":
     with open("saved/testing_audio_names.txt") as data_filename_file:
         data_filenames = data_filename_file.readlines()
+
+    # Print HTML tags to help build the GUI
+    print("GENERATED HTML OPTION TAGS:\n")
+    for filename in selected_data:
+        print(f'<option value="{filename[:-4]}">{filename[:-4]}</option>')
+    for filename in selected_data:
+        print(f'<option value="{filename[:-4]}_gen">{filename[:-4]}_gen</option>')
+
+    print("")
+
+    # Build dictionary
+    data_filename_dict = {
+        data_filename.strip(): idx for idx, data_filename in enumerate(data_filenames)
+    }
+
+    selected_data_indices = []
+
+    for data_filename in selected_data:
+        filename = data_filename.strip()
+        selected_data_indices.append((filename, data_filename_dict[filename]))
+    for data_filename in selected_data:
+        filename = data_filename.strip()[:-4] + "_gen.wav"
+        selected_data_indices.append((filename, data_filename_dict[filename]))
+
+    # Get cached inference from best model
+    with open(f"saved/{best_model}/best_pred.json") as inference_file:
+        model_data = json.load(inference_file)
+
+    model_data_lst = list(zip(model_data["y_true"], model_data["y_pred"]))
+
+    cached_inference = {}
+    no_mispredictions = True
+
+    for filename, data_idx in selected_data_indices:
+        pruned_filename = filename[:-4]
+        cached_inference[pruned_filename] = str(model_data_lst[data_idx][1])
+        if model_data_lst[data_idx][0] != model_data_lst[data_idx][1]:
+            print(
+                f"{pruned_filename}'s ground truth label is not the same as its predicted label."
+            )
+            no_mispredictions = False
+
+    if not no_mispredictions:
+        print()
+    print("CACHED INFERENCE:\n")
+    pp = pprint.PrettyPrinter(depth=4, sort_dicts=False)
+    pp.pprint(cached_inference)
 
     # By interesting, we mean that some of the models wrongly classified the data point
     interesting_data_points_results = []
