@@ -30,6 +30,132 @@
             transform: scale(1.2);
         }
     </style>
+    <script type="text/javascript" src="js/loadingOverlay.js"></script>
+    <script type="text/javascript">
+        let output_to_result_mapping = {
+            "0": "Fake",
+            "1": "Real"
+        }
+        let cached_inference = {
+            "LJ049-0058":"1",
+            "LJ043-0062":"1",
+            "LJ042-0089":"1",
+            "LJ049-0221":"1",
+            "LJ042-0238":"1",
+            "LJ045-0202":"1",
+            "LJ048-0265":"1",
+            "LJ049-0103":"1",
+            "LJ046-0243":"1",
+            "LJ049-0079":"1",
+            "LJ047-0048":"1",
+            "LJ043-0069":"1",
+            "LJ048-0178":"1",
+            "LJ044-0233":"1",
+            "LJ042-0222":"1",
+            "LJ040-0165":"1",
+            "LJ040-0073":"1",
+            "LJ045-0182":"1",
+            "LJ045-0231":"1",
+            "LJ050-0082":"1",
+            "LJ049-0058_gen":"0",
+            "LJ043-0062_gen":"0",
+            "LJ042-0089_gen":"0",
+            "LJ049-0221_gen":"0",
+            "LJ042-0238_gen":"0",
+            "LJ045-0202_gen":"0",
+            "LJ048-0265_gen":"0",
+            "LJ049-0103_gen":"0",
+            "LJ046-0243_gen":"0",
+            "LJ049-0079_gen":"0",
+            "LJ047-0048_gen":"0",
+            "LJ043-0069_gen":"0",
+            "LJ048-0178_gen":"0",
+            "LJ044-0233_gen":"0",
+            "LJ042-0222_gen":"0",
+            "LJ040-0165_gen":"0",
+            "LJ040-0073_gen":"0",
+            "LJ045-0182_gen":"0",
+            "LJ045-0231_gen":"0",
+            "LJ050-0082_gen":"0"
+        };
+        let cached_transcript = {
+            "LJ040-0073":"Marguerite Oswald withdrew Lee from the orphans' home and took him with her to Dallas when he was a little over four years old.",
+            "LJ040-0073_gen":"Marguerite Oswald withdrew Lee from the orphans' home and took him with her to Dallas when he was a little over four years old.",
+            "LJ040-0165":"Lee's withdrawal was also noted by Mrs. Siegel, who described him as a, quote, seriously detached, withdrawn youngster, end quote.",
+            "LJ040-0165_gen":"Lee's withdrawal was also noted by Mrs. Siegel, who described him as a, quote, seriously detached, withdrawn youngster, end quote.",
+            "LJ042-0089":"I leave Embassy, elated at this showdown, returning to my hotel I feel now my energies are not spent in vain.",
+            "LJ042-0089_gen":"I leave Embassy, elated at this showdown, returning to my hotel I feel now my energies are not spent in vain.",
+            "LJ042-0222":"Judged by his other statements and writings, however, he appears to have indicated his true feelings in the set of answers first presented",
+            "LJ042-0222_gen":"Judged by his other statements and writings, however, he appears to have indicated his true feelings in the set of answers first presented",
+            "LJ042-0238":"freedom of speech, travel outspoken opposition to unpopular policies, freedom to believe in god, end quote, while the Soviet Union did not.",
+            "LJ042-0238_gen":"freedom of speech, travel outspoken opposition to unpopular policies, freedom to believe in god, end quote, while the Soviet Union did not.",
+            "LJ043-0062":"Oswald's defection, his interest in the Soviet Union, and his activities on behalf of the Fair Play for Cuba Committee",
+            "LJ043-0062_gen":"Oswald's defection, his interest in the Soviet Union, and his activities on behalf of the Fair Play for Cuba Committee",
+            "LJ043-0069":"the evidence indicates that Oswald usually told his prospective employers and employment counselors that he had recently been discharged from the Marine Corps.",
+            "LJ043-0069_gen":"the evidence indicates that Oswald usually told his prospective employers and employment counselors that he had recently been discharged from the Marine Corps.",
+            "LJ044-0233":"Oswald was carrying only thirteen dollars, eighty-seven cents at the time of his arrest, although he had left, apparently by design,",
+            "LJ044-0233_gen":"Oswald was carrying only thirteen dollars, eighty-seven cents at the time of his arrest, although he had left, apparently by design,",
+            "LJ045-0182":"Instead of returning to Irving on November fifteen for his customary weekend visit, he remained in Dallas at his wife's suggestion because of the birthday party.",
+            "LJ045-0182_gen":"Instead of returning to Irving on November fifteen for his customary weekend visit, he remained in Dallas at his wife's suggestion because of the birthday party.",
+            "LJ045-0202":"He had great difficulty in establishing meaningful relations with other people. Except for his family he was completely alone.",
+            "LJ045-0202_gen":"He had great difficulty in establishing meaningful relations with other people. Except for his family he was completely alone.",
+            "LJ045-0231":"two officers have testified that at the time of his arrest Oswald said something to the effect that, quote, it's all over now, end quote.",
+            "LJ045-0231_gen":"two officers have testified that at the time of his arrest Oswald said something to the effect that, quote, it's all over now, end quote.",
+            "LJ046-0243":"if the presence in Dallas of the Stevenson pickets might have created a danger for the President on a visit to that city,",
+            "LJ046-0243_gen":"if the presence in Dallas of the Stevenson pickets might have created a danger for the President on a visit to that city,",
+            "LJ047-0048":"while Oswald remained somewhat evasive at this interview, he was not antagonistic and seemed generally to be settling down.",
+            "LJ047-0048_gen":"while Oswald remained somewhat evasive at this interview, he was not antagonistic and seemed generally to be settling down.",
+            "LJ048-0178":"In accordance with its regular procedures, no survey or other check was made by the Secret Service, or by any other law enforcement agency at its request,",
+            "LJ048-0178_gen":"In accordance with its regular procedures, no survey or other check was made by the Secret Service, or by any other law enforcement agency at its request,",
+            "LJ048-0265":"after which time a very moderate use of liquor will not be considered a violation. However, all members of the White House Detail",
+            "LJ048-0265_gen":"after which time a very moderate use of liquor will not be considered a violation. However, all members of the White House Detail",
+            "LJ049-0058":"Secondly, agents are instructed to remove the President as quickly as possible from known or impending danger.",
+            "LJ049-0058_gen":"Secondly, agents are instructed to remove the President as quickly as possible from known or impending danger.",
+            "LJ049-0079":"Many changes have already been made and others are contemplated, some of them in response to the Commission's questions and informal suggestions.",
+            "LJ049-0079_gen":"Many changes have already been made and others are contemplated, some of them in response to the Commission's questions and informal suggestions.",
+            "LJ049-0103":"whether or not the act is committed while the victim is in the performance of his official duties or on account of such performance.",
+            "LJ049-0103_gen":"whether or not the act is committed while the victim is in the performance of his official duties or on account of such performance.",
+            "LJ049-0221":"perhaps upon recommendations based on further studies by the Cabinet-level committee recommended above or the National Security Council.",
+            "LJ049-0221_gen":"perhaps upon recommendations based on further studies by the Cabinet-level committee recommended above or the National Security Council.",
+            "LJ050-0082":"the interest of the Secret Service goes beyond information on individuals or groups threatening to cause harm or embarrassment to the President.",
+            "LJ050-0082_gen":"the interest of the Secret Service goes beyond information on individuals or groups threatening to cause harm or embarrassment to the President."
+        };
+        function processAudioSelection() {
+            let audioFileName = document.getElementById("audio-selector").value;
+            let sound = document.createElement('audio');
+            sound.id = 'selected-audio-player';
+            sound.controls = 'controls';
+            let divider = document.createElement("br");
+            let transcript_header = document.createTextNode("Transcript: ");
+            let transcript_content = document.createElement("em");
+            transcript_content.innerHTML = cached_transcript[audioFileName];
+            let newChildNodes = [sound, divider, transcript_header, transcript_content];
+            fetch('https://markhh.com/AudioDeepFakeDetection/samples/' + audioFileName + ".wav")
+            .then(response => response.blob())
+            .then(blob=>sound.src = URL.createObjectURL(blob))
+            sound.type = 'audio/wav';
+            let audioElement = document.getElementById('selected_audio_container');
+            if (audioElement.hasChildNodes()) {
+                audioElement.replaceChildren(...newChildNodes);
+            } else {
+                audioElement.appendChild(sound);
+                audioElement.appendChild(divider);
+                audioElement.appendChild(transcript_header);
+                audioElement.appendChild(transcript_content);
+            }
+        }
+        function getCachedAudioResult() {
+            let audioFileName = document.getElementById("audio-selector").value;
+            let result = document.createTextNode("Result: " + output_to_result_mapping[cached_inference[audioFileName]]);
+            let newChildNodes = [result];
+            let resultElement = document.getElementById('audio_result_container');
+            if (resultElement.hasChildNodes()) {
+                resultElement.replaceChildren(...newChildNodes);
+            } else {
+                resultElement.appendChild(result);
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -52,14 +178,14 @@
     <div class="columns">
         <div class="column is-full has-text-justified">
             <article class="message is-primary">
-            <div class="message-header">
-                <p>Introduction to Exploratory GUI</p>
-            </div>
-            <div class="message-body">
-                <p>This minimalist GUI serves as a method to explore the results of our Deep Learning group project!</p>
-                <p>More concretely, you will be able to interact with some of the data and findings to better understand the intuition and implications of our results.</p>
-                <p>Without further ado, let's explore!</p>
-            </div>
+                <div class="message-header">
+                    <p>Introduction to Exploratory GUI</p>
+                </div>
+                <div class="message-body">
+                    <p>This minimalist GUI serves as a method to explore the results of our Deep Learning group project!</p>
+                    <p>More concretely, you will be able to interact with some of the data and findings to better understand the intuition and implications of our results.</p>
+                    <p>Without further ado, let's explore!</p>
+                </div>
             </article>
             <article class="message">
                 <div class="message-header">
@@ -83,7 +209,75 @@
                         <tr><td>ShallowCNN_lfcc_I</td><td>1.000</td><td>1.000</td><td>0.9996</td><td>0.0004</td></tr>
                     </table>
                 </div>
-                </article>
+            </article>
+            <article class="message is-link">
+                <div class="message-header">
+                    <p>Dataset Exploration</p>
+                </div>
+                <div class="message-body">
+                    <p>In this section, you can select either a real audio or a fake audio from our dataset, listen to it, and see how our model performs.</p>
+                    <p>The selected model is our best model so far: <i>ShallowCNN_lfcc_I</i>.</p>
+                    <br>
+                    <div class="select is-rounded is-primary">
+                        <select id="audio-selector" onchange="processAudioSelection();" onfocus="this.selectedIndex = 0;">
+                            <option value="LJ049-0058">LJ049-0058</option>
+                            <option value="LJ043-0062">LJ043-0062</option>
+                            <option value="LJ042-0089">LJ042-0089</option>
+                            <option value="LJ049-0221">LJ049-0221</option>
+                            <option value="LJ042-0238">LJ042-0238</option>
+                            <option value="LJ045-0202">LJ045-0202</option>
+                            <option value="LJ048-0265">LJ048-0265</option>
+                            <option value="LJ049-0103">LJ049-0103</option>
+                            <option value="LJ046-0243">LJ046-0243</option>
+                            <option value="LJ049-0079">LJ049-0079</option>
+                            <option value="LJ047-0048">LJ047-0048</option>
+                            <option value="LJ043-0069">LJ043-0069</option>
+                            <option value="LJ048-0178">LJ048-0178</option>
+                            <option value="LJ044-0233">LJ044-0233</option>
+                            <option value="LJ042-0222">LJ042-0222</option>
+                            <option value="LJ040-0165">LJ040-0165</option>
+                            <option value="LJ040-0073">LJ040-0073</option>
+                            <option value="LJ045-0182">LJ045-0182</option>
+                            <option value="LJ045-0231">LJ045-0231</option>
+                            <option value="LJ050-0082">LJ050-0082</option>
+                            <option value="LJ049-0058_gen">LJ049-0058_gen</option>
+                            <option value="LJ043-0062_gen">LJ043-0062_gen</option>
+                            <option value="LJ042-0089_gen">LJ042-0089_gen</option>
+                            <option value="LJ049-0221_gen">LJ049-0221_gen</option>
+                            <option value="LJ042-0238_gen">LJ042-0238_gen</option>
+                            <option value="LJ045-0202_gen">LJ045-0202_gen</option>
+                            <option value="LJ048-0265_gen">LJ048-0265_gen</option>
+                            <option value="LJ049-0103_gen">LJ049-0103_gen</option>
+                            <option value="LJ046-0243_gen">LJ046-0243_gen</option>
+                            <option value="LJ049-0079_gen">LJ049-0079_gen</option>
+                            <option value="LJ047-0048_gen">LJ047-0048_gen</option>
+                            <option value="LJ043-0069_gen">LJ043-0069_gen</option>
+                            <option value="LJ048-0178_gen">LJ048-0178_gen</option>
+                            <option value="LJ044-0233_gen">LJ044-0233_gen</option>
+                            <option value="LJ042-0222_gen">LJ042-0222_gen</option>
+                            <option value="LJ040-0165_gen">LJ040-0165_gen</option>
+                            <option value="LJ040-0073_gen">LJ040-0073_gen</option>
+                            <option value="LJ045-0182_gen">LJ045-0182_gen</option>
+                            <option value="LJ045-0231_gen">LJ045-0231_gen</option>
+                            <option value="LJ050-0082_gen">LJ050-0082_gen</option>
+                        </select>
+                    </div>
+                    <br>
+                    <br>
+                    <div id="selected_audio_container">
+                        <audio id="selected-audio-player" controls>
+                            <source src="samples/LJ049-0058.wav" type="audio/wav">
+                            Your browser does not support the audio element.
+                        </audio>
+                        <br>
+                        <p>Transcript: <em>Secondly, agents are instructed to remove the President as quickly as possible from known or impending danger.</em></p>
+                    </div>
+                    <br>
+                    <input id="submit_button" class="button" onclick="getCachedAudioResult();" type="submit" value="Predict">
+                    <br>
+                    <div id="audio_result_container"></div>
+                </div>
+            </article>
             <article class="message is-warning">
                 <div class="message-header">
                 <p>Interesting Results</p>
@@ -97,6 +291,7 @@
                             <source src="./anomalies/LJ045-0047.wav" type="audio/wav">
                             Your browser does not support the audio tag.
                         </audio>
+                        <p>Transcript: <em>and I told him that</em></p>
                     </li>
                     <li>
                         <p>LJ045-0087</p>
@@ -104,6 +299,7 @@
                             <source src="./anomalies/LJ045-0087.wav" type="audio/wav">
                             Your browser does not support the audio tag.
                         </audio>
+                        <p>Transcript <em>Mrs. Oswald told another of her friends that Oswald was very cold to her, that they very seldom had sexual relations</em></p>
                     </li>
                 </ul>
                 <p>The above audio files are the real human voices, obtained from the LJ Speech dataset. Here are the corresponding fake ones generated by MelGAN:</p>
@@ -114,6 +310,7 @@
                             <source src="./anomalies/LJ045-0047_gen.wav" type="audio/wav">
                             Your browser does not support the audio tag.
                         </audio>
+                        <p><em>and I told him that</em></p>
                     </li>
                     <li>
                         <p>LJ045-0087_gen</p>
@@ -121,6 +318,7 @@
                             <source src="./anomalies/LJ045-0087_gen.wav" type="audio/wav">
                             Your browser does not support the audio tag.
                         </audio>
+                        <p><em>Mrs. Oswald told another of her friends that Oswald was very cold to her, that they very seldom had sexual relations</em></p>
                     </li>
                 </ul>
                 <p>If you try to listen to the audio files, they are very similar and virtually indistinguishable to the human ear. Let's take a closer look at their features.</p>
