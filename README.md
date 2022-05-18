@@ -4,7 +4,7 @@ A Course Project for SUTD 50.039 Theory and Practice of Deep Learning (2022 Spri
 
 Created by [Mark He Huang](https://markhh.com/), [Peiyuan Zhang](https://www.linkedin.com/in/lance-peiyuan-zhang-5b2886194/), [James Raphael Tiovalen](https://jamestiotio.github.io/), [Madhumitha Balaji](https://www.linkedin.com/in/madhu-balaji/), and [Shyam Sridhar](https://www.linkedin.com/in/shyam-sridhar/).
 
-Check out our: [Project Report](Report.pdf) | [GUI (Website)](https://markhh.com/AudioDeepFakeDetection/)
+Check out our: [Project Report](Report.pdf) | [Interactive Website](https://markhh.com/AudioDeepFakeDetection/)
 
 ## Setup Environment
 
@@ -61,8 +61,7 @@ Use the [`train.py`](train.py) script to train the model.
 usage: train.py [-h] [--real_dir REAL_DIR] [--fake_dir FAKE_DIR] [--batch_size BATCH_SIZE] [--epochs EPOCHS]
                 [--seed SEED] [--feature_classname {wave,lfcc,mfcc}]
                 [--model_classname {MLP,WaveRNN,WaveLSTM,SimpleLSTM,ShallowCNN,TSSD}]
-                [--in_distribution {True,False}] [--device DEVICE] [--deterministic] [--restore] [--debug]
-                [--debug_all]
+                [--in_distribution {True,False}] [--device DEVICE] [--deterministic] [--restore] [--eval_only] [--debug] [--debug_all]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -83,6 +82,7 @@ optional arguments:
   --device DEVICE       Device to use. (default: 'cuda' if possible)
   --deterministic       Whether to use deterministic training (reproducible results).
   --restore             Whether to restore from checkpoint.
+  --eval_only           Whether to evaluate only.
   --debug               Whether to use debug mode.
   --debug_all           Whether to use debug mode for all models.
 ```
@@ -98,12 +98,24 @@ python train.py --debug_all
 To train the model `ShallowCNN` with `lfcc` features in the in-distribution setting, you can run the following command:
 
 ```bash
-CUDA_VISIBLE_DEVICES=0 python train.py --real data/real --fake data/fake --batch_size 128 --epochs 20 --seed 42 --feature_classname lfcc --model_classname ShallowCNN
+python train.py --real data/real --fake data/fake --batch_size 128 --epochs 20 --seed 42 --feature_classname lfcc --model_classname ShallowCNN
 ```
 
-## Evaluation Results
+Please use inline environment variable `CUDA_VISIBLE_DEVICES` to specify the GPU device(s) to use. For example:
 
-By default, we directly use test set for training validation, and the best model and the best predictions will be automatically saved in the [`saved`](saved) directory during training. Go to the directory [`saved`](saved) to see the evaluation results.
+```bash
+CUDA_VISIBLE_DEVICES=0 python train.py
+```
+
+## Evaluation
+
+By default, we directly use test set for training validation, and the best model and the best predictions will be automatically saved in the [`saved`](saved) directory during training/testing. Go to the directory [`saved`](saved) to see the evaluation results.
+
+To evaluate on the test set using trained model, you can run the following command:
+
+```bash
+python train.py --feature_classname lfcc --model_classname ShallowCNN --restore --eval_only
+```
 
 Run the following command to re-compute the evaluation results based on saved predictions and labels:
 
