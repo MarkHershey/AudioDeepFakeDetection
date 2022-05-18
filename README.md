@@ -51,22 +51,7 @@ data
 
 ## Model Checkpoints
 
-Model checkpoints are included in this repository using [Git Large File Storage (LFS)](https://git-lfs.github.com/).
-
-If you already have `git-lfs` installed, the model checkpoints will be automatically downloaded when you run command `git clone` or `git pull`.
-
-If you don't have `git-lfs` installed, you can follow the install instructions [here](https://git-lfs.github.com/). For debain-based linux users, you can install `git-lfs` using the following command:
-
-```bash
-curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash && \
-sudo apt-get install git-lfs
-```
-
-After you have `git-lfs` installed, you can execute the following command at the root of this repository to download the model checkpoints:
-
-```bash
-git lfs pull
-```
+You may download the model checkpoints from here: [Google Drive](https://drive.google.com/drive/folders/1iR2zLQjBZgxIs3gHkXh54Ulg-M6-6W4L?usp=sharing). Unzip the files and replace the `saved` directory with the extracted files.
 
 ## Training
 
