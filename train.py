@@ -258,7 +258,7 @@ def train(
     )
 
 
-def eval(
+def eval_only(
     real_dir: Union[Path, str],
     fake_dir: Union[Path, str],
     amount_to_use: int = None,
@@ -427,7 +427,7 @@ def experiment(
     LOGGER.info(f"Batch size: {batch_size}, seed: {seed}, epochs: {epochs}")
 
     if eval_only:
-        eval(
+        eval_only(
             real_dir=real_dir,
             fake_dir=fake_dir,
             amount_to_use=amount_to_use,
