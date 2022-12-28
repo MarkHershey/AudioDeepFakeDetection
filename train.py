@@ -581,7 +581,7 @@ def main():
     args = parse_args()
 
     if args.debug_all:
-        debug(args.real, args.fake, args.device)
+        debug(args.real_dir, args.fake_dir, args.device)
         return
 
     exp_setup = "I" if args.in_distribution else "O"
