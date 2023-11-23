@@ -405,10 +405,9 @@ def experiment(
     seed: Optional[int] = None,
     amount_to_use: Union[int, None] = None,
     restore: bool = False,
-    eval_only: bool = False,
+    evaluate_only: bool = False,
     **kwargs,
 ):
-
     root_save_dir = Path("saved")
     save_dir = root_save_dir / name
     save_dir.mkdir(parents=True, exist_ok=True)
@@ -426,7 +425,7 @@ def experiment(
 
     LOGGER.info(f"Batch size: {batch_size}, seed: {seed}, epochs: {epochs}")
 
-    if eval_only:
+    if evaluate_only:
         eval_only(
             real_dir=real_dir,
             fake_dir=fake_dir,
@@ -603,7 +602,7 @@ def main():
             seed=args.seed if args.deterministic else None,
             amount_to_use=160 if args.debug else None,
             restore=args.restore,
-            eval_only=args.eval_only,
+            evaluate_only=args.eval_only,
         )
         printc(f">>>>> Experiment Done: {exp_name}\n\n")
     except Exception as e:
